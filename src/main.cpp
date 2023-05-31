@@ -1,4 +1,4 @@
-#include "../include/olcConsoleGameEngine.h"
+#include "olcConsoleGameEngine.h"
 
 struct V3 { float x,y,z; };
 struct Triangle { V3 p[3]; };
