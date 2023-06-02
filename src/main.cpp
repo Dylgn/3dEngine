@@ -1,11 +1,16 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+
 #include "olcConsoleGameEngine.h"
 
-struct V3 { float x,y,z; };
+#include "MathUtility.hpp"
+#include "M4x4.hpp"
+#include "V3d.hpp"
+
+// struct V3 { float x,y,z; };
 struct Triangle { 
-    V3 p[3];
+    V3d p[3];
     wchar_t sym;
 	short col;
 };
@@ -17,7 +22,7 @@ struct Mesh {
         if (!f.is_open()) return false;
 
         // Temp storage of vertices
-        std::vector<V3> vertices;
+        std::vector<V3d> vertices;
 
         while (!f.eof()) {
             char line[128];
@@ -28,7 +33,7 @@ struct Mesh {
 
             char type;
             if (line[0] == 'v') {
-                V3 v;
+                V3d v;
                 s >> type >> v.x >> v.y >> v.z;
                 vertices.push_back(v);
             } else if (line[0] == 'f') {
@@ -41,51 +46,18 @@ struct Mesh {
         return true;
     }
 };
-struct M4x4 { float m[4][4] = {0}; };
+// struct M4x4 { float m[4][4] = {0}; };
 
 class Engine3D : public olcConsoleGameEngine {
     public:
         Engine3D() { m_sAppName = L"Demo"; }
 
         bool OnUserCreate() override {
-            // mesh_cube.triangles = {
-            //     // SOOUTH 
-            //     { 0.0f, 0.0f, 0.0f,  0.0f, 1.0f, 0.0f,  1.0f, 1.0f, 0.0f },
-            //     { 0.0f, 0.0f, 0.0f,  1.0f, 1.0f, 0.0f,  1.0f, 0.0f, 0.0f },
-            //     // EAST
-            //     { 1.0f, 0.0f, 0.0f,  1.0f, 1.0f, 0.0f,  1.0f, 1.0f, 1.0f },
-            //     { 1.0f, 0.0f, 0.0f,  1.0f, 1.0f, 1.0f,  1.0f, 0.0f, 1.0f },
-            //     // NORTH
-            //     { 1.0f, 0.0f, 1.0f,  1.0f, 1.0f, 1.0f,  0.0f, 1.0f, 1.0f },
-            //     { 1.0f, 0.0f, 1.0f,  0.0f, 1.0f, 1.0f,  0.0f, 0.0f, 1.0f },
-            //     // WEST
-            //     { 0.0f, 0.0f, 1.0f,  0.0f, 1.0f, 1.0f,  0.0f, 1.0f, 0.0f },
-            //     { 0.0f, 0.0f, 1.0f,  0.0f, 1.0f, 0.0f,  0.0f, 0.0f, 0.0f },
-            //     // TOP
-            //     { 0.0f, 1.0f, 0.0f,  0.0f, 1.0f, 1.0f,  1.0f, 1.0f, 1.0f },
-            //     { 0.0f, 1.0f, 0.0f,  1.0f, 1.0f, 1.0f,  1.0f, 1.0f, 0.0f },
-            //     // BOTTOM
-            //     { 1.0f, 0.0f, 1.0f,  0.0f, 0.0f, 1.0f,  0.0f, 0.0f, 0.0f },
-            //     { 1.0f, 0.0f, 1.0f,  0.0f, 0.0f, 0.0f,  1.0f, 0.0f, 0.0f }
-            // };
             mesh_cube.LoadObject("../resources/test.obj");
 
             // Projection Matrix
-            float fNear = 0.1f;
-            float fFar = 1000.0f;
-            float fFov = 90.0f;
-            float fAspectRatio = (float) ScreenHeight() / (float) ScreenWidth();
-            float fFovRad = 1.0f / tanf(fFov * 0.5f / 180.0f * 3.14159f);
+            mat_proj = MathUtil::GetProjMat(90.0f, ((float) ScreenHeight()) / ((float) ScreenWidth()), 0.1f, 1000.0f);
 
-            // Camera
-            v_cam = {0,0,0};
-
-            mat_proj.m[0][0] = fAspectRatio * fFovRad;
-            mat_proj.m[1][1] = fFovRad;
-            mat_proj.m[2][2] = fFar / (fFar - fNear);
-            mat_proj.m[3][2] = (-fFar * fNear) / (fFar - fNear);
-            mat_proj.m[2][3] = 1.0f;
-            mat_proj.m[3][3] = 0.0f;
             return true;
         }
         bool OnUserUpdate(float fElapsedTime) override {
@@ -94,89 +66,67 @@ class Engine3D : public olcConsoleGameEngine {
 
             // Rotation matrices
             M4x4 mat_rot_z, mat_rot_x;
-            fTheta += 1.0f * fElapsedTime;
-            // Z Rotation
-            mat_rot_z.m[0][0] = cosf(fTheta);
-            mat_rot_z.m[0][1] = sinf(fTheta);
-            mat_rot_z.m[1][0] = -sinf(fTheta);
-            mat_rot_z.m[1][1] = cosf(fTheta);
-            mat_rot_z.m[2][2] = 1;
-            mat_rot_z.m[3][3] = 1;
-            // X Rotation
-            mat_rot_x.m[0][0] = 1;
-            mat_rot_x.m[1][1] = cosf(fTheta * 0.5f);
-            mat_rot_x.m[1][2] = sinf(fTheta * 0.5f);
-            mat_rot_x.m[2][1] = -sinf(fTheta * 0.5f);
-            mat_rot_x.m[2][2] = cosf(fTheta * 0.5f);
-            mat_rot_x.m[3][3] = 1;
+            theta += 1.0f * fElapsedTime;
+            mat_rot_z = MathUtil::GetMatRotZ(theta * 0.5f);
+            mat_rot_x = MathUtil::GetMatRotX(theta);
+
+            // Translate matrix
+            M4x4 mat_translate = MathUtil::MatTranslate(0.0f, 0.0f, 5.0f);
+            // World matrix
+            M4x4 mat_world = (mat_rot_z * mat_rot_x) * mat_translate;
 
             std::vector<Triangle> triangles_to_render;
 
             // Draw triangles
             for (Triangle t : mesh_cube.triangles) {
-                Triangle t_proj, t_translate, t_rot_z, t_rot_zx;
+                Triangle t_proj, t_transform;
 
-                // Z Rotation
-                MultMatrixVector(t.p[0], t_rot_z.p[0], mat_rot_z);
-                MultMatrixVector(t.p[1], t_rot_z.p[1], mat_rot_z);
-                MultMatrixVector(t.p[2], t_rot_z.p[2], mat_rot_z);
-                // X Rotation
-                MultMatrixVector(t_rot_z.p[0], t_rot_zx.p[0], mat_rot_x);
-                MultMatrixVector(t_rot_z.p[1], t_rot_zx.p[1], mat_rot_x);
-                MultMatrixVector(t_rot_z.p[2], t_rot_zx.p[2], mat_rot_x);
+                // Transform with world matrix
+                t_transform.p[0] = mat_world * t.p[0];
+                t_transform.p[1] = mat_world * t.p[1];
+                t_transform.p[2] = mat_world * t.p[2];
 
-                // Offset objects 3 units so they are correctly in view
-                t_translate = t_rot_zx;
-                t_translate.p[0].z = t_rot_zx.p[0].z + 8.0f;
-                t_translate.p[1].z = t_rot_zx.p[1].z + 8.0f;
-                t_translate.p[2].z = t_rot_zx.p[2].z + 8.0f;
+                // Calculate normal of t
+                V3d norm, line1, line2;
+                // Get 2 sides of triangle
+                line1 = t_transform.p[1] - t_transform.p[0];
+                line2 = t_transform.p[2] - t_transform.p[0];
+                // Get normal from cross product
+                norm = line1.crossProd(line2);
+                norm = norm.normalize();
 
-                // Get normals of triangle
-                V3 norm, line1, line2;
-                line1.x = t_translate.p[1].x - t_translate.p[0].x;
-                line1.y = t_translate.p[1].y - t_translate.p[0].y;
-                line1.z = t_translate.p[1].z - t_translate.p[0].z;
-
-                line2.x = t_translate.p[2].x - t_translate.p[0].x;
-                line2.y = t_translate.p[2].y - t_translate.p[0].y;
-                line2.z = t_translate.p[2].z - t_translate.p[0].z;
-                // Cross product
-                norm.x = line1.y * line2.z - line1.z * line2.y;
-                norm.y = line1.z * line2.x - line1.x * line2.z;
-                norm.z = line1.x * line2.y - line1.y * line2.x;
-
-                float l = sqrtf(norm.x * norm.x + norm.y * norm.y + norm.z * norm.z);
-                norm.x /= l; norm.y /= l; norm.z /= l;
-
-                //if (norm.z < 0.0f) {
-                if (norm.x * (t_translate.p[0].x - v_cam.x) +
-                    norm.y * (t_translate.p[0].y - v_cam.y) +
-                    norm.z * (t_translate.p[0].z - v_cam.z) < 0.0f) {
-                    
+                // Ray from triangle to camera
+                V3d cam_ray = t_transform.p[0] - cam;
+                // t visible if ray aligned with normal
+                if (norm.dotProd(cam_ray) < 0.0f) {
                     // Illumination
-                    V3 light_dir = {0.0f, 0.0f, -1.0f};
-                    float l = sqrtf(light_dir.x * light_dir.x + light_dir.y * light_dir.y + light_dir.z * light_dir.z);
-                    light_dir.x /= l; light_dir.y /= l; light_dir.z /= l;
-                    // Dot Product
-                    float dp = norm.x * light_dir.x + norm.y * light_dir.y + norm.z * light_dir.z;
+                    V3d light_dir = { 0.0f, 1.0f, -1.0f };
+                    light_dir = light_dir.normalize();
+                    // Alignment of light direction & normal
+                    float dp = MathUtil::max(0.1f, light_dir.dotProd(norm));
 
 				    // Choose console colours as required (much easier with RGB)
 				    CHAR_INFO c = GetColour(dp);
-				    t_translate.col = c.Attributes;
-				    t_translate.sym = c.Char.UnicodeChar;
+				    t_transform.col = c.Attributes;
+				    t_transform.sym = c.Char.UnicodeChar;
 
                     // Project into screen space
-                    MultMatrixVector(t_translate.p[0], t_proj.p[0], mat_proj);
-                    MultMatrixVector(t_translate.p[1], t_proj.p[1], mat_proj);
-                    MultMatrixVector(t_translate.p[2], t_proj.p[2], mat_proj);
-                    t_proj.col = t_translate.col;
-				    t_proj.sym = t_translate.sym;
+                    t_proj.p[0] = mat_proj * t_transform.p[0];
+                    t_proj.p[1] = mat_proj * t_transform.p[1];
+                    t_proj.p[2] = mat_proj * t_transform.p[2];
+                    t_proj.col = t_transform.col;
+                    t_proj.sym = t_transform.sym;
 
-                    // Scale to view
-                    t_proj.p[0].x += 1.0f; t_proj.p[0].y += 1.0f;
-                    t_proj.p[1].x += 1.0f; t_proj.p[1].y += 1.0f;
-                    t_proj.p[2].x += 1.0f; t_proj.p[2].y += 1.0f;
+                    // Normalize
+                    t_proj.p[0] = t_proj.p[0] / t_proj.p[0].w;
+                    t_proj.p[1] = t_proj.p[1] / t_proj.p[1].w;
+                    t_proj.p[2] = t_proj.p[2] / t_proj.p[2].w;
 
+                    // Offset vertices into visible normalized space
+                    V3d view_offset = { 1, 1, 0 };
+                    t_proj.p[0] = t_proj.p[0] + view_offset;
+                    t_proj.p[1] = t_proj.p[1] + view_offset;
+                    t_proj.p[2] = t_proj.p[2] + view_offset;
                     t_proj.p[0].x *= 0.5f * (float) ScreenWidth();
                     t_proj.p[0].y *= 0.5f * (float) ScreenHeight();
                     t_proj.p[1].x *= 0.5f * (float) ScreenWidth();
@@ -213,21 +163,8 @@ class Engine3D : public olcConsoleGameEngine {
     private:
         Mesh mesh_cube;
         M4x4 mat_proj;
-        V3 v_cam;
-        float fTheta;
-
-        void MultMatrixVector(V3 &i, V3 &o, M4x4 &m) {
-            o.x = i.x * m.m[0][0] + i.y * m.m[1][0] + i.z * m.m[2][0] + m.m[3][0];
-            o.y = i.x * m.m[0][1] + i.y * m.m[1][1] + i.z * m.m[2][1] + m.m[3][1];
-            o.z = i.x * m.m[0][2] + i.y * m.m[1][2] + i.z * m.m[2][2] + m.m[3][2];
-            float w = i.x * m.m[0][3] + i.y * m.m[1][3] + i.z * m.m[2][3] + m.m[3][3];
-
-            if (w != 0.0f) {
-                o.x /= w;
-                o.y /= w;
-                o.z /= w;
-            }
-        }
+        V3d cam;
+        float theta;
 
         CHAR_INFO GetColour(float lum) {
 	    	short bg_col, fg_col;
