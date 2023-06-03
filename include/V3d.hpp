@@ -6,14 +6,14 @@ struct V3d {
     float z = 0;
     float w = 1;
 
-    V3d operator+(V3d &o);
-    V3d operator-(V3d &o);
+    V3d operator+(V3d o);
+    V3d operator-(V3d o);
     V3d operator*(float k);
     V3d operator/(float k);
 
-    float dotProd(V3d &o);
+    float dotProd(V3d o);
 
-    V3d crossProd(V3d &o);
+    V3d crossProd(V3d o);
 
     float length();
     

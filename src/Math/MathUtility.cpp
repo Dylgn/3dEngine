@@ -23,6 +23,17 @@ namespace MathUtil {
         };
     }
 
+    V3d LineIntersectPlane(V3d &plane_point, V3d &plane_norm, V3d &line_start, V3d &line_end) {
+        plane_norm = plane_norm.normalize();
+        float plane_d = -plane_norm.dotProd(plane_point);
+        float ad = line_start.dotProd(plane_norm);
+        float bd = line_end.dotProd(plane_norm);
+        float t = (-plane_d - ad) / (bd - ad);
+        V3d line_slope = line_end - line_start;
+        V3d line_to_intersect = line_slope * t;
+        return line_start + line_to_intersect;
+    }
+
     M4x4 GetIdentityMat() {
         M4x4 m;
         m.m[0][0] = 1.0f;
@@ -87,6 +98,118 @@ namespace MathUtil {
         m.m[3][1] = y;
         m.m[3][2] = z;
         return m;
+    }
+
+    M4x4 MatPointAt(V3d &pos, V3d &target, V3d &up) {
+        V3d new_forward = target - pos;
+        new_forward.normalize();
+
+        V3d new_up = up - (new_forward * up.dotProd(new_forward));
+        new_up.normalize();
+
+        V3d new_right = new_up.crossProd(new_forward);
+
+        // Dimensioning/translation matrix
+        M4x4 m;
+        m.m[0][0] = new_right.x;
+        m.m[0][1] = new_right.y;
+        m.m[0][2] = new_right.z;
+        m.m[0][3] = 0.0f;
+        m.m[1][0] = new_up.x;
+        m.m[1][1] = new_up.y;
+        m.m[1][2] = new_up.z;
+        m.m[1][3] = 0.0f;
+        m.m[2][0] = new_forward.x;
+        m.m[2][1] = new_forward.y;
+        m.m[2][2] = new_forward.z;
+        m.m[2][3] = 0.0f;
+        m.m[3][0] = pos.x;
+        m.m[3][1] = pos.y;
+        m.m[3][2] = pos.z;
+        m.m[3][3] = 1.0f;
+        return m;
+    }
+
+    int TriangleClipPlane(V3d plane_point, V3d plane_norm, Triangle &in_triangle, Triangle &out_triangle1, Triangle &out_triangle2) {
+        plane_norm = plane_norm.normalize();
+
+        // Distance from point to plane (signed)
+        auto dist = [&](V3d &p) {
+            V3d n = p.normalize();
+            return (plane_norm.x * p.x + plane_norm.y * p.y + plane_norm.z * p.z - plane_norm.dotProd(plane_point));
+        };
+
+        // Inside if distance is positive
+        V3d *in_points[3];
+        V3d *out_points[3];
+        int in_count = 0;
+        int out_count = 0;
+
+        for (int i = 0; i < 3; ++i) {
+            float d = dist(in_triangle.p[i]);
+            if (d >= 0) in_points[in_count++] = &in_triangle.p[i];
+            else out_points[out_count++] = &in_triangle.p[i];
+        }
+
+        // Return # of triangles *potentially* inside screen
+        switch (in_count) {
+            case 0:
+                return 0; // All points outside screen, do not render
+            case 1:
+                out_triangle1.col = in_triangle.col;
+                out_triangle1.sym = in_triangle.sym;
+
+                out_triangle1.p[0] = *in_points[0]; // 1 point inside
+
+                // New points at intersection of triangle sides & plane
+                out_triangle1.p[1] = LineIntersectPlane(plane_point, plane_norm, *in_points[0], *out_points[0]);
+                out_triangle1.p[2] = LineIntersectPlane(plane_point, plane_norm, *in_points[0], *out_points[1]);
+                
+                return 1;
+            case 2:
+                out_triangle1.col = in_triangle.col;
+                out_triangle1.sym = in_triangle.sym;
+                out_triangle2.col = in_triangle.col;
+                out_triangle2.sym = in_triangle.sym;
+
+                // 1 outside point causes 2 new triangles
+                out_triangle1.p[0] = *in_points[0];
+                out_triangle1.p[1] = *in_points[1];
+                out_triangle1.p[2] = LineIntersectPlane(plane_point, plane_norm, *in_points[0], *out_points[0]);
+
+                out_triangle2.p[0] = *in_points[1];
+                out_triangle2.p[1] = out_triangle1.p[2];
+                out_triangle2.p[2] = LineIntersectPlane(plane_point, plane_norm, *in_points[1], *out_points[0]);
+
+                return 2; // 2 new triangles formed
+            case 3:
+                out_triangle1 = in_triangle;
+                return 1; // All points inside screen, return single valid triangle
+        }
+
+        return 0;
+    }
+
+    M4x4 InvertRotTransMat(M4x4 &m) {
+        // Invert rotation/translation matrices
+        M4x4 ret;
+        ret.m[0][0] = m.m[0][0];
+        ret.m[0][1] = m.m[1][0];
+        ret.m[0][2] = m.m[2][0];
+        ret.m[0][3] = 0.0f;
+        ret.m[1][0] = m.m[0][1];
+        ret.m[1][1] = m.m[1][1];
+        ret.m[1][2] = m.m[2][1];
+        ret.m[1][3] = 0.0f;
+        ret.m[2][0] = m.m[0][2];
+        ret.m[2][1] = m.m[1][2];
+        ret.m[2][2] = m.m[2][2];
+        ret.m[2][3] = 0.0f;
+        ret.m[3][0] = -(m.m[3][0] * ret.m[0][0] + m.m[3][1] * ret.m[1][0] + m.m[3][2] * ret.m[2][0]);
+        ret.m[3][1] = -(m.m[3][0] * ret.m[0][1] + m.m[3][1] * ret.m[1][1] + m.m[3][2] * ret.m[2][1]);
+        ret.m[3][2] = -(m.m[3][0] * ret.m[0][2] + m.m[3][1] * ret.m[1][2] + m.m[3][2] * ret.m[2][2]);
+        ret.m[3][3] = 1.0f;
+        return ret;
     }
 
     float max(float a, float b) {

@@ -2,14 +2,14 @@
 #include "V3d.hpp"
 #include "MathUtility.hpp"
 
-V3d V3d::operator+(V3d &o) {
+V3d V3d::operator+(V3d o) {
     return {
         this->x + o.x,
         this->y + o.y,
         this->z + o.z
     };
 }
-V3d V3d::operator-(V3d &o) {
+V3d V3d::operator-(V3d o) {
     return {
         this->x - o.x,
         this->y - o.y,
@@ -31,11 +31,11 @@ V3d V3d::operator/(float k) {
     };
 }
 
-float V3d::dotProd(V3d &o) {
+float V3d::dotProd(V3d o) {
     return MathUtil::DotProd(*this, o);
 }
 
-V3d V3d::crossProd(V3d &o) {
+V3d V3d::crossProd(V3d o) {
     return MathUtil::CrossProd(*this, o);
 }
 
