@@ -9,13 +9,8 @@
 #include "M4x4.hpp"
 #include "V3d.hpp"
 #include "Triangle.hpp"
+#include "V2d.hpp"
 
-// struct V3 { float x,y,z; };
-// struct Triangle { 
-//     V3d p[3];
-//     wchar_t sym;
-// 	short col;
-// };
 struct Mesh { 
     std::vector<Triangle> triangles;
 
@@ -48,14 +43,39 @@ struct Mesh {
         return true;
     }
 };
-// struct M4x4 { float m[4][4] = {0}; };
 
 class Engine3D : public olcConsoleGameEngine {
     public:
         Engine3D() { m_sAppName = L"Demo"; }
 
         bool OnUserCreate() override {
-            mesh_cube.LoadObject("../resources/axis.obj");
+            //mesh_cube.LoadObject("../resources/cube.obj");
+            mesh_cube.triangles = {
+    		    // SOUTH
+    		    { 0.0f, 0.0f, 0.0f, 1.0f,    0.0f, 1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,		0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f}, 
+    		    { 0.0f, 0.0f, 0.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,    1.0f, 0.0f, 0.0f, 1.0f,		0.0f, 1.0f,		1.0f, 0.0f,		1.0f, 1.0f},
+
+    		    // EAST           																			   
+    		    { 1.0f, 0.0f, 0.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,		0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f},
+    		    { 1.0f, 0.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f, 1.0f,		0.0f, 1.0f,		1.0f, 0.0f,		1.0f, 1.0f},
+
+    		    // NORTH           																			   
+    		    { 1.0f, 0.0f, 1.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f,		0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f},
+    		    { 1.0f, 0.0f, 1.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f, 1.0f,		0.0f, 1.0f,		1.0f, 0.0f,		1.0f, 1.0f},
+
+    		    // WEST            																			   
+    		    { 0.0f, 0.0f, 1.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f,    0.0f, 1.0f, 0.0f, 1.0f,		0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f},
+    		    { 0.0f, 0.0f, 1.0f, 1.0f,    0.0f, 1.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f, 1.0f,		0.0f, 1.0f,		1.0f, 0.0f,		1.0f, 1.0f},
+
+    		    // TOP             																			   
+    		    { 0.0f, 1.0f, 0.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,		0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f},
+    		    { 0.0f, 1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,		0.0f, 1.0f,		1.0f, 0.0f,		1.0f, 1.0f},
+
+    		    // BOTTOM          																			  
+    		    { 1.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 0.0f, 1.0f,		0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f},
+    		    { 1.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 0.0f, 1.0f,		0.0f, 1.0f,		1.0f, 0.0f,		1.0f, 1.0f},
+    		};
+            spr_tex1 = new olcSprite(L"../resources/Sword.spr");
 
             // Projection Matrix
             mat_proj = MathUtil::GetProjMat(90.0f, ((float) ScreenHeight()) / ((float) ScreenWidth()), 0.1f, 1000.0f);
@@ -97,7 +117,7 @@ class Engine3D : public olcConsoleGameEngine {
             M4x4 mat_cam = MathUtil::MatPointAt(cam, target, up);
             M4x4 mat_view = MathUtil::InvertRotTransMat(mat_cam);
 
-            std::vector<Triangle> triangles_to_render;
+            std::vector<Triangle> triangles_to_raster;
 
             // Draw triangles
             for (Triangle t : mesh_cube.triangles) {
@@ -107,6 +127,9 @@ class Engine3D : public olcConsoleGameEngine {
                 t_transform.p[0] = mat_world * t.p[0];
                 t_transform.p[1] = mat_world * t.p[1];
                 t_transform.p[2] = mat_world * t.p[2];
+                t_transform.t[0] = t.t[0];
+                t_transform.t[1] = t.t[1];
+                t_transform.t[2] = t.t[2];
 
                 // Calculate normal of t
                 V3d norm, line1, line2;
@@ -136,6 +159,9 @@ class Engine3D : public olcConsoleGameEngine {
                     t_viewed.p[0] = mat_view * t_transform.p[0];
                     t_viewed.p[1] = mat_view * t_transform.p[1];
                     t_viewed.p[2] = mat_view * t_transform.p[2];
+                    t_viewed.t[0] = t_transform.t[0];
+                    t_viewed.t[1] = t_transform.t[1];
+                    t_viewed.t[2] = t_transform.t[2];
 
                     // Clip against near plane (at most 2 triangles)
                     int clipped_triangle_count = 0;
@@ -149,6 +175,9 @@ class Engine3D : public olcConsoleGameEngine {
                         t_proj.p[2] = mat_proj * clipped[i].p[2];
                         t_proj.col = t_transform.col;
                         t_proj.sym = t_transform.sym;
+                        t_proj.t[0] = clipped[i].t[0];
+                        t_proj.t[1] = clipped[i].t[1];
+                        t_proj.t[2] = clipped[i].t[2];
 
                         // Invert x/y axis
                         t_proj.p[0].y *= -1.0f;
@@ -173,19 +202,19 @@ class Engine3D : public olcConsoleGameEngine {
                         t_proj.p[2].y *= 0.5f * (float) ScreenHeight();
 
                         // Store triangles for sorting
-                        triangles_to_render.push_back(t_proj);
+                        triangles_to_raster.push_back(t_proj);
                     }
                 }
             }
 
             // Sort triangles back to front
-            sort(triangles_to_render.begin(), triangles_to_render.end(), [](Triangle &t1, Triangle &t2) {
+            sort(triangles_to_raster.begin(), triangles_to_raster.end(), [](Triangle &t1, Triangle &t2) {
                 float z1 = (t1.p[0].z + t1.p[1].z + t1.p[2].z) / 3.0f;
                 float z2 = (t2.p[0].z + t2.p[1].z + t2.p[2].z) / 3.0f;
                 return z1 > z2;
             });
 
-            for (Triangle &t: triangles_to_render) {
+            for (Triangle &t: triangles_to_raster) {
                 // Clip triangles against screen edges
                 Triangle clipped[2];
                 std::list<Triangle> t_list;
@@ -222,18 +251,23 @@ class Engine3D : public olcConsoleGameEngine {
                 }
 
                 for (Triangle &t : t_list) {
-                    FillTriangle(
-                        t.p[0].x, t.p[0].y,
-                        t.p[1].x, t.p[1].y,
-                        t.p[2].x, t.p[2].y,
-                        t.sym, t.col
+                    TextureTriangle(t.p[0].x, t.p[0].y, t.t[0].u, t.t[0].v,
+                        t.p[1].x, t.p[1].y, t.t[1].u, t.t[1].v,
+                        t.p[2].x, t.p[2].y, t.t[2].u, t.t[2].v,
+                        spr_tex1
                     );
-                    // DrawTriangle(
+                    // FillTriangle(
                     //     t.p[0].x, t.p[0].y,
                     //     t.p[1].x, t.p[1].y,
                     //     t.p[2].x, t.p[2].y,
-                    //     PIXEL_SOLID, FG_BLACK
+                    //     t.sym, t.col
                     // );
+                    DrawTriangle(
+                        t.p[0].x, t.p[0].y,
+                        t.p[1].x, t.p[1].y,
+                        t.p[2].x, t.p[2].y,
+                        PIXEL_SOLID, FG_WHITE
+                    );
                 }
             }
             return true;
@@ -243,9 +277,10 @@ class Engine3D : public olcConsoleGameEngine {
         M4x4 mat_proj;
         V3d cam;
         V3d look_dir;
-        float theta;
+        float theta = 0;
+        float yaw = 0;
 
-        float yaw;
+        olcSprite *spr_tex1;
 
         CHAR_INFO GetColour(float lum) {
 	    	short bg_col, fg_col;
@@ -277,6 +312,129 @@ class Engine3D : public olcConsoleGameEngine {
 	    	c.Char.UnicodeChar = sym;
 	    	return c;
 	    }
+
+        void TextureTriangle(int x1, int y1, float u1, float v1, 
+            int x2, int y2, float u2, float v2, 
+            int x3, int y3, float u3, float v3, 
+            olcSprite *tex) {
+                if (y2 < y1) {
+                    std::swap(y1, y2);
+                    std::swap(x1, x2);
+                    std::swap(u1, u2);
+                    std::swap(v1, v2);
+                }
+                if (y3 < y1) {
+                    std::swap(y1, y3);
+                    std::swap(x1, x3);
+                    std::swap(u1, u3);
+                    std::swap(v1, v3);
+                }
+                if (y3 < y2) {
+                    std::swap(y2, y3);
+                    std::swap(x2, x3);
+                    std::swap(u2, u3);
+                    std::swap(v2, v3);
+                }
+                int dy1 = y2 - y1;
+                int dx1 = x2 - x1;
+                float dv1 = v2 - v1;
+                float du1 = u2 - u1;
+
+                int dy2 = y3 - y1;
+                int dx2 = x3 - x1;
+                float dv2 = v3 - v1;
+                float du2 = u3 - u1;
+
+                float tex_u, tex_v;
+
+                float dax_step = 0, dbx_step = 0,
+                du1_step = 0, dv1_step = 0,
+                du2_step = 0, dv2_step = 0;
+
+                if (dy1) dax_step = dx1 / ((float) abs(dy1));
+                if (dy2) dbx_step = dx2 / ((float) abs(dy2));
+
+                if (dy1) du1_step = du1 / ((float) abs(dy1));
+                if (dy1) dv1_step = dv1 / ((float) abs(dy1));
+
+                if (dy2) du2_step = du2 / ((float) abs(dy2));
+                if (dy2) dv2_step = dv2 / ((float) abs(dy2));
+
+                if (dy1) { // Top half of triangle (drawing from 1 vertex to 2 vertices)
+                    for (int i = y1; i <= y2; ++i) {
+                        int ax = x1 + ((float)(i - y1)) * dax_step;
+                        int bx = x1 + ((float)(i - y1)) * dbx_step;
+
+                        float tex_su = u1 + ((float)(i - y1)) * du1_step;
+                        float tex_sv = v1 + ((float)(i - y1)) * dv1_step;
+
+                        float tex_eu = u1 + ((float)(i - y1)) * du2_step;
+                        float tex_ev = v1 + ((float)(i - y1)) * dv2_step;
+
+                        if (ax > bx) {
+                            std::swap(ax, bx);
+                            std::swap(tex_su, tex_eu);
+                            std::swap(tex_sv, tex_ev);
+                        }
+
+                        tex_u = tex_su;
+                        tex_v = tex_sv;
+
+                        float tstep = 1.0f / ((float) (bx - ax));
+                        float t = 0.0f;
+
+                        for (int j = ax; j < bx; ++j) {
+                            tex_u = (1.0f - t) * tex_su + t * tex_eu;
+                            tex_v = (1.0f - t) * tex_sv + t * tex_ev;
+                            Draw(j, i, tex->SampleGlyph(tex_u, tex_v), tex->SampleColour(tex_u, tex_v));
+
+                            t += tstep;
+                        }
+                    }
+                }
+
+                dy1 = y3 - y2;
+                dx1 = x3 - x2;
+                dv1 = v3 - v2;
+                du1 = u3 - u2;
+                if (dy1) dax_step = dx1 / ((float) abs(dy1));
+                if (dy2) dbx_step = dx2 / ((float) abs(dy2));
+                
+                du1_step = 0, dv1_step = 0;
+                if (dy1) du1_step = du1 / ((float) abs(dy1));
+                if (dy1) dv1_step = dv1 / ((float) abs(dy1));
+
+                for (int i = y2; i <= y3; ++i) { // bottom half of triangle
+                    int ax = x2 + ((float) (i - y2)) * dax_step;
+                    int bx = x1 + ((float) (i - y1)) * dbx_step;
+
+                    float tex_su = u2 + ((float) (i - y2)) * du1_step;
+                    float tex_sv = v2 + ((float) (i - y2)) * dv1_step;
+
+                    float tex_eu = u1 + ((float) (i - y1)) * du2_step;
+                    float tex_ev = v1 + ((float) (i - y1)) * dv2_step;
+
+                    if (ax > bx) {
+                        std::swap(ax, bx);
+                        std::swap(tex_su, tex_eu);
+                        std::swap(tex_sv, tex_ev);
+                    }
+
+                    tex_u = tex_su;
+                    tex_v = tex_sv;
+
+                    float tstep = 1.0f / ((float) (bx - ax));
+                    float t = 0.0f;
+
+                    for (int j = ax; j < bx; ++j) {
+                        tex_u = (1.0f - t) * tex_su + t * tex_eu;
+                        tex_v = (1.0f - t) * tex_sv + t * tex_ev;
+                        Draw(j, i, tex->SampleGlyph(tex_u, tex_v), tex->SampleColour(tex_u, tex_v));
+
+                        t += tstep;
+                    }
+                }
+        }
 };
 
 int main() {

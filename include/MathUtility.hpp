@@ -11,7 +11,7 @@ namespace MathUtil {
 
     V3d CrossProd(V3d &v1, V3d &v2);
 
-    V3d LineIntersectPlane(V3d &plane_point, V3d &plane_norm, V3d &line_start, V3d &line_end);
+    V3d LineIntersectPlane(V3d &plane_point, V3d &plane_norm, V3d &line_start, V3d &line_end, float &t);
 
     M4x4 GetIdentityMat();
 

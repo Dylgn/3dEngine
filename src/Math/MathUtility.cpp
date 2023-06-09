@@ -23,12 +23,12 @@ namespace MathUtil {
         };
     }
 
-    V3d LineIntersectPlane(V3d &plane_point, V3d &plane_norm, V3d &line_start, V3d &line_end) {
+    V3d LineIntersectPlane(V3d &plane_point, V3d &plane_norm, V3d &line_start, V3d &line_end, float &t) {
         plane_norm = plane_norm.normalize();
         float plane_d = -plane_norm.dotProd(plane_point);
         float ad = line_start.dotProd(plane_norm);
         float bd = line_end.dotProd(plane_norm);
-        float t = (-plane_d - ad) / (bd - ad);
+        t = (-plane_d - ad) / (bd - ad);
         V3d line_slope = line_end - line_start;
         V3d line_to_intersect = line_slope * t;
         return line_start + line_to_intersect;
@@ -139,17 +139,30 @@ namespace MathUtil {
             return (plane_norm.x * p.x + plane_norm.y * p.y + plane_norm.z * p.z - plane_norm.dotProd(plane_point));
         };
 
+        // Points inside/outside of plane
         // Inside if distance is positive
         V3d *in_points[3];
         V3d *out_points[3];
         int in_count = 0;
         int out_count = 0;
+        // Texture coords
+        V2d *in_tex[3];
+        V2d *out_tex[3];
+        int in_tex_count = 0;
+        int out_tex_count = 0;
 
         for (int i = 0; i < 3; ++i) {
             float d = dist(in_triangle.p[i]);
-            if (d >= 0) in_points[in_count++] = &in_triangle.p[i];
-            else out_points[out_count++] = &in_triangle.p[i];
+            if (d >= 0) {
+                in_points[in_count++] = &in_triangle.p[i];
+                in_tex[in_tex_count++] = &in_triangle.t[i];
+            } else {
+                out_points[out_count++] = &in_triangle.p[i];
+                out_tex[out_tex_count++] = &in_triangle.t[i];
+            }
         }
+
+        float t;
 
         // Return # of triangles *potentially* inside screen
         switch (in_count) {
@@ -160,10 +173,15 @@ namespace MathUtil {
                 out_triangle1.sym = in_triangle.sym;
 
                 out_triangle1.p[0] = *in_points[0]; // 1 point inside
+                out_triangle1.t[0] = *in_tex[0];
 
                 // New points at intersection of triangle sides & plane
-                out_triangle1.p[1] = LineIntersectPlane(plane_point, plane_norm, *in_points[0], *out_points[0]);
-                out_triangle1.p[2] = LineIntersectPlane(plane_point, plane_norm, *in_points[0], *out_points[1]);
+                out_triangle1.p[1] = LineIntersectPlane(plane_point, plane_norm, *in_points[0], *out_points[0], t);
+                out_triangle1.t[1].u = t * (out_tex[0]->u - in_tex[0]->u) + in_tex[0]->u;
+                out_triangle1.t[1].v = t * (out_tex[0]->v - in_tex[0]->v) + in_tex[0]->v;
+                out_triangle1.p[2] = LineIntersectPlane(plane_point, plane_norm, *in_points[0], *out_points[1], t);
+                out_triangle1.t[2].u = t * (out_tex[0]->u - in_tex[0]->u) + in_tex[0]->u;
+                out_triangle1.t[2].v = t * (out_tex[0]->v - in_tex[0]->v) + in_tex[0]->v;
                 
                 return 1;
             case 2:
@@ -175,11 +193,19 @@ namespace MathUtil {
                 // 1 outside point causes 2 new triangles
                 out_triangle1.p[0] = *in_points[0];
                 out_triangle1.p[1] = *in_points[1];
-                out_triangle1.p[2] = LineIntersectPlane(plane_point, plane_norm, *in_points[0], *out_points[0]);
+                out_triangle1.t[0] = *in_tex[0];
+                out_triangle1.t[1] = *in_tex[1];
+                out_triangle1.p[2] = LineIntersectPlane(plane_point, plane_norm, *in_points[0], *out_points[0], t);
+                out_triangle1.t[2].u = t * (out_tex[0]->u - in_tex[0]->u) + in_tex[0]->u;
+                out_triangle1.t[2].v = t * (out_tex[0]->v - in_tex[0]->v) + in_tex[0]->v;
 
                 out_triangle2.p[0] = *in_points[1];
                 out_triangle2.p[1] = out_triangle1.p[2];
-                out_triangle2.p[2] = LineIntersectPlane(plane_point, plane_norm, *in_points[1], *out_points[0]);
+                out_triangle2.t[0] = *in_tex[0];
+                out_triangle2.t[1] = *in_tex[1];
+                out_triangle2.p[2] = LineIntersectPlane(plane_point, plane_norm, *in_points[1], *out_points[0], t);
+                out_triangle2.t[2].u = t * (out_tex[0]->u - in_tex[0]->u) + in_tex[0]->u;
+                out_triangle2.t[2].v = t * (out_tex[0]->v - in_tex[0]->v) + in_tex[0]->v;
 
                 return 2; // 2 new triangles formed
             case 3:
