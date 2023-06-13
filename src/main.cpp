@@ -52,30 +52,32 @@ class Engine3D : public olcConsoleGameEngine {
             //mesh_cube.LoadObject("../resources/cube.obj");
             mesh_cube.triangles = {
     		    // SOUTH
-    		    { 0.0f, 0.0f, 0.0f, 1.0f,    0.0f, 1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,		0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f}, 
-    		    { 0.0f, 0.0f, 0.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,    1.0f, 0.0f, 0.0f, 1.0f,		0.0f, 1.0f,		1.0f, 0.0f,		1.0f, 1.0f},
+    		    { 0.0f, 0.0f, 0.0f, 1.0f,    0.0f, 1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 1.0f}, 
+    		    { 0.0f, 0.0f, 0.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,    1.0f, 0.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f},
 
     		    // EAST           																			   
-    		    { 1.0f, 0.0f, 0.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,		0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f},
-    		    { 1.0f, 0.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f, 1.0f,		0.0f, 1.0f,		1.0f, 0.0f,		1.0f, 1.0f},
+    		    { 1.0f, 0.0f, 0.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,     0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 1.0f},
+    		    { 1.0f, 0.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f, 1.0f,     0.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f},
 
     		    // NORTH           																			   
-    		    { 1.0f, 0.0f, 1.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f,		0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f},
-    		    { 1.0f, 0.0f, 1.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f, 1.0f,		0.0f, 1.0f,		1.0f, 0.0f,		1.0f, 1.0f},
+    		    { 1.0f, 0.0f, 1.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f,     0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 1.0f},
+    		    { 1.0f, 0.0f, 1.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f, 1.0f,     0.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f},
 
     		    // WEST            																			   
-    		    { 0.0f, 0.0f, 1.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f,    0.0f, 1.0f, 0.0f, 1.0f,		0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f},
-    		    { 0.0f, 0.0f, 1.0f, 1.0f,    0.0f, 1.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f, 1.0f,		0.0f, 1.0f,		1.0f, 0.0f,		1.0f, 1.0f},
+    		    { 0.0f, 0.0f, 1.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f,    0.0f, 1.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 1.0f},
+    		    { 0.0f, 0.0f, 1.0f, 1.0f,    0.0f, 1.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f},
 
     		    // TOP             																			   
-    		    { 0.0f, 1.0f, 0.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,		0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f},
-    		    { 0.0f, 1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,		0.0f, 1.0f,		1.0f, 0.0f,		1.0f, 1.0f},
+    		    { 0.0f, 1.0f, 0.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,     0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 1.0f},
+    		    { 0.0f, 1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f},
 
     		    // BOTTOM          																			  
-    		    { 1.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 0.0f, 1.0f,		0.0f, 1.0f,		0.0f, 0.0f,		1.0f, 0.0f},
-    		    { 1.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 0.0f, 1.0f,		0.0f, 1.0f,		1.0f, 0.0f,		1.0f, 1.0f},
+    		    { 1.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 1.0f},
+    		    { 1.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f},
     		};
             spr_tex1 = new olcSprite(L"../resources/Sword.spr");
+
+            pDebthBuffer = new float[ScreenWidth() * ScreenHeight()];
 
             // Projection Matrix
             mat_proj = MathUtil::GetProjMat(90.0f, ((float) ScreenHeight()) / ((float) ScreenWidth()), 0.1f, 1000.0f);
@@ -96,6 +98,9 @@ class Engine3D : public olcConsoleGameEngine {
 
             // Clear screen
             Fill(0,0, ScreenWidth(), ScreenHeight(), PIXEL_SOLID, FG_BLACK);
+
+            // Clear Depth buffer
+            for (int i = 0; i < ScreenWidth() * ScreenHeight(); ++i) pDebthBuffer[i] = 0.0f;
 
             // Rotation matrices
             M4x4 mat_rot_z, mat_rot_x;
@@ -159,6 +164,8 @@ class Engine3D : public olcConsoleGameEngine {
                     t_viewed.p[0] = mat_view * t_transform.p[0];
                     t_viewed.p[1] = mat_view * t_transform.p[1];
                     t_viewed.p[2] = mat_view * t_transform.p[2];
+                    t_viewed.sym = t_transform.sym;
+                    t_viewed.col = t_transform.col;
                     t_viewed.t[0] = t_transform.t[0];
                     t_viewed.t[1] = t_transform.t[1];
                     t_viewed.t[2] = t_transform.t[2];
@@ -173,21 +180,32 @@ class Engine3D : public olcConsoleGameEngine {
                         t_proj.p[0] = mat_proj * clipped[i].p[0];
                         t_proj.p[1] = mat_proj * clipped[i].p[1];
                         t_proj.p[2] = mat_proj * clipped[i].p[2];
-                        t_proj.col = t_transform.col;
-                        t_proj.sym = t_transform.sym;
+                        t_proj.col = clipped[i].col;
+                        t_proj.sym = clipped[i].sym;
                         t_proj.t[0] = clipped[i].t[0];
                         t_proj.t[1] = clipped[i].t[1];
                         t_proj.t[2] = clipped[i].t[2];
 
-                        // Invert x/y axis
-                        t_proj.p[0].y *= -1.0f;
-                        t_proj.p[1].y *= -1.0f;
-                        t_proj.p[2].y *= -1.0f;
+                        // Fix distortion of textures caused by perspective
+                        t_proj.t[0].u = t_proj.t[0].u / t_proj.p[0].w;
+                        t_proj.t[1].u = t_proj.t[1].u / t_proj.p[1].w;
+                        t_proj.t[2].u = t_proj.t[2].u / t_proj.p[2].w;
+                        t_proj.t[0].v = t_proj.t[0].v / t_proj.p[0].w;
+                        t_proj.t[1].v = t_proj.t[1].v / t_proj.p[1].w;
+                        t_proj.t[2].v = t_proj.t[2].v / t_proj.p[2].w;
+                        t_proj.t[0].w = 1.0f / t_proj.p[0].w;
+                        t_proj.t[1].w = 1.0f / t_proj.p[1].w;
+                        t_proj.t[2].w = 1.0f / t_proj.p[2].w;
 
                         // Normalize
                         t_proj.p[0] = t_proj.p[0] / t_proj.p[0].w;
                         t_proj.p[1] = t_proj.p[1] / t_proj.p[1].w;
                         t_proj.p[2] = t_proj.p[2] / t_proj.p[2].w;
+
+                        // Invert y axis
+                        t_proj.p[0].y *= -1.0f;
+                        t_proj.p[1].y *= -1.0f;
+                        t_proj.p[2].y *= -1.0f;
 
                         // Offset vertices into visible normalized space
                         V3d view_offset = { 1, 1, 0 };
@@ -208,11 +226,11 @@ class Engine3D : public olcConsoleGameEngine {
             }
 
             // Sort triangles back to front
-            sort(triangles_to_raster.begin(), triangles_to_raster.end(), [](Triangle &t1, Triangle &t2) {
-                float z1 = (t1.p[0].z + t1.p[1].z + t1.p[2].z) / 3.0f;
-                float z2 = (t2.p[0].z + t2.p[1].z + t2.p[2].z) / 3.0f;
-                return z1 > z2;
-            });
+            // sort(triangles_to_raster.begin(), triangles_to_raster.end(), [](Triangle &t1, Triangle &t2) {
+            //     float z1 = (t1.p[0].z + t1.p[1].z + t1.p[2].z) / 3.0f;
+            //     float z2 = (t2.p[0].z + t2.p[1].z + t2.p[2].z) / 3.0f;
+            //     return z1 > z2;
+            // });
 
             for (Triangle &t: triangles_to_raster) {
                 // Clip triangles against screen edges
@@ -251,9 +269,9 @@ class Engine3D : public olcConsoleGameEngine {
                 }
 
                 for (Triangle &t : t_list) {
-                    TextureTriangle(t.p[0].x, t.p[0].y, t.t[0].u, t.t[0].v,
-                        t.p[1].x, t.p[1].y, t.t[1].u, t.t[1].v,
-                        t.p[2].x, t.p[2].y, t.t[2].u, t.t[2].v,
+                    TextureTriangle(t.p[0].x, t.p[0].y, t.t[0].u, t.t[0].v, t.t[0].w,
+                        t.p[1].x, t.p[1].y, t.t[1].u, t.t[1].v, t.t[1].w,
+                        t.p[2].x, t.p[2].y, t.t[2].u, t.t[2].v, t.t[2].w,
                         spr_tex1
                     );
                     // FillTriangle(
@@ -281,6 +299,7 @@ class Engine3D : public olcConsoleGameEngine {
         float yaw = 0;
 
         olcSprite *spr_tex1;
+        float *pDebthBuffer = nullptr;
 
         CHAR_INFO GetColour(float lum) {
 	    	short bg_col, fg_col;
@@ -313,52 +332,60 @@ class Engine3D : public olcConsoleGameEngine {
 	    	return c;
 	    }
 
-        void TextureTriangle(int x1, int y1, float u1, float v1, 
-            int x2, int y2, float u2, float v2, 
-            int x3, int y3, float u3, float v3, 
+        void TextureTriangle(int x1, int y1, float u1, float v1, float w1,
+            int x2, int y2, float u2, float v2, float w2,
+            int x3, int y3, float u3, float v3, float w3,
             olcSprite *tex) {
                 if (y2 < y1) {
                     std::swap(y1, y2);
                     std::swap(x1, x2);
                     std::swap(u1, u2);
                     std::swap(v1, v2);
+                    std::swap(w1, w2);
                 }
                 if (y3 < y1) {
                     std::swap(y1, y3);
                     std::swap(x1, x3);
                     std::swap(u1, u3);
                     std::swap(v1, v3);
+                    std::swap(w1, w3);
                 }
                 if (y3 < y2) {
                     std::swap(y2, y3);
                     std::swap(x2, x3);
                     std::swap(u2, u3);
                     std::swap(v2, v3);
+                    std::swap(w2, w3);
                 }
                 int dy1 = y2 - y1;
                 int dx1 = x2 - x1;
                 float dv1 = v2 - v1;
                 float du1 = u2 - u1;
+                float dw1 = w2 - w1;
 
                 int dy2 = y3 - y1;
                 int dx2 = x3 - x1;
                 float dv2 = v3 - v1;
                 float du2 = u3 - u1;
+                float dw2 = w3 - w1;
 
-                float tex_u, tex_v;
+                float tex_u, tex_v, tex_w;
 
                 float dax_step = 0, dbx_step = 0,
                 du1_step = 0, dv1_step = 0,
-                du2_step = 0, dv2_step = 0;
+                du2_step = 0, dv2_step = 0,
+                dw1_step = 0, dw2_step = 0;
 
                 if (dy1) dax_step = dx1 / ((float) abs(dy1));
                 if (dy2) dbx_step = dx2 / ((float) abs(dy2));
 
                 if (dy1) du1_step = du1 / ((float) abs(dy1));
                 if (dy1) dv1_step = dv1 / ((float) abs(dy1));
+                if (dy1) dw1_step = dw1 / ((float) abs(dy1));
 
                 if (dy2) du2_step = du2 / ((float) abs(dy2));
                 if (dy2) dv2_step = dv2 / ((float) abs(dy2));
+                if (dy2) dw2_step = dw2 / ((float) abs(dy2));
 
                 if (dy1) { // Top half of triangle (drawing from 1 vertex to 2 vertices)
                     for (int i = y1; i <= y2; ++i) {
@@ -367,18 +394,22 @@ class Engine3D : public olcConsoleGameEngine {
 
                         float tex_su = u1 + ((float)(i - y1)) * du1_step;
                         float tex_sv = v1 + ((float)(i - y1)) * dv1_step;
+                        float tex_sw = w1 + ((float)(i - y1)) * dw1_step;
 
                         float tex_eu = u1 + ((float)(i - y1)) * du2_step;
                         float tex_ev = v1 + ((float)(i - y1)) * dv2_step;
+                        float tex_ew = w1 + ((float)(i - y1)) * dw2_step;
 
                         if (ax > bx) {
                             std::swap(ax, bx);
                             std::swap(tex_su, tex_eu);
                             std::swap(tex_sv, tex_ev);
+                            std::swap(tex_sw, tex_ew);
                         }
 
                         tex_u = tex_su;
                         tex_v = tex_sv;
+                        tex_w = tex_sw;
 
                         float tstep = 1.0f / ((float) (bx - ax));
                         float t = 0.0f;
@@ -386,7 +417,12 @@ class Engine3D : public olcConsoleGameEngine {
                         for (int j = ax; j < bx; ++j) {
                             tex_u = (1.0f - t) * tex_su + t * tex_eu;
                             tex_v = (1.0f - t) * tex_sv + t * tex_ev;
-                            Draw(j, i, tex->SampleGlyph(tex_u, tex_v), tex->SampleColour(tex_u, tex_v));
+                            tex_w = (1.0f - t) * tex_sw + t * tex_ew;
+                            // Only draw if greater than depth buffer (in front of whats on screen)
+                            if (tex_w > pDebthBuffer[i * ScreenWidth() + j]) {
+                                Draw(j, i, tex->SampleGlyph(tex_u / tex_w, tex_v / tex_w), tex->SampleColour(tex_u / tex_w, tex_v / tex_w));
+                                pDebthBuffer[i * ScreenWidth() + j] = tex_w;
+                            }
 
                             t += tstep;
                         }
@@ -397,12 +433,15 @@ class Engine3D : public olcConsoleGameEngine {
                 dx1 = x3 - x2;
                 dv1 = v3 - v2;
                 du1 = u3 - u2;
+                dw1 = w3 - w2;
+
                 if (dy1) dax_step = dx1 / ((float) abs(dy1));
                 if (dy2) dbx_step = dx2 / ((float) abs(dy2));
                 
                 du1_step = 0, dv1_step = 0;
                 if (dy1) du1_step = du1 / ((float) abs(dy1));
                 if (dy1) dv1_step = dv1 / ((float) abs(dy1));
+                if (dy1) dw1_step = dw1 / ((float) abs(dy1));
 
                 for (int i = y2; i <= y3; ++i) { // bottom half of triangle
                     int ax = x2 + ((float) (i - y2)) * dax_step;
@@ -410,18 +449,22 @@ class Engine3D : public olcConsoleGameEngine {
 
                     float tex_su = u2 + ((float) (i - y2)) * du1_step;
                     float tex_sv = v2 + ((float) (i - y2)) * dv1_step;
+                    float tex_sw = w2 + ((float) (i - y2)) * dw1_step;
 
                     float tex_eu = u1 + ((float) (i - y1)) * du2_step;
                     float tex_ev = v1 + ((float) (i - y1)) * dv2_step;
+                    float tex_ew = w1 + ((float) (i - y1)) * dw2_step;
 
                     if (ax > bx) {
                         std::swap(ax, bx);
                         std::swap(tex_su, tex_eu);
                         std::swap(tex_sv, tex_ev);
+                        std::swap(tex_sw, tex_ew);
                     }
 
                     tex_u = tex_su;
                     tex_v = tex_sv;
+                    tex_w = tex_sw;
 
                     float tstep = 1.0f / ((float) (bx - ax));
                     float t = 0.0f;
@@ -429,7 +472,11 @@ class Engine3D : public olcConsoleGameEngine {
                     for (int j = ax; j < bx; ++j) {
                         tex_u = (1.0f - t) * tex_su + t * tex_eu;
                         tex_v = (1.0f - t) * tex_sv + t * tex_ev;
-                        Draw(j, i, tex->SampleGlyph(tex_u, tex_v), tex->SampleColour(tex_u, tex_v));
+                        tex_w = (1.0f - t) * tex_sw + t * tex_ew;
+                        if (tex_w > pDebthBuffer[i * ScreenWidth() + j]) {
+                            Draw(j, i, tex->SampleGlyph(tex_u / tex_w, tex_v / tex_w), tex->SampleColour(tex_u / tex_w, tex_v / tex_w));
+                            pDebthBuffer[i * ScreenWidth() + j] = tex_w;
+                        }
 
                         t += tstep;
                     }

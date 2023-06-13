@@ -179,9 +179,11 @@ namespace MathUtil {
                 out_triangle1.p[1] = LineIntersectPlane(plane_point, plane_norm, *in_points[0], *out_points[0], t);
                 out_triangle1.t[1].u = t * (out_tex[0]->u - in_tex[0]->u) + in_tex[0]->u;
                 out_triangle1.t[1].v = t * (out_tex[0]->v - in_tex[0]->v) + in_tex[0]->v;
+                out_triangle1.t[1].w = t * (out_tex[0]->w - in_tex[0]->w) + in_tex[0]->w;
                 out_triangle1.p[2] = LineIntersectPlane(plane_point, plane_norm, *in_points[0], *out_points[1], t);
-                out_triangle1.t[2].u = t * (out_tex[0]->u - in_tex[0]->u) + in_tex[0]->u;
-                out_triangle1.t[2].v = t * (out_tex[0]->v - in_tex[0]->v) + in_tex[0]->v;
+                out_triangle1.t[2].u = t * (out_tex[1]->u - in_tex[0]->u) + in_tex[0]->u;
+                out_triangle1.t[2].v = t * (out_tex[1]->v - in_tex[0]->v) + in_tex[0]->v;
+                out_triangle1.t[2].w = t * (out_tex[1]->w - in_tex[0]->w) + in_tex[0]->w;
                 
                 return 1;
             case 2:
@@ -198,14 +200,16 @@ namespace MathUtil {
                 out_triangle1.p[2] = LineIntersectPlane(plane_point, plane_norm, *in_points[0], *out_points[0], t);
                 out_triangle1.t[2].u = t * (out_tex[0]->u - in_tex[0]->u) + in_tex[0]->u;
                 out_triangle1.t[2].v = t * (out_tex[0]->v - in_tex[0]->v) + in_tex[0]->v;
+                out_triangle1.t[2].w = t * (out_tex[0]->w - in_tex[0]->w) + in_tex[0]->w;
 
                 out_triangle2.p[0] = *in_points[1];
                 out_triangle2.p[1] = out_triangle1.p[2];
-                out_triangle2.t[0] = *in_tex[0];
-                out_triangle2.t[1] = *in_tex[1];
+                out_triangle2.t[0] = *in_tex[1];
+                out_triangle2.t[1] = out_triangle1.t[2];
                 out_triangle2.p[2] = LineIntersectPlane(plane_point, plane_norm, *in_points[1], *out_points[0], t);
-                out_triangle2.t[2].u = t * (out_tex[0]->u - in_tex[0]->u) + in_tex[0]->u;
-                out_triangle2.t[2].v = t * (out_tex[0]->v - in_tex[0]->v) + in_tex[0]->v;
+                out_triangle2.t[2].u = t * (out_tex[0]->u - in_tex[1]->u) + in_tex[1]->u;
+                out_triangle2.t[2].v = t * (out_tex[0]->v - in_tex[1]->v) + in_tex[1]->v;
+                out_triangle2.t[2].w = t * (out_tex[0]->w - in_tex[1]->w) + in_tex[1]->w;
 
                 return 2; // 2 new triangles formed
             case 3:
