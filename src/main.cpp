@@ -129,12 +129,8 @@ class Engine3D : public olcConsoleGameEngine {
                 Triangle t_proj, t_transform, t_viewed;
 
                 // Transform with world matrix
-                t_transform.p[0] = mat_world * t.p[0];
-                t_transform.p[1] = mat_world * t.p[1];
-                t_transform.p[2] = mat_world * t.p[2];
-                t_transform.t[0] = t.t[0];
-                t_transform.t[1] = t.t[1];
-                t_transform.t[2] = t.t[2];
+                t_transform.copyPoints(t.multPoints(mat_world));
+                t_transform.copyTexture(t);
 
                 // Calculate normal of t
                 V3d norm, line1, line2;
@@ -161,14 +157,10 @@ class Engine3D : public olcConsoleGameEngine {
 				    t_transform.sym = c.Char.UnicodeChar;
 
                     // World space to view space
-                    t_viewed.p[0] = mat_view * t_transform.p[0];
-                    t_viewed.p[1] = mat_view * t_transform.p[1];
-                    t_viewed.p[2] = mat_view * t_transform.p[2];
+                    t_viewed.copyPoints(t_transform.multPoints(mat_view));
                     t_viewed.sym = t_transform.sym;
                     t_viewed.col = t_transform.col;
-                    t_viewed.t[0] = t_transform.t[0];
-                    t_viewed.t[1] = t_transform.t[1];
-                    t_viewed.t[2] = t_transform.t[2];
+                    t_viewed.copyTexture(t_transform);
 
                     // Clip against near plane (at most 2 triangles)
                     int clipped_triangle_count = 0;
@@ -177,30 +169,20 @@ class Engine3D : public olcConsoleGameEngine {
 
                     for (int i = 0; i < clipped_triangle_count; ++i) {
                         // Project into screen space
-                        t_proj.p[0] = mat_proj * clipped[i].p[0];
-                        t_proj.p[1] = mat_proj * clipped[i].p[1];
-                        t_proj.p[2] = mat_proj * clipped[i].p[2];
+                        t_proj.copyPoints(clipped[i].multPoints(mat_proj));
                         t_proj.col = clipped[i].col;
                         t_proj.sym = clipped[i].sym;
-                        t_proj.t[0] = clipped[i].t[0];
-                        t_proj.t[1] = clipped[i].t[1];
-                        t_proj.t[2] = clipped[i].t[2];
+                        t_proj.copyTexture(clipped[i]);
 
                         // Fix distortion of textures caused by perspective
-                        t_proj.t[0].u = t_proj.t[0].u / t_proj.p[0].w;
-                        t_proj.t[1].u = t_proj.t[1].u / t_proj.p[1].w;
-                        t_proj.t[2].u = t_proj.t[2].u / t_proj.p[2].w;
-                        t_proj.t[0].v = t_proj.t[0].v / t_proj.p[0].w;
-                        t_proj.t[1].v = t_proj.t[1].v / t_proj.p[1].w;
-                        t_proj.t[2].v = t_proj.t[2].v / t_proj.p[2].w;
-                        t_proj.t[0].w = 1.0f / t_proj.p[0].w;
-                        t_proj.t[1].w = 1.0f / t_proj.p[1].w;
-                        t_proj.t[2].w = 1.0f / t_proj.p[2].w;
+                        for (int i = 0; i < 3; ++i) {
+                            t_proj.t[i].u = t_proj.t[i].u / t_proj.p[i].w;
+                            t_proj.t[i].v = t_proj.t[i].v / t_proj.p[i].w;
+                            t_proj.t[i].w = 1.0f / t_proj.p[i].w;
+                        }
 
                         // Normalize
-                        t_proj.p[0] = t_proj.p[0] / t_proj.p[0].w;
-                        t_proj.p[1] = t_proj.p[1] / t_proj.p[1].w;
-                        t_proj.p[2] = t_proj.p[2] / t_proj.p[2].w;
+                        t_proj.normalizePoints();
 
                         // Invert y axis
                         t_proj.p[0].y *= -1.0f;
@@ -209,9 +191,7 @@ class Engine3D : public olcConsoleGameEngine {
 
                         // Offset vertices into visible normalized space
                         V3d view_offset = { 1, 1, 0 };
-                        t_proj.p[0] = t_proj.p[0] + view_offset;
-                        t_proj.p[1] = t_proj.p[1] + view_offset;
-                        t_proj.p[2] = t_proj.p[2] + view_offset;
+                        t_proj.copyPoints(t_proj.addPoints(view_offset));
                         t_proj.p[0].x *= 0.5f * (float) ScreenWidth();
                         t_proj.p[0].y *= 0.5f * (float) ScreenHeight();
                         t_proj.p[1].x *= 0.5f * (float) ScreenWidth();
@@ -280,12 +260,12 @@ class Engine3D : public olcConsoleGameEngine {
                     //     t.p[2].x, t.p[2].y,
                     //     t.sym, t.col
                     // );
-                    DrawTriangle(
-                        t.p[0].x, t.p[0].y,
-                        t.p[1].x, t.p[1].y,
-                        t.p[2].x, t.p[2].y,
-                        PIXEL_SOLID, FG_WHITE
-                    );
+                    // DrawTriangle(
+                    //     t.p[0].x, t.p[0].y,
+                    //     t.p[1].x, t.p[1].y,
+                    //     t.p[2].x, t.p[2].y,
+                    //     PIXEL_SOLID, FG_WHITE
+                    // );
                 }
             }
             return true;
