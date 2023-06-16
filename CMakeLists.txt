@@ -15,6 +15,8 @@ set(SOURCES
 
     src/Render/Geometry.cpp
     src/Render/Mesh.cpp
+
+    src/Render/Window.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
