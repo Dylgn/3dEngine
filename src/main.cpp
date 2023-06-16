@@ -249,9 +249,9 @@ class Engine3D : public olcConsoleGameEngine {
                 }
 
                 for (Triangle &t : t_list) {
-                    TextureTriangle(t.p[0].x, t.p[0].y, t.t[0].u, t.t[0].v, t.t[0].w,
-                        t.p[1].x, t.p[1].y, t.t[1].u, t.t[1].v, t.t[1].w,
-                        t.p[2].x, t.p[2].y, t.t[2].u, t.t[2].v, t.t[2].w,
+                    TextureTriangle(t.p[0], t.t[0],
+                        t.p[1], t.t[1],
+                        t.p[2], t.t[2],
                         spr_tex1
                     );
                     // FillTriangle(
@@ -312,96 +312,87 @@ class Engine3D : public olcConsoleGameEngine {
 	    	return c;
 	    }
 
-        void TextureTriangle(int x1, int y1, float u1, float v1, float w1,
-            int x2, int y2, float u2, float v2, float w2,
-            int x3, int y3, float u3, float v3, float w3,
-            olcSprite *tex) {
-                if (y2 < y1) {
-                    std::swap(y1, y2);
-                    std::swap(x1, x2);
-                    std::swap(u1, u2);
-                    std::swap(v1, v2);
-                    std::swap(w1, w2);
+        void TextureTriangle(V3d p1, V2d t1, V3d p2, V2d t2, V3d p3, V2d t3, olcSprite *tex) {
+                if (p2.y < p1.y) {
+                    std::swap(p1, p2);
+                    std::swap(t1, t2);
                 }
-                if (y3 < y1) {
-                    std::swap(y1, y3);
-                    std::swap(x1, x3);
-                    std::swap(u1, u3);
-                    std::swap(v1, v3);
-                    std::swap(w1, w3);
+                if (p3.y < p1.y) {
+                    std::swap(p1, p3);
+                    std::swap(t1, t3);
                 }
-                if (y3 < y2) {
-                    std::swap(y2, y3);
-                    std::swap(x2, x3);
-                    std::swap(u2, u3);
-                    std::swap(v2, v3);
-                    std::swap(w2, w3);
+                if (p3.y < p2.y) {
+                    std::swap(p2, p3);
+                    std::swap(t2, t3);
                 }
-                int dy1 = y2 - y1;
-                int dx1 = x2 - x1;
-                float dv1 = v2 - v1;
-                float du1 = u2 - u1;
-                float dw1 = w2 - w1;
 
-                int dy2 = y3 - y1;
-                int dx2 = x3 - x1;
-                float dv2 = v3 - v1;
-                float du2 = u3 - u1;
-                float dw2 = w3 - w1;
+                V2d dt1{ t2.u - t1.u, t2.v - t1.v, t2.w - t1.w};
+                V2d dt2{ t3.u - t1.u, t3.v - t1.v, t3.w - t1.w};
 
-                float tex_u, tex_v, tex_w;
+                int dx[] = { ((int) (p2.x - p1.x)), ((int) (p3.x - p1.x)) };
+                int dy[] = { ((int) (p2.y - p1.y)), ((int) (p3.y - p1.y)) };
 
-                float dax_step = 0, dbx_step = 0,
-                du1_step = 0, dv1_step = 0,
-                du2_step = 0, dv2_step = 0,
-                dw1_step = 0, dw2_step = 0;
+                V2d tex_cur;
 
-                if (dy1) dax_step = dx1 / ((float) abs(dy1));
-                if (dy2) dbx_step = dx2 / ((float) abs(dy2));
+                V2d dt1_step;
+                V2d dt2_step;
+                float dax_step = 0, dbx_step = 0;
 
-                if (dy1) du1_step = du1 / ((float) abs(dy1));
-                if (dy1) dv1_step = dv1 / ((float) abs(dy1));
-                if (dy1) dw1_step = dw1 / ((float) abs(dy1));
+                if (dy[0]) {
+                    dax_step = dx[0] / ((float) abs(dy[0]));
+                    dt1_step = {
+                        dt1.u / ((float) abs(dy[0])),
+                        dt1.v / ((float) abs(dy[0])),
+                        dt1.w / ((float) abs(dy[0]))
+                    };
+                }
+                if (dy[1]) {
+                    dbx_step = dx[1] / ((float) abs(dy[1]));
+                    dt2_step = {
+                        dt2.u / ((float) abs(dy[1])),
+                        dt2.v / ((float) abs(dy[1])),
+                        dt2.w / ((float) abs(dy[1]))
+                    };
+                }
 
-                if (dy2) du2_step = du2 / ((float) abs(dy2));
-                if (dy2) dv2_step = dv2 / ((float) abs(dy2));
-                if (dy2) dw2_step = dw2 / ((float) abs(dy2));
+                if (dy[0]) { // Top half of triangle (drawing from 1 vertex to 2 vertices)
+                    for (int i = p1.y; i <= p2.y; ++i) {
+                        float di = i - p1.y;
+                        int ax = p1.x + di * dax_step;
+                        int bx = p1.x + di * dbx_step;
 
-                if (dy1) { // Top half of triangle (drawing from 1 vertex to 2 vertices)
-                    for (int i = y1; i <= y2; ++i) {
-                        int ax = x1 + ((float)(i - y1)) * dax_step;
-                        int bx = x1 + ((float)(i - y1)) * dbx_step;
+                        V2d tex_start{
+                            t1.u + di * dt1_step.u,
+                            t1.v + di * dt1_step.v,
+                            t1.w + di * dt1_step.w
+                        };
 
-                        float tex_su = u1 + ((float)(i - y1)) * du1_step;
-                        float tex_sv = v1 + ((float)(i - y1)) * dv1_step;
-                        float tex_sw = w1 + ((float)(i - y1)) * dw1_step;
-
-                        float tex_eu = u1 + ((float)(i - y1)) * du2_step;
-                        float tex_ev = v1 + ((float)(i - y1)) * dv2_step;
-                        float tex_ew = w1 + ((float)(i - y1)) * dw2_step;
+                        V2d tex_end{
+                            t1.u + di * dt2_step.u,
+                            t1.v + di * dt2_step.v,
+                            t1.w + di * dt2_step.w
+                        };
 
                         if (ax > bx) {
                             std::swap(ax, bx);
-                            std::swap(tex_su, tex_eu);
-                            std::swap(tex_sv, tex_ev);
-                            std::swap(tex_sw, tex_ew);
+                            std::swap(tex_start, tex_end);
                         }
 
-                        tex_u = tex_su;
-                        tex_v = tex_sv;
-                        tex_w = tex_sw;
+                        tex_cur = { tex_start.u, tex_start.v, tex_start.w };
 
                         float tstep = 1.0f / ((float) (bx - ax));
                         float t = 0.0f;
 
                         for (int j = ax; j < bx; ++j) {
-                            tex_u = (1.0f - t) * tex_su + t * tex_eu;
-                            tex_v = (1.0f - t) * tex_sv + t * tex_ev;
-                            tex_w = (1.0f - t) * tex_sw + t * tex_ew;
+                            tex_cur = {
+                                (1.0f - t) * tex_start.u + t * tex_end.u,
+                                (1.0f - t) * tex_start.v + t * tex_end.v,
+                                (1.0f - t) * tex_start.w + t * tex_end.w
+                            };
                             // Only draw if greater than depth buffer (in front of whats on screen)
-                            if (tex_w > pDebthBuffer[i * ScreenWidth() + j]) {
-                                Draw(j, i, tex->SampleGlyph(tex_u / tex_w, tex_v / tex_w), tex->SampleColour(tex_u / tex_w, tex_v / tex_w));
-                                pDebthBuffer[i * ScreenWidth() + j] = tex_w;
+                            if (tex_cur.w > pDebthBuffer[i * ScreenWidth() + j]) {
+                                Draw(j, i, tex->SampleGlyph(tex_cur.u / tex_cur.w, tex_cur.v / tex_cur.w), tex->SampleColour(tex_cur.u / tex_cur.w, tex_cur.v / tex_cur.w));
+                                pDebthBuffer[i * ScreenWidth() + j] = tex_cur.w;
                             }
 
                             t += tstep;
@@ -409,53 +400,57 @@ class Engine3D : public olcConsoleGameEngine {
                     }
                 }
 
-                dy1 = y3 - y2;
-                dx1 = x3 - x2;
-                dv1 = v3 - v2;
-                du1 = u3 - u2;
-                dw1 = w3 - w2;
+                dx[0] = p3.x - p2.x;
+                dy[0] = p3.y - p2.y;
+                dt1 = { t3.u - t2.u, t3.v - t2.v, t3.w - t2.w };
 
-                if (dy1) dax_step = dx1 / ((float) abs(dy1));
-                if (dy2) dbx_step = dx2 / ((float) abs(dy2));
-                
-                du1_step = 0, dv1_step = 0;
-                if (dy1) du1_step = du1 / ((float) abs(dy1));
-                if (dy1) dv1_step = dv1 / ((float) abs(dy1));
-                if (dy1) dw1_step = dw1 / ((float) abs(dy1));
+                if (dy[0]) {
+                    dax_step = dx[0] / ((float) abs(dy[0]));
+                    dt1_step = {
+                        dt1.u / ((float) abs(dy[0])),
+                        dt1.v / ((float) abs(dy[0])),
+                        dt1.w / ((float) abs(dy[0]))
+                    };
+                }
+                if (dy[1]) dbx_step = dx[1] / ((float) abs(dy[1]));
 
-                for (int i = y2; i <= y3; ++i) { // bottom half of triangle
-                    int ax = x2 + ((float) (i - y2)) * dax_step;
-                    int bx = x1 + ((float) (i - y1)) * dbx_step;
+                for (int i = p2.y; i <= p3.y; ++i) { // bottom half of triangle
+                    float di1 = i - p1.y;
+                    float di2 = i - p2.y;
+                    int ax = p2.x + di2 * dax_step;
+                    int bx = p1.x + di1 * dbx_step;
 
-                    float tex_su = u2 + ((float) (i - y2)) * du1_step;
-                    float tex_sv = v2 + ((float) (i - y2)) * dv1_step;
-                    float tex_sw = w2 + ((float) (i - y2)) * dw1_step;
+                    V2d tex_start{
+                        t2.u + di2 * dt1_step.u,
+                        t2.v + di2 * dt1_step.v,
+                        t2.w + di2 * dt1_step.w
+                    };
 
-                    float tex_eu = u1 + ((float) (i - y1)) * du2_step;
-                    float tex_ev = v1 + ((float) (i - y1)) * dv2_step;
-                    float tex_ew = w1 + ((float) (i - y1)) * dw2_step;
+                    V2d tex_end{
+                        t1.u + di1 * dt2_step.u,
+                        t1.v + di1 * dt2_step.v,
+                        t1.w + di1 * dt2_step.w
+                    };
 
                     if (ax > bx) {
                         std::swap(ax, bx);
-                        std::swap(tex_su, tex_eu);
-                        std::swap(tex_sv, tex_ev);
-                        std::swap(tex_sw, tex_ew);
+                        std::swap(tex_start, tex_end);
                     }
 
-                    tex_u = tex_su;
-                    tex_v = tex_sv;
-                    tex_w = tex_sw;
+                    tex_cur = { tex_start.u, tex_start.v, tex_start.w };
 
                     float tstep = 1.0f / ((float) (bx - ax));
                     float t = 0.0f;
 
                     for (int j = ax; j < bx; ++j) {
-                        tex_u = (1.0f - t) * tex_su + t * tex_eu;
-                        tex_v = (1.0f - t) * tex_sv + t * tex_ev;
-                        tex_w = (1.0f - t) * tex_sw + t * tex_ew;
-                        if (tex_w > pDebthBuffer[i * ScreenWidth() + j]) {
-                            Draw(j, i, tex->SampleGlyph(tex_u / tex_w, tex_v / tex_w), tex->SampleColour(tex_u / tex_w, tex_v / tex_w));
-                            pDebthBuffer[i * ScreenWidth() + j] = tex_w;
+                        tex_cur = {
+                            (1.0f - t) * tex_start.u + t * tex_end.u,
+                            (1.0f - t) * tex_start.v + t * tex_end.v,
+                            (1.0f - t) * tex_start.w + t * tex_end.w
+                        };
+                        if (tex_cur.w > pDebthBuffer[i * ScreenWidth() + j]) {
+                            Draw(j, i, tex->SampleGlyph(tex_cur.u / tex_cur.w, tex_cur.v / tex_cur.w), tex->SampleColour(tex_cur.u / tex_cur.w, tex_cur.v / tex_cur.w));
+                            pDebthBuffer[i * ScreenWidth() + j] = tex_cur.w;
                         }
 
                         t += tstep;
