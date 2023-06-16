@@ -19,7 +19,7 @@ class Engine3D : public olcConsoleGameEngine {
         Engine3D() { m_sAppName = L"Demo"; }
 
         bool OnUserCreate() override {
-            //mesh_cube.LoadObject("../resources/cube.obj");
+            //mesh_cube.LoadObject("../resources/brick_cube.obj");
             mesh_cube.triangles = {
     		    // SOUTH
     		    { 0.0f, 0.0f, 0.0f, 1.0f,    0.0f, 1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 1.0f}, 
