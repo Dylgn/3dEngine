@@ -14,6 +14,9 @@
 
 #include "Geometry.hpp"
 
+#include "Window.hpp"
+#include <GL/gl.h>
+
 class Engine3D : public olcConsoleGameEngine {
     public:
         Engine3D() { m_sAppName = L"Demo"; }
@@ -285,9 +288,22 @@ class Engine3D : public olcConsoleGameEngine {
 };
 
 int main() {
-    Engine3D engine;
+    // Engine3D engine;
 
-    if (engine.ConstructConsole(256,240,4,4)) {
-        engine.Start();
-    } // else error check
+    // if (engine.ConstructConsole(256,240,4,4)) {
+    //     engine.Start();
+    // } // else error check
+
+    Window *window = new Window(640, 480, L"");
+
+    while (true) {
+        if (!window->ProcessMessages()) break;
+
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        window->GLSwapBuffers();
+
+        Sleep(10);
+    }
 }
