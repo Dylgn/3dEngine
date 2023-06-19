@@ -15,7 +15,6 @@
 #include "Geometry.hpp"
 
 #include "Window.hpp"
-#include <GL/gl.h>
 
 class Engine3D : public olcConsoleGameEngine {
     public:
@@ -299,10 +298,7 @@ int main() {
     while (true) {
         if (!window->ProcessMessages()) break;
 
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        window->GLSwapBuffers();
+        //
 
         Sleep(10);
     }
