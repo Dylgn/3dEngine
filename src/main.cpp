@@ -298,7 +298,8 @@ int main() {
     while (true) {
         if (!window->ProcessMessages()) break;
 
-        //
+        window->clear(0x00FF0000);
+        window->update();
 
         Sleep(10);
     }

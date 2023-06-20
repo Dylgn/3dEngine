@@ -11,6 +11,10 @@ class Window {
 
         bool ProcessMessages();
 
+        void update();
+        void setPixel(int x, int y, DWORD colour);
+        void clear(DWORD colour);
+
         Window(const Window&) = delete;
         Window &operator=(const Window&) = delete;
     private:
@@ -18,6 +22,14 @@ class Window {
         HINSTANCE hInstance;
         HWND hWnd;
         HDC hDC;
+        int WIDTH;
+        int HEIGHT;
+
+        DWORD *screen_buffer;
+
+        HDC back_dc;
+        HBITMAP back_bm;
 
         void ConstructWindow(int width, int height, const wchar_t *title);
+        void ConstructBackBuffer();
 };
