@@ -2,6 +2,8 @@
 
 #include <Windows.h>
 
+#include "V2d.hpp"
+
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 class Window {
@@ -13,6 +15,7 @@ class Window {
 
         void update();
         void setPixel(int x, int y, DWORD colour);
+        void drawTriangle(V2d v1, V2d v2, V2d v3);
         void clear(DWORD colour);
 
         Window(const Window&) = delete;

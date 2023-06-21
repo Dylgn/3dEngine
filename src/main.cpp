@@ -298,7 +298,9 @@ int main() {
     while (true) {
         if (!window->ProcessMessages()) break;
 
-        window->clear(0x00FF0000);
+        //window->clear(0x00FF0000);
+        window->drawTriangle({320, 160}, {190, 395}, {410, 340});
+
         window->update();
 
         Sleep(10);

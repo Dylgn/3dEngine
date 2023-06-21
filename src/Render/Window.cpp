@@ -1,6 +1,6 @@
-#include "Window.hpp"
+#include <algorithm>
 
-#include <iostream>
+#include "Window.hpp"
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     switch (uMsg) {
@@ -48,6 +48,42 @@ void Window::setPixel(int x, int y, DWORD colour) {
     screen_buffer[y * WIDTH + x] = colour;
 }
 
+void Window::drawTriangle(V2d v1, V2d v2, V2d v3) {
+    // Order vertices so that vertex 1 is highest on screen & vertex 3 is lowest
+    if (v2.v < v1.v) std::swap(v1,v2);
+    if (v3.v < v1.v) std::swap(v1,v3);
+    if (v3.v < v2.v) std::swap(v2,v3);
+
+    // Slopes of line segments from v1 to v2 & v1 to v3
+    float slope_v2 = (v1.u - v2.u) / (v1.v - v2.v);
+    float slope_v3 = (v1.u - v3.u) / (v1.v - v3.v);
+    if (v1.v - v2.v != 0) {
+        // First half of triangle
+        for (int i = v1.v; i <= v2.v; ++i) {
+            // x-values of start/end of triangle at each y-value
+            float start = slope_v2 * (i - v1.v) + v1.u;
+            float end = slope_v3 * (i - v1.v) + v1.u;
+            if (end < start) std::swap(start, end);
+
+            // Draw line start to end
+            for (int j = start; j <= end; ++j) {
+                setPixel(j, i, 0x00FF0000);
+            }
+        }
+    }
+
+    slope_v2 = (v2.u - v3.u) / (v2.v - v3.v);
+    // Second half of triangle
+    for (int i = v2.v; i <= v3.v; ++i) {
+        float start = slope_v2 * (i - v2.v) + v2.u;
+        float end = slope_v3 * (i - v1.v) + v1.u;
+        if (end < start) std::swap(start, end);
+        for (int j = start; j <= end; ++j) {
+            setPixel(j, i, 0x00FF0000);
+        }
+    }
+}
+
 void Window::clear(DWORD colour) {
     for (int i = 0; i < HEIGHT; ++i) {
         for (int j = 0; j < WIDTH; ++j) {
@@ -93,10 +129,6 @@ void Window::ConstructWindow(int width, int height, const wchar_t *title) {
 
     ShowWindow(hWnd, SW_SHOW);
     UpdateWindow(hWnd);
-
-    screen_buffer[10] = 0x00FF0000;
-    screen_buffer[100 * WIDTH + 10] = 0x0000FF00;
-    screen_buffer[10 * WIDTH + 10] = 0x000000FF;
 }
 
 void Window::ConstructBackBuffer() {
@@ -111,7 +143,7 @@ void Window::ConstructBackBuffer() {
     back_dc = CreateCompatibleDC(hDC);
     back_bm = CreateCompatibleBitmap(hDC, WIDTH, HEIGHT);
 
-    SetBitmapBits(back_bm, HEIGHT * WIDTH, (const void*)screen_buffer);
+    SetBitmapBits(back_bm, 4 * HEIGHT * WIDTH, (const void*)screen_buffer);
 
     SelectObject(back_dc, back_bm);
     ReleaseDC(hWnd, hDC);
