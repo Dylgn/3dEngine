@@ -3,21 +3,21 @@
 #include "Geometry.hpp"
 #include "MathUtility.hpp"
 
-std::vector<Triangle> GetTriangles(Mesh mesh, M4x4 mat_proj, V3d &cam, V3d &look_dir, float theta, float yaw, int width, int height);
+std::vector<Triangle> GetTriangles(Mesh mesh, M4x4 mat_proj, Camera &cam, float theta, float yaw, int width, int height);
 std::list<Triangle> ClipTriangles(std::vector<Triangle> triangles, int width, int height);
 
 
-std::list<Triangle> GetClippedTriangles(Mesh mesh, M4x4 mat_proj, V3d &cam, V3d &look_dir, float theta, float yaw, float width, float height) {
-    auto triangles = GetTriangles(mesh, mat_proj, cam, look_dir, theta, yaw, width, height);
+std::list<Triangle> GetClippedTriangles(Mesh mesh, Camera &cam, float width, float height) {
+    auto triangles = GetTriangles(mesh, cam, width, height);
     return ClipTriangles(triangles, width, height);
 }
 
-std::vector<Triangle> GetTriangles(Mesh mesh, M4x4 mat_proj, V3d &cam, V3d &look_dir, float theta, float yaw, int width, int height) {
+std::vector<Triangle> GetTriangles(Mesh mesh, Camera &cam, int width, int height) {
     // Rotation matrices
     M4x4 mat_rot_z, mat_rot_x;
     //theta += 1.0f * fElapsedTime;
-    mat_rot_z = MathUtil::GetMatRotZ(theta * 0.5f);
-    mat_rot_x = MathUtil::GetMatRotX(theta);
+    mat_rot_z = MathUtil::GetMatRotZ(cam.theta * 0.5f);
+    mat_rot_x = MathUtil::GetMatRotX(cam.theta);
 
     // Translate matrix
     M4x4 mat_translate = MathUtil::MatTranslate(0.0f, 0.0f, 8.0f);
@@ -28,10 +28,10 @@ std::vector<Triangle> GetTriangles(Mesh mesh, M4x4 mat_proj, V3d &cam, V3d &look
     // View matrix
     V3d up = { 0,1,0 };
     V3d target = { 0,0,1 };
-    M4x4 mat_cam_rot = MathUtil::GetMatRotY(yaw);
-    look_dir = mat_cam_rot * target;
-    target = cam + look_dir;
-    M4x4 mat_cam = MathUtil::MatPointAt(cam, target, up);
+    M4x4 mat_cam_rot = MathUtil::GetMatRotY(cam.yaw);
+    cam.look_dir = mat_cam_rot * target;
+    target = cam.pos + cam.look_dir;
+    M4x4 mat_cam = MathUtil::MatPointAt(cam.pos, target, up);
     M4x4 mat_view = MathUtil::InvertRotTransMat(mat_cam);
 
     std::vector<Triangle> triangles;
@@ -53,7 +53,7 @@ std::vector<Triangle> GetTriangles(Mesh mesh, M4x4 mat_proj, V3d &cam, V3d &look
         norm = norm.normalize();
 
         // Ray from triangle to camera
-        V3d cam_ray = t_transform.p[0] - cam;
+        V3d cam_ray = t_transform.p[0] - cam.pos;
         // t visible if ray aligned with normal
         if (norm.dotProd(cam_ray) < 0.0f) {
             /*
@@ -81,7 +81,7 @@ std::vector<Triangle> GetTriangles(Mesh mesh, M4x4 mat_proj, V3d &cam, V3d &look
             
             for (int i = 0; i < clipped_triangle_count; ++i) {
                 // Project into screen space
-                t_proj.copyPoints(clipped[i].multPoints(mat_proj));
+                t_proj.copyPoints(clipped[i].multPoints(cam.mat_proj));
                 t_proj.col = clipped[i].col;
                 t_proj.sym = clipped[i].sym;
                 t_proj.copyTexture(clipped[i]);

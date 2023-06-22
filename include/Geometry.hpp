@@ -7,8 +7,9 @@
 #include "M4x4.hpp"
 #include "V3d.hpp"
 #include "Triangle.hpp"
+#include "Camera.hpp"
 
-std::vector<Triangle> GetTriangles(Mesh mesh, M4x4 mat_proj, V3d &cam, V3d &look_dir, float theta, float yaw, int width, int height);
+std::vector<Triangle> GetTriangles(Mesh mesh, Camera &cam, int width, int height);
 std::list<Triangle> ClipTriangles(std::vector<Triangle> triangles, int width, int height);
-std::list<Triangle> GetClippedTriangles(Mesh mesh, M4x4 mat_proj, V3d &cam, V3d &look_dir, float theta, float yaw, float width, float height);
+std::list<Triangle> GetClippedTriangles(Mesh mesh, Camera &cam, float width, float height);
 std::vector<Triangle> SortDepth(std::vector<Triangle> triangles);

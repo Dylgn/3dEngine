@@ -16,6 +16,8 @@
 
 #include "Window.hpp"
 
+#include "GameEngine.hpp"
+
 class Engine3D : public olcConsoleGameEngine {
     public:
         Engine3D() { m_sAppName = L"Demo"; }
@@ -74,7 +76,7 @@ class Engine3D : public olcConsoleGameEngine {
             // Clear Depth buffer
             for (int i = 0; i < ScreenWidth() * ScreenHeight(); ++i) pDebthBuffer[i] = 0.0f;
 
-            std::list<Triangle> triangles = GetClippedTriangles(mesh_cube, mat_proj, cam, look_dir, theta, yaw, ScreenWidth(), ScreenHeight());
+            std::list<Triangle> triangles;// = GetClippedTriangles(mesh_cube, {mat_proj, cam, look_dir, theta, yaw}, ScreenWidth(), ScreenHeight());
 
             for (Triangle &t : triangles) {
                 TextureTriangle(t.p[0], t.t[0],
@@ -286,6 +288,24 @@ class Engine3D : public olcConsoleGameEngine {
         }
 };
 
+class BasicGameEngine: public GameEngine {
+    public:
+        BasicGameEngine(int width = 640, int height = 480, float fov_deg = 90.0f, const wchar_t *title = L""):
+            GameEngine{width, height, fov_deg, title} {}
+        ~BasicGameEngine() override {
+
+        }
+        bool onStart() override {
+            Mesh cube;
+            cube.LoadObject("../resources/brick_cube.obj");
+            meshes.push_back(cube);
+            return true;
+        }
+        bool onUpdate(float elapsed_time) override {
+            return true;
+        }
+};
+
 int main() {
     // Engine3D engine;
 
@@ -293,16 +313,19 @@ int main() {
     //     engine.Start();
     // } // else error check
 
-    Window *window = new Window(640, 480, L"");
+    // Window *window = new Window(640, 480, L"");
 
-    while (true) {
-        if (!window->ProcessMessages()) break;
+    // while (true) {
+    //     if (!window->ProcessMessages()) break;
 
-        //window->clear(0x00FF0000);
-        window->drawTriangle({320, 160}, {190, 395}, {410, 340});
+    //     //window->clear(0x00FF0000);
+    //     Triangle t{{{320,160},{250,240},{410,395}}};
+    //     window->drawTriangle(t);
 
-        window->update();
+    //     window->update();
 
-        Sleep(10);
-    }
+    //     Sleep(10);
+    // }
+    BasicGameEngine engine{};
+    engine.Start();
 }

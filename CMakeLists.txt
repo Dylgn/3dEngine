@@ -9,6 +9,7 @@ set(CMAKE_CXX_FLAGS "-DUNICODE")
 # CPP Files
 set(SOURCES
     src/main.cpp
+    src/GameEngine.cpp
     
     src/Math/V3d.cpp
     src/Math/M4x4.cpp
@@ -17,7 +18,6 @@ set(SOURCES
 
     src/Render/Geometry.cpp
     src/Render/Mesh.cpp
-
     src/Render/Window.cpp
 )
 

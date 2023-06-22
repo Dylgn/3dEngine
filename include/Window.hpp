@@ -2,7 +2,7 @@
 
 #include <Windows.h>
 
-#include "V2d.hpp"
+#include "Triangle.hpp"
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -15,8 +15,11 @@ class Window {
 
         void update();
         void setPixel(int x, int y, DWORD colour);
-        void drawTriangle(V2d v1, V2d v2, V2d v3);
+        void drawTriangle(Triangle t, bool check_depth = false);
         void clear(DWORD colour);
+        void clear_depth_buffer();
+        int getWidth();
+        int getHeight();
 
         Window(const Window&) = delete;
         Window &operator=(const Window&) = delete;
@@ -29,6 +32,7 @@ class Window {
         int HEIGHT;
 
         DWORD *screen_buffer;
+        float *depth_buffer = nullptr;
 
         HDC back_dc;
         HBITMAP back_bm;
