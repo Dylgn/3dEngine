@@ -54,21 +54,21 @@ class Engine3D : public olcConsoleGameEngine {
             pDebthBuffer = new float[ScreenWidth() * ScreenHeight()];
 
             // Projection Matrix
-            mat_proj = MathUtil::GetProjMat(90.0f, ((float) ScreenHeight()) / ((float) ScreenWidth()), 0.1f, 1000.0f);
+            cam.mat_proj = MathUtil::GetProjMat(90.0f, ((float) ScreenHeight()) / ((float) ScreenWidth()), 0.1f, 1000.0f);
 
             return true;
         }
         bool OnUserUpdate(float fElapsedTime) override {
 
-            if (GetKey(VK_UP).bHeld) cam.y += 8.0f * fElapsedTime;
-            if (GetKey(VK_DOWN).bHeld) cam.y -= 8.0f * fElapsedTime;
-            if (GetKey(VK_LEFT).bHeld) cam.x -= 8.0f * fElapsedTime;
-            if (GetKey(VK_RIGHT).bHeld) cam.x += 8.0f * fElapsedTime;
-            V3d forward = look_dir * (8.0f * fElapsedTime);
-            if (GetKey(L'W').bHeld) cam = cam + forward;
-            if (GetKey(L'S').bHeld) cam = cam - forward;
-            if (GetKey(L'A').bHeld) yaw += 2.0f * fElapsedTime;
-            if (GetKey(L'D').bHeld) yaw -= 2.0f * fElapsedTime;
+            if (GetKey(VK_UP).bHeld) cam.pos.y += 8.0f * fElapsedTime;
+            if (GetKey(VK_DOWN).bHeld) cam.pos.y -= 8.0f * fElapsedTime;
+            if (GetKey(VK_LEFT).bHeld) cam.pos.x -= 8.0f * fElapsedTime;
+            if (GetKey(VK_RIGHT).bHeld) cam.pos.x += 8.0f * fElapsedTime;
+            V3d forward = cam.look_dir * (8.0f * fElapsedTime);
+            if (GetKey(L'W').bHeld) cam.pos = cam.pos + forward;
+            if (GetKey(L'S').bHeld) cam.pos = cam.pos - forward;
+            if (GetKey(L'A').bHeld) cam.yaw += 2.0f * fElapsedTime;
+            if (GetKey(L'D').bHeld) cam.yaw -= 2.0f * fElapsedTime;
 
             // Clear screen
             Fill(0,0, ScreenWidth(), ScreenHeight(), PIXEL_SOLID, FG_BLACK);
@@ -76,7 +76,7 @@ class Engine3D : public olcConsoleGameEngine {
             // Clear Depth buffer
             for (int i = 0; i < ScreenWidth() * ScreenHeight(); ++i) pDebthBuffer[i] = 0.0f;
 
-            std::list<Triangle> triangles;// = GetClippedTriangles(mesh_cube, {mat_proj, cam, look_dir, theta, yaw}, ScreenWidth(), ScreenHeight());
+            std::list<Triangle> triangles = GetClippedTriangles(mesh_cube, cam, ScreenWidth(), ScreenHeight());
 
             for (Triangle &t : triangles) {
                 TextureTriangle(t.p[0], t.t[0],
@@ -101,11 +101,12 @@ class Engine3D : public olcConsoleGameEngine {
         }
     private:
         Mesh mesh_cube;
-        M4x4 mat_proj;
-        V3d cam;
-        V3d look_dir;
-        float theta = 0;
-        float yaw = 0;
+        Camera cam;
+        // M4x4 mat_proj;
+        // V3d cam;
+        // V3d look_dir;
+        // float theta = 0;
+        // float yaw = 0;
 
         olcSprite *spr_tex1;
         float *pDebthBuffer = nullptr;
@@ -220,6 +221,7 @@ class Engine3D : public olcConsoleGameEngine {
                         };
                         // Only draw if greater than depth buffer (in front of whats on screen)
                         if (tex_cur.w > pDebthBuffer[i * ScreenWidth() + j]) {
+                            //Draw(j, i, BG_GREY | FG_WHITE, PIXEL_SOLID);
                             Draw(j, i, tex->SampleGlyph(tex_cur.u / tex_cur.w, tex_cur.v / tex_cur.w), tex->SampleColour(tex_cur.u / tex_cur.w, tex_cur.v / tex_cur.w));
                             pDebthBuffer[i * ScreenWidth() + j] = tex_cur.w;
                         }
@@ -278,6 +280,7 @@ class Engine3D : public olcConsoleGameEngine {
                         (1.0f - t) * tex_start.w + t * tex_end.w
                     };
                     if (tex_cur.w > pDebthBuffer[i * ScreenWidth() + j]) {
+                        //Draw(j, i, BG_GREY | FG_WHITE, PIXEL_SOLID);
                         Draw(j, i, tex->SampleGlyph(tex_cur.u / tex_cur.w, tex_cur.v / tex_cur.w), tex->SampleColour(tex_cur.u / tex_cur.w, tex_cur.v / tex_cur.w));
                         pDebthBuffer[i * ScreenWidth() + j] = tex_cur.w;
                     }
@@ -333,6 +336,12 @@ class BasicGameEngine: public GameEngine {
             if (KeyDown(VK_S)) cam.pos = cam.pos - forward;
             if (KeyDown(VK_A)) cam.yaw += 2.0f * elapsed_time;
             if (KeyDown(VK_D)) cam.yaw -= 2.0f * elapsed_time;
+            if (KeyDown(VK_UP)) cam.pos.y += 8.0f * elapsed_time;
+            if (KeyDown(VK_DOWN)) cam.pos.y -= 8.0f * elapsed_time;
+            if (KeyDown(VK_LEFT)) cam.pos.x -= 8.0f * elapsed_time;
+            if (KeyDown(VK_RIGHT)) cam.pos.x += 8.0f * elapsed_time;
+
+            std::cout << 1 / elapsed_time << std::endl;
             return true;
         }
 };
@@ -343,20 +352,7 @@ int main() {
     // if (engine.ConstructConsole(256,240,4,4)) {
     //     engine.Start();
     // } // else error check
-
-    // Window *window = new Window(640, 480, L"");
-
-    // while (true) {
-    //     if (!window->ProcessMessages()) break;
-
-    //     //window->clear(0x00FF0000);
-    //     Triangle t{{{320,160},{250,240},{410,395}}};
-    //     window->drawTriangle(t);
-
-    //     window->update();
-
-    //     Sleep(10);
-    // }
-    BasicGameEngine engine{1280, 960};
+    
+    BasicGameEngine engine{960, 720};
     engine.Start();
 }

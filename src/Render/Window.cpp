@@ -3,6 +3,7 @@
 #include "Window.hpp"
 
 #include <iostream>
+#include <math.h>
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     switch (uMsg) {
@@ -85,77 +86,89 @@ void Window::drawTriangle(Triangle t, bool check_depth) {
     }
 
     // Slopes of line segments from v1 to v2 & v1 to v3
-    // float slope_v2, slope_v3;
-    // if (v2.y - v1.y) slope_v2 = (v1.x - v2.x) / (v1.y - v2.y);
-    // if (v3.y - v1.y) slope_v3 = (v1.x - v3.x) / (v1.y - v3.y);
-    float slope_v2 = (v1.x - v2.x) / (v1.y - v2.y);
-    float slope_v3 = (v1.x - v3.x) / (v1.y - v3.y);
+    float slope_v2 = 0, slope_v3 = 0;
+    V2d slope_t2 = {0,0}, slope_t3 = {0,0};
 
-    V2d slope_t2 = (t1 - t2) / (v1.y - v2.y);
-    V2d slope_t3 = (t1 - t3) / (v1.y - v3.y);
+    if ((v1.y - v3.y) != 0 ) {
+        slope_v3 = (v1.x - v3.x) / ((float)(v1.y - v3.y));
+        slope_t3 = (t1 - t3) / ((float)(v1.y - v3.y));
+    }
 
     if ((v1.y - v2.y) != 0) {
+        slope_v2 = (v1.x - v2.x) / ((float)(v1.y - v2.y));
+        slope_t2 = (t1 - t2) / ((float)(v1.y - v2.y));
         // First half of triangle
         for (int i = v1.y; i <= v2.y; ++i) {
             float di = i - v1.y;
             // x-values of start/end of triangle at each y-value
-            float start = slope_v2 * max((i - v1.y), 0) + v1.x;
-            float end = slope_v3 * max((i - v1.y), 0) + v1.x;
+            int start = slope_v2 * max(di, 0) + v1.x;
+            int end = slope_v3 * max(di, 0) + v1.x;
 
-            V2d t_start = slope_t2 * (i - v1.y) + t1;
-            V2d t_end = slope_t3 * (i - v1.y) + t1;
+            V2d t_start = slope_t2 * max(di, 0) + t1;
+            V2d t_end = slope_t3 * max(di, 0) + t1;
 
             if (end < start) {
                 std::swap(start, end);
                 std::swap(t_start, t_end);
             }
 
+            float tstep = 1.0f / ((float) (end - start));
+            float t = 0.0f;
+
             // Draw line start to end
             for (int j = start; j <= end; ++j) {
                 // Linear interpolation texture coordinates
-                // float t = ((float) (j - start)) / ((float) (end - start));
-                // if (end - start == 0) t = 0;
-                // V2d t_j = t_start * (1 - t) + t_end * t;
+                V2d t_j = t_start * (1 - t) + t_end * t;
 
-                setPixel(j, i, 0x00FF0000);
+                if (t_j.w > depth_buffer[i * WIDTH + j]) {
+                    int y = (t_j.v / t_j.w) * 29.0f;
+                    int x = (t_j.u / t_j.w) * 50.0f;
+                    
+                    setPixel(j, i, image[y * 50 + x]);
+                    depth_buffer[i * WIDTH + j] = t_j.w;
+                }
 
-                // if (t_j.w > depth_buffer[i * WIDTH + j]) {
-                //     setPixel(j, i,  image[((int)t_j.v) * 50 + ((int)t_j.u)]);
-                //     depth_buffer[i * WIDTH + j] = t_j.w;
-                // }
+                t += tstep;
             }
         }
     }
 
-    slope_v2 = (v2.x - v3.x) / (v2.y - v3.y);
-    slope_t2 = (t2 - t3) / (v2.y - v3.y);
+    if ((v2.y - v3.y) != 0) {
+        slope_v2 = (v2.x - v3.x) / ((float)(v2.y - v3.y));
+        slope_t2 = (t2 - t3) / ((float)(v2.y - v3.y));
+    }
+    
     if (v2.y - v3.y != 0) {
         // Second half of triangle
         for (int i = v2.y; i <= v3.y; ++i) {
             float di = i - v1.y;
             float di2 = i - v2.y;
-            float start = slope_v2 * max((i - v2.y), 0) + v2.x;
-            float end = slope_v3 * max((i - v1.y), 0) + v1.x;
+            int start = slope_v2 * max(di2, 0) + v2.x;
+            int end = slope_v3 * max(di, 0) + v1.x;
 
-            V2d t_start = slope_t2 * (i - v2.y) + t2;
-            V2d t_end = slope_t3 * (i - v1.y) + t1;
+            V2d t_start = slope_t2 * max(di2, 0) + t2;
+            V2d t_end = slope_t3 * max(di, 0) + t1;
 
             if (end < start) {
                 std::swap(start, end);
                 std::swap(t_start, t_end);
             }
 
+            float tstep = 1.0f / ((float) (end - start));
+            float t = 0.0f;
+
             for (int j = start; j <= end; ++j) {
-                // float t = ((float) (j - start)) / ((float) (end - start));
-                // if (end - start == 0) t = 0;
-                // V2d t_j = t_start * (1 - t) + t_end * t;
+                V2d t_j = t_start * (1 - t) + t_end * t;
 
-                setPixel(j, i, 0x00FF0000);
+                if (t_j.w > depth_buffer[i * WIDTH + j]) {
+                    int y = (t_j.v / t_j.w) * 29.0f;
+                    int x = (t_j.u / t_j.w) * 50.0f;
 
-                // if (t_j.w > depth_buffer[i * WIDTH + j]) {
-                //     setPixel(j, i, image[((int)t_j.v) * 50 + ((int)t_j.u)]);
-                //     depth_buffer[i * WIDTH + j] = t_j.w;
-                // }
+                    setPixel(j, i, image[y * 50 + x]);
+                    depth_buffer[i * WIDTH + j] = t_j.w;
+                }
+
+                t += tstep;
             }
         }
     }
@@ -194,7 +207,6 @@ void Window::ConstructWindow(int width, int height, const wchar_t *title) {
             else image[i * 50 + j] = 0x00FF0000;
         }
     }
-
 
     WNDCLASS wnd_class = {};
     wnd_class.lpszClassName = CLASS_NAME;
