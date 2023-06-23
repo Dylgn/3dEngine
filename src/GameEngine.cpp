@@ -36,7 +36,7 @@ void GameEngine::Start() {
         std::chrono::duration<float> elapsed_time = time_now - time_prev;
         onUpdate(elapsed_time.count());
         time_prev = time_now;
-        
+
         Render();
     }
 }
