@@ -5,8 +5,6 @@
 #include "Triangle.hpp"
 #include "Geometry.hpp"
 
-#include <iostream>
-
 GameEngine::GameEngine(int width, int height, float fov_deg, const wchar_t *title): 
     running{false}, window{width, height, title} {
     cam = {
@@ -32,15 +30,19 @@ void GameEngine::Start() {
             running = false;
             break;
         }
-
+        
         // Calculate elapsed time since last call to onUpdate()
         auto time_now = std::chrono::system_clock::now();
         std::chrono::duration<float> elapsed_time = time_now - time_prev;
         onUpdate(elapsed_time.count());
         time_prev = time_now;
-
+        
         Render();
     }
+}
+
+bool GameEngine::KeyDown(int virt_key) {
+    return window.KeyDown(virt_key);
 }
 
 void GameEngine::Render() {
@@ -50,7 +52,14 @@ void GameEngine::Render() {
     int HEIGHT = window.getHeight();
 
     std::list<Triangle> triangles;
-    triangles.push_back({{{320,160},{250,240},{410,395}}});
+    Triangle test;
+    // test.p[0] = {320,160};
+    // test.p[1] = {250,240};
+    // test.p[2] = {410,395};
+    // test.t[0] = {0,30};
+    // test.t[1] = {0,0};
+    // test.t[2] = {50,0};
+    // triangles.push_back(test);
     for (Mesh &mesh : meshes) {
         // TODO : send entire cam struct
         std::list<Triangle> clipped = GetClippedTriangles(mesh, cam, WIDTH, HEIGHT);

@@ -20,7 +20,7 @@ std::vector<Triangle> GetTriangles(Mesh mesh, Camera &cam, int width, int height
     mat_rot_x = MathUtil::GetMatRotX(cam.theta);
 
     // Translate matrix
-    M4x4 mat_translate = MathUtil::MatTranslate(0.0f, 0.0f, 8.0f);
+    M4x4 mat_translate = MathUtil::MatTranslate(0.0f, 0.0f, 1.0f);
 
     // World matrix
     M4x4 mat_world = (mat_rot_z * mat_rot_x) * mat_translate;

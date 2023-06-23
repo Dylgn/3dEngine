@@ -4,6 +4,11 @@
 
 #include "Triangle.hpp"
 
+#define VK_W 0x57
+#define VK_A 0x41
+#define VK_S 0x53
+#define VK_D 0x44
+
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 class Window {
@@ -20,6 +25,7 @@ class Window {
         void clear_depth_buffer();
         int getWidth();
         int getHeight();
+        bool KeyDown(int virt_key);
 
         Window(const Window&) = delete;
         Window &operator=(const Window&) = delete;
@@ -36,6 +42,8 @@ class Window {
 
         HDC back_dc;
         HBITMAP back_bm;
+
+        DWORD *image = nullptr;
 
         void ConstructWindow(int width, int height, const wchar_t *title);
         void ConstructBackBuffer();

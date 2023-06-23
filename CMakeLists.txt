@@ -15,6 +15,7 @@ set(SOURCES
     src/Math/M4x4.cpp
     src/Math/Triangle.cpp
     src/Math/MathUtility.cpp
+    src/Math/V2d.cpp
 
     src/Render/Geometry.cpp
     src/Render/Mesh.cpp
