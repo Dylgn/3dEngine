@@ -52,16 +52,8 @@ void GameEngine::Render() {
     int HEIGHT = window.getHeight();
 
     std::list<Triangle> triangles;
-    Triangle test;
-    // test.p[0] = {320,160};
-    // test.p[1] = {250,240};
-    // test.p[2] = {410,395};
-    // test.t[0] = {0,30};
-    // test.t[1] = {0,0};
-    // test.t[2] = {50,0};
-    // triangles.push_back(test);
+
     for (Mesh &mesh : meshes) {
-        // TODO : send entire cam struct
         std::list<Triangle> clipped = GetClippedTriangles(mesh, cam, WIDTH, HEIGHT);
         for (Triangle &t : clipped) triangles.push_back(t);
     }
@@ -69,5 +61,4 @@ void GameEngine::Render() {
         window.drawTriangle(t);
     }
     window.update();
-    Sleep(10);
 }
