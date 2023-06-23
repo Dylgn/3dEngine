@@ -5,27 +5,26 @@
 #include <iostream>
 #include <math.h>
 
-LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+LRESULT CALLBACK WindowProc(HWND wnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     switch (uMsg) {
         case WM_CREATE:
             break;
         case WM_CLOSE:
-            DestroyWindow(hWnd);
+            DestroyWindow(wnd);
             break;
         case WM_DESTROY:
             PostQuitMessage(0);
             return 0;
     }
-    return DefWindowProc(hWnd, uMsg, wParam, lParam);
+    return DefWindowProc(wnd, uMsg, wParam, lParam);
 }
 
-Window::Window(int width, int height, const wchar_t *title): CLASS_NAME{L"Window Class"}, hInstance(GetModuleHandle(nullptr)) {
-    ConstructWindow(width, height, title);
-    depth_buffer = new float[width * height];
+Window::Window(int width, int height, const wchar_t *title): CLASS_NAME{L"Window Class"}, instance(GetModuleHandle(nullptr)), WIDTH{width}, HEIGHT{height}, depth_buffer{new float[WIDTH * HEIGHT]}, screen_buffer{new DWORD[HEIGHT * WIDTH]} {
+    ConstructWindow(title);
 }
 
 Window::~Window() {
-    UnregisterClass(CLASS_NAME, hInstance);
+    UnregisterClass(CLASS_NAME, instance);
     DeleteDC(back_dc);
     DeleteObject(back_bm);
     delete[] screen_buffer;
@@ -46,7 +45,7 @@ bool Window::ProcessMessages() {
 
 void Window::update() {
     SetBitmapBits(back_bm, 4 * HEIGHT * WIDTH, (const void*)screen_buffer);
-    BitBlt(GetDC(hWnd), 0, 0, WIDTH, HEIGHT, back_dc, 0, 0, SRCCOPY);
+    BitBlt(GetDC(wnd), 0, 0, WIDTH, HEIGHT, back_dc, 0, 0, SRCCOPY);
 }
 
 void Window::setPixel(int x, int y, DWORD colour) {
@@ -123,7 +122,7 @@ void Window::drawTriangle(Triangle t, bool check_depth) {
                 if (t_j.w > depth_buffer[i * WIDTH + j]) {
                     int y = (t_j.v / t_j.w) * 29.0f;
                     int x = (t_j.u / t_j.w) * 50.0f;
-                    
+
                     setPixel(j, i, image[y * 50 + x]);
                     depth_buffer[i * WIDTH + j] = t_j.w;
                 }
@@ -198,19 +197,10 @@ bool Window::KeyDown(int virt_key) {
     return GetKeyState(virt_key) & 0x8000;
 }
 
-void Window::ConstructWindow(int width, int height, const wchar_t *title) {
-    image = new DWORD[50 * 30];
-    memset(image, 0, sizeof(DWORD) * 50 * 30);
-    for (int i = 0; i < 30; ++i) {
-        for (int j = 0; j < 50; ++j) {
-            if (j % 6 < 3) image[i * 50 + j] = 0x000000FF;
-            else image[i * 50 + j] = 0x00FF0000;
-        }
-    }
-
+void Window::ConstructWindow(const wchar_t *title) {
     WNDCLASS wnd_class = {};
     wnd_class.lpszClassName = CLASS_NAME;
-    wnd_class.hInstance = hInstance;
+    wnd_class.hInstance = instance;
     wnd_class.hIcon = LoadIcon(NULL, IDI_WINLOGO);
     wnd_class.hCursor = LoadCursor(NULL, IDC_ARROW);
     wnd_class.lpfnWndProc = WindowProc;
@@ -222,31 +212,37 @@ void Window::ConstructWindow(int width, int height, const wchar_t *title) {
     RECT rect;
     rect.left = 250;
     rect.top = 250;
-    rect.right = rect.left + width;
-    rect.bottom = rect.top + height;
-
-    WIDTH = width;
-    HEIGHT = height;
+    rect.right = rect.left + WIDTH;
+    rect.bottom = rect.top + HEIGHT;
 
     AdjustWindowRect(&rect, style, false);
 
-    hWnd = CreateWindowEx(
+    wnd = CreateWindowEx(
         0, CLASS_NAME, title, style, 
         rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, 
-        NULL, NULL, hInstance, NULL
+        NULL, NULL, instance, NULL
     );
 
-    hDC = GetDC(hWnd);
-
-    screen_buffer = new DWORD[WIDTH * HEIGHT];
     memset(screen_buffer, 0, sizeof(DWORD) * WIDTH * HEIGHT);
-    ConstructBackBuffer();
+    memset(depth_buffer, 0, sizeof(float) * WIDTH * HEIGHT);
 
-    ShowWindow(hWnd, SW_SHOW);
-    UpdateWindow(hWnd);
+    image = new DWORD[50 * 30];
+    memset(image, 0, sizeof(DWORD) * 50 * 30);
+    for (int i = 0; i < 30; ++i) {
+        for (int j = 0; j < 50; ++j) {
+            if (j % 6 < 3) image[i * 50 + j] = 0x000000FF;
+            else image[i * 50 + j] = 0x00FF0000;
+        }
+    }
+
+    HDC dc = GetDC(wnd);
+    ConstructBackBuffer(dc);
+
+    ShowWindow(wnd, SW_SHOW);
+    UpdateWindow(wnd);
 }
 
-void Window::ConstructBackBuffer() {
+void Window::ConstructBackBuffer(HDC &dc) {
     BITMAPINFO bmi;
     bmi.bmiHeader.biSize = sizeof(BITMAPCOREHEADER);
     bmi.bmiHeader.biWidth = WIDTH;
@@ -255,11 +251,11 @@ void Window::ConstructBackBuffer() {
     bmi.bmiHeader.biBitCount = 32;
     bmi.bmiHeader.biCompression = BI_RGB;
 
-    back_dc = CreateCompatibleDC(hDC);
-    back_bm = CreateCompatibleBitmap(hDC, WIDTH, HEIGHT);
+    back_dc = CreateCompatibleDC(dc);
+    back_bm = CreateCompatibleBitmap(dc, WIDTH, HEIGHT);
 
     SetBitmapBits(back_bm, 4 * HEIGHT * WIDTH, (const void*)screen_buffer);
 
     SelectObject(back_dc, back_bm);
-    ReleaseDC(hWnd, hDC);
+    ReleaseDC(wnd, dc);
 }
