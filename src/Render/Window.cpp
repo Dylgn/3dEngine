@@ -16,7 +16,7 @@ LRESULT CALLBACK WindowProc(HWND wnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     return DefWindowProc(wnd, uMsg, wParam, lParam);
 }
 
-Window::Window(int width, int height, const wchar_t *title): CLASS_NAME{L"Window Class"}, instance(GetModuleHandle(nullptr)), WIDTH{width}, HEIGHT{height}, depth_buffer{new float[WIDTH * HEIGHT]}, screen_buffer{new DWORD[HEIGHT * WIDTH]} {
+Window::Window(int width, int height, const wchar_t *title): CLASS_NAME{L"Window Class"}, instance(GetModuleHandle(nullptr)), WIDTH{width}, HEIGHT{height}, depth_buffer{new float[WIDTH * HEIGHT]}, frame_buffer{new DWORD[HEIGHT * WIDTH]} {
     ConstructWindow(title);
 }
 
@@ -24,7 +24,7 @@ Window::~Window() {
     UnregisterClass(CLASS_NAME, instance);
     DeleteDC(back_dc);
     DeleteObject(back_bm);
-    delete[] screen_buffer;
+    delete[] frame_buffer;
     delete[] depth_buffer;
 }
 
@@ -41,13 +41,13 @@ bool Window::ProcessMessages() {
 }
 
 void Window::update() {
-    SetBitmapBits(back_bm, 4 * HEIGHT * WIDTH, (const void*)screen_buffer);
+    SetBitmapBits(back_bm, 4 * HEIGHT * WIDTH, (const void*)frame_buffer);
     BitBlt(GetDC(wnd), 0, 0, WIDTH, HEIGHT, back_dc, 0, 0, SRCCOPY);
 }
 
 void Window::setPixel(int x, int y, DWORD colour) {
     if (x >= WIDTH || x < 0 || y >= HEIGHT || y < 0) return;
-    screen_buffer[y * WIDTH + x] = colour;
+    frame_buffer[y * WIDTH + x] = colour;
 }
 
 float max(float a, float b) {
@@ -173,7 +173,7 @@ void Window::drawTriangle(Triangle t, bool check_depth) {
 void Window::clear(DWORD colour) {
     for (int i = 0; i < HEIGHT; ++i) {
         for (int j = 0; j < WIDTH; ++j) {
-            screen_buffer[i * WIDTH + j] = colour;
+            frame_buffer[i * WIDTH + j] = colour;
         }
     }
 }
@@ -220,7 +220,7 @@ void Window::ConstructWindow(const wchar_t *title) {
         NULL, NULL, instance, NULL
     );
 
-    memset(screen_buffer, 0, sizeof(DWORD) * WIDTH * HEIGHT);
+    memset(frame_buffer, 0, sizeof(DWORD) * WIDTH * HEIGHT);
     memset(depth_buffer, 0, sizeof(float) * WIDTH * HEIGHT);
 
     image = new DWORD[50 * 30];
@@ -251,7 +251,7 @@ void Window::ConstructBackBuffer(HDC &dc) {
     back_dc = CreateCompatibleDC(dc);
     back_bm = CreateCompatibleBitmap(dc, WIDTH, HEIGHT);
 
-    SetBitmapBits(back_bm, 4 * HEIGHT * WIDTH, (const void*)screen_buffer);
+    SetBitmapBits(back_bm, 4 * HEIGHT * WIDTH, (const void*)frame_buffer);
 
     SelectObject(back_dc, back_bm);
     ReleaseDC(wnd, dc);

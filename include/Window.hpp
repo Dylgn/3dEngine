@@ -39,7 +39,7 @@ class Window {
         const int WIDTH;
         const int HEIGHT;
 
-        DWORD *screen_buffer;
+        DWORD *frame_buffer;
         float *depth_buffer = nullptr;
         DWORD *image = nullptr;
 
