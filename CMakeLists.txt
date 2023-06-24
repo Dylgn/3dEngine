@@ -27,13 +27,11 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 target_include_directories(${PROJECT_NAME}
     PRIVATE
         include
-        ${OPENGL_INCLUDE_DIRS}
 )
 
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
         winmm.lib
-        ${OPENGL_LIBRARIES}
 )
 
 #set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-mwindows")
