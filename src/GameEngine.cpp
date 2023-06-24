@@ -48,17 +48,13 @@ bool GameEngine::KeyDown(int virt_key) {
 void GameEngine::Render() {
     window.clear(0x00000000);
     window.clear_depth_buffer();
-    int WIDTH = window.getWidth();
-    int HEIGHT = window.getHeight();
-
-    std::list<Triangle> triangles;
 
     for (Mesh &mesh : meshes) {
-        std::list<Triangle> clipped = GetClippedTriangles(mesh, cam, WIDTH, HEIGHT);
-        for (Triangle &t : clipped) triangles.push_back(t);
+        // Get clipped triangles
+        std::list<Triangle> clipped = GetClippedTriangles(mesh, cam, window.getWidth(), window.getHeight());
+        // Draw triangles
+        for (Triangle &t : clipped) window.drawTriangle(t);
     }
-    for (Triangle &t : triangles) {
-        window.drawTriangle(t);
-    }
+    
     window.update();
 }
