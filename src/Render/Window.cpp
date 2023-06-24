@@ -2,9 +2,6 @@
 
 #include "Window.hpp"
 
-#include <iostream>
-#include <math.h>
-
 LRESULT CALLBACK WindowProc(HWND wnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     switch (uMsg) {
         case WM_CREATE:
