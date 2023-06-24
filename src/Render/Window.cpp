@@ -227,8 +227,8 @@ void Window::ConstructWindow(const wchar_t *title) {
     memset(image, 0, sizeof(DWORD) * 50 * 30);
     for (int i = 0; i < 30; ++i) {
         for (int j = 0; j < 50; ++j) {
-            if (j % 6 < 3) image[i * 50 + j] = 0x000000FF;
-            else image[i * 50 + j] = 0x00FF0000;
+            if (j % 6 < 3) image[i * 50 + j] = 0x0000FF;
+            else image[i * 50 + j] = 0xFF0000;
         }
     }
 
@@ -245,7 +245,7 @@ void Window::ConstructBackBuffer(HDC &dc) {
     bmi.bmiHeader.biWidth = WIDTH;
     bmi.bmiHeader.biWidth = -HEIGHT;
     bmi.bmiHeader.biPlanes = 1;
-    bmi.bmiHeader.biBitCount = 32;
+    bmi.bmiHeader.biBitCount = 24;
     bmi.bmiHeader.biCompression = BI_RGB;
 
     back_dc = CreateCompatibleDC(dc);
