@@ -19,9 +19,9 @@ class Window {
         bool ProcessMessages();
 
         void update();
-        void setPixel(int x, int y, DWORD colour);
+        void setPixel(int x, int y, unsigned int colour);
         void drawTriangle(Triangle t, bool check_depth = false);
-        void clear(DWORD colour);
+        void clear(unsigned int colour);
         void clear_depth_buffer();
 
         int getWidth();
@@ -39,9 +39,9 @@ class Window {
         const int WIDTH;
         const int HEIGHT;
 
-        DWORD *frame_buffer;
+        unsigned int *frame_buffer;
         float *depth_buffer = nullptr;
-        DWORD *image = nullptr;
+        unsigned int *image = nullptr;
 
         HDC back_dc;
         HBITMAP back_bm;

@@ -16,7 +16,7 @@ LRESULT CALLBACK WindowProc(HWND wnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     return DefWindowProc(wnd, uMsg, wParam, lParam);
 }
 
-Window::Window(int width, int height, const wchar_t *title): CLASS_NAME{L"Window Class"}, instance(GetModuleHandle(nullptr)), WIDTH{width}, HEIGHT{height}, depth_buffer{new float[WIDTH * HEIGHT]}, frame_buffer{new DWORD[HEIGHT * WIDTH]} {
+Window::Window(int width, int height, const wchar_t *title): CLASS_NAME{L"Window Class"}, instance(GetModuleHandle(nullptr)), WIDTH{width}, HEIGHT{height}, depth_buffer{new float[WIDTH * HEIGHT]}, frame_buffer{new unsigned int[HEIGHT * WIDTH]} {
     ConstructWindow(title);
 }
 
@@ -45,7 +45,7 @@ void Window::update() {
     BitBlt(GetDC(wnd), 0, 0, WIDTH, HEIGHT, back_dc, 0, 0, SRCCOPY);
 }
 
-void Window::setPixel(int x, int y, DWORD colour) {
+void Window::setPixel(int x, int y, unsigned int colour) {
     if (x >= WIDTH || x < 0 || y >= HEIGHT || y < 0) return;
     frame_buffer[y * WIDTH + x] = colour;
 }
@@ -170,7 +170,7 @@ void Window::drawTriangle(Triangle t, bool check_depth) {
     }
 }
 
-void Window::clear(DWORD colour) {
+void Window::clear(unsigned int colour) {
     for (int i = 0; i < HEIGHT; ++i) {
         for (int j = 0; j < WIDTH; ++j) {
             frame_buffer[i * WIDTH + j] = colour;
@@ -220,11 +220,11 @@ void Window::ConstructWindow(const wchar_t *title) {
         NULL, NULL, instance, NULL
     );
 
-    memset(frame_buffer, 0, sizeof(DWORD) * WIDTH * HEIGHT);
+    memset(frame_buffer, 0, sizeof(unsigned int) * WIDTH * HEIGHT);
     memset(depth_buffer, 0, sizeof(float) * WIDTH * HEIGHT);
 
-    image = new DWORD[50 * 30];
-    memset(image, 0, sizeof(DWORD) * 50 * 30);
+    image = new unsigned int[50 * 30];
+    memset(image, 0, sizeof(unsigned int) * 50 * 30);
     for (int i = 0; i < 30; ++i) {
         for (int j = 0; j < 50; ++j) {
             if (j % 6 < 3) image[i * 50 + j] = 0x0000FF;
