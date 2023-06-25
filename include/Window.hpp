@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Windows.h>
-
 #include "Triangle.hpp"
 
 #define VK_W 0x57

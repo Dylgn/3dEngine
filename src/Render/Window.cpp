@@ -240,13 +240,13 @@ void Window::ConstructWindow(const wchar_t *title) {
 }
 
 void Window::ConstructBackBuffer(HDC &dc) {
-    BITMAPINFO bmi;
-    bmi.bmiHeader.biSize = sizeof(BITMAPCOREHEADER);
-    bmi.bmiHeader.biWidth = WIDTH;
-    bmi.bmiHeader.biWidth = -HEIGHT;
-    bmi.bmiHeader.biPlanes = 1;
-    bmi.bmiHeader.biBitCount = 24;
-    bmi.bmiHeader.biCompression = BI_RGB;
+    // BITMAPINFO bmi;
+    // bmi.bmiHeader.biSize = sizeof(BITMAPCOREHEADER);
+    // bmi.bmiHeader.biWidth = WIDTH;
+    // bmi.bmiHeader.biWidth = -HEIGHT;
+    // bmi.bmiHeader.biPlanes = 1;
+    // bmi.bmiHeader.biBitCount = 24;
+    // bmi.bmiHeader.biCompression = BI_RGB;
 
     back_dc = CreateCompatibleDC(dc);
     back_bm = CreateCompatibleBitmap(dc, WIDTH, HEIGHT);
