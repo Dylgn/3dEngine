@@ -76,7 +76,7 @@ class Engine3D : public olcConsoleGameEngine {
             // Clear Depth buffer
             for (int i = 0; i < ScreenWidth() * ScreenHeight(); ++i) pDebthBuffer[i] = 0.0f;
 
-            std::list<Triangle> triangles = GetClippedTriangles(mesh_cube, cam, ScreenWidth(), ScreenHeight());
+            std::list<Triangle> triangles = Render::GetClippedTriangles(mesh_cube, cam, ScreenWidth(), ScreenHeight());
 
             for (Triangle &t : triangles) {
                 TextureTriangle(t.p[0], t.t[0],
