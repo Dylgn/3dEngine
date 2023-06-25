@@ -51,7 +51,7 @@ void GameEngine::Render() {
 
     for (Mesh &mesh : meshes) {
         // Get clipped triangles
-        std::list<Triangle> clipped = GetClippedTriangles(mesh, cam, window.getWidth(), window.getHeight());
+        std::list<Triangle> clipped = Render::GetClippedTriangles(mesh, cam, window.getWidth(), window.getHeight());
         // Draw triangles
         for (Triangle &t : clipped) window.drawTriangle(t);
     }

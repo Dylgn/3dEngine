@@ -3,16 +3,12 @@
 #include "Geometry.hpp"
 #include "MathUtility.hpp"
 
-std::vector<Triangle> GetTriangles(Mesh mesh, M4x4 mat_proj, Camera &cam, float theta, float yaw, int width, int height);
-std::list<Triangle> ClipTriangles(std::vector<Triangle> triangles, int width, int height);
-
-
-std::list<Triangle> GetClippedTriangles(Mesh mesh, Camera &cam, float width, float height) {
+std::list<Triangle> Render::GetClippedTriangles(Mesh mesh, Camera &cam, float width, float height) {
     auto triangles = GetTriangles(mesh, cam, width, height);
     return ClipTriangles(triangles, width, height);
 }
 
-std::vector<Triangle> GetTriangles(Mesh mesh, Camera &cam, int width, int height) {
+std::vector<Triangle> Render::GetTriangles(Mesh mesh, Camera &cam, int width, int height) {
     // Rotation matrices
     M4x4 mat_rot_z, mat_rot_x;
     //theta += 1.0f * fElapsedTime;
@@ -120,7 +116,7 @@ std::vector<Triangle> GetTriangles(Mesh mesh, Camera &cam, int width, int height
     return triangles;
 }
 
-std::list<Triangle> ClipTriangles(std::vector<Triangle> triangles, int width, int height) {
+std::list<Triangle> Render::ClipTriangles(std::vector<Triangle> triangles, int width, int height) {
     std::list<Triangle> output;
     for (Triangle &t : triangles) {
         // Clip triangles against screen edges
@@ -164,7 +160,7 @@ std::list<Triangle> ClipTriangles(std::vector<Triangle> triangles, int width, in
     return output;
 }
 
-std::vector<Triangle> SortDepth(std::vector<Triangle> triangles) {
+std::vector<Triangle> Render::SortDepth(std::vector<Triangle> triangles) {
     // Sort triangles back to front
     sort(triangles.begin(), triangles.end(), [](Triangle &t1, Triangle &t2) {
         float z1 = (t1.p[0].z + t1.p[1].z + t1.p[2].z) / 3.0f;
