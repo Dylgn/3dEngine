@@ -100,12 +100,12 @@ std::vector<Triangle> Render::GetTriangles(Mesh mesh, Camera &cam, int width, in
                 // Offset vertices into visible normalized space
                 V3d view_offset = { 1, 1, 0 };
                 t_proj.copyPoints(t_proj.addPoints(view_offset));
-                t_proj.p[0].x *= 0.5f * (float) width;
-                t_proj.p[0].y *= 0.5f * (float) height;
-                t_proj.p[1].x *= 0.5f * (float) width;
-                t_proj.p[1].y *= 0.5f * (float) height;
-                t_proj.p[2].x *= 0.5f * (float) width;
-                t_proj.p[2].y *= 0.5f * (float) height;
+                t_proj.p[0].x *= 0.5f * static_cast<float>(width);
+                t_proj.p[0].y *= 0.5f * static_cast<float>(height);
+                t_proj.p[1].x *= 0.5f * static_cast<float>(width);
+                t_proj.p[1].y *= 0.5f * static_cast<float>(height);
+                t_proj.p[2].x *= 0.5f * static_cast<float>(width);
+                t_proj.p[2].y *= 0.5f * static_cast<float>(height);
 
                 // Store triangles for int
                 triangles.push_back(t_proj);
@@ -138,13 +138,13 @@ std::list<Triangle> Render::ClipTriangles(std::vector<Triangle> triangles, int w
                         triangles_to_add = MathUtil::TriangleClipPlane({ 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f }, clip, clipped[0], clipped[1]);
                         break;
                     case 1:
-                        triangles_to_add = MathUtil::TriangleClipPlane({0.0f, ((float) height) - 1, 0.0f }, { 0.0f, -1.0f, 0.0f }, clip, clipped[0], clipped[1]);
+                        triangles_to_add = MathUtil::TriangleClipPlane({0.0f, static_cast<float>(height) - 1, 0.0f }, { 0.0f, -1.0f, 0.0f }, clip, clipped[0], clipped[1]);
                         break;
                     case 2:
                         triangles_to_add = MathUtil::TriangleClipPlane({ 0.0f, 0.0f, 0.0f }, { 1.0f, 0.0f, 0.0f }, clip, clipped[0], clipped[1]);
                         break;
                     case 3:
-                        triangles_to_add = MathUtil::TriangleClipPlane({ ((float) width) - 1, 0.0f, 0.0f }, { -1.0f, 0.0f, 0.0f }, clip, clipped[0], clipped[1]);
+                        triangles_to_add = MathUtil::TriangleClipPlane({ static_cast<float>(width) - 1, 0.0f, 0.0f }, { -1.0f, 0.0f, 0.0f }, clip, clipped[0], clipped[1]);
                         break;
                 }
 
