@@ -25,6 +25,9 @@ void GameEngine::Start() {
 
     auto time_prev = std::chrono::system_clock::now();
 
+    temp.LoadTexture("../resources/brick.bmp");
+    if (!temp.image) return;
+
     while (running) {
         if (!window.ProcessMessages()) {
             running = false;
@@ -53,7 +56,7 @@ void GameEngine::Render() {
         // Get clipped triangles
         std::list<Triangle> clipped = Render::GetClippedTriangles(mesh, cam, window.getWidth(), window.getHeight());
         // Draw triangles
-        for (Triangle &t : clipped) window.drawTriangle(t);
+        for (Triangle &t : clipped) window.drawTriangle(t, temp);
     }
     
     window.update();

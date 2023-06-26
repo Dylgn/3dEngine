@@ -9,7 +9,7 @@
 class GameEngine {
     bool running;
     Window window;
-    
+    Texture temp;
     public:
         GameEngine(int width = 640, int height = 480, float fov_deg = 90.0f, const wchar_t *title = L"");
         virtual ~GameEngine();
