@@ -16,7 +16,7 @@ LRESULT CALLBACK WindowProc(HWND wnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     return DefWindowProc(wnd, uMsg, wParam, lParam);
 }
 
-Window::Window(int width, int height, const wchar_t *title): CLASS_NAME{L"Window Class"}, instance(GetModuleHandle(nullptr)), WIDTH{width}, HEIGHT{height}, depth_buffer{new float[WIDTH * HEIGHT]}, frame_buffer{new unsigned int[HEIGHT * WIDTH]} {
+Window::Window(int width, int height, const wchar_t *title): CLASS_NAME{L"Window Class"}, instance(GetModuleHandle(nullptr)), WIDTH{width}, HEIGHT{height}, depth_buffer{new float[WIDTH * HEIGHT]}, frame_buffer{new uint32_t[HEIGHT * WIDTH]} {
     ConstructWindow(title);
 }
 
@@ -45,7 +45,7 @@ void Window::update() {
     BitBlt(GetDC(wnd), 0, 0, WIDTH, HEIGHT, back_dc, 0, 0, SRCCOPY);
 }
 
-void Window::setPixel(int x, int y, unsigned int colour) {
+void Window::setPixel(int x, int y, uint32_t colour) {
     if (x >= WIDTH || x < 0 || y >= HEIGHT || y < 0) return;
     frame_buffer[y * WIDTH + x] = colour;
 }
@@ -59,7 +59,7 @@ float min(float a, float b) {
     else return a;
 }
 
-void Window::drawTriangle(Triangle t, bool check_depth) {
+void Window::drawTriangle(Triangle t, Texture tex, bool check_depth) {
     V3d v1 = t.p[0];
     V3d v2 = t.p[1];
     V3d v3 = t.p[2];
@@ -86,13 +86,13 @@ void Window::drawTriangle(Triangle t, bool check_depth) {
     V2d slope_t2 = {0,0}, slope_t3 = {0,0};
 
     if ((v1.y - v3.y) != 0 ) {
-        slope_v3 = (v1.x - v3.x) / ((float)(v1.y - v3.y));
-        slope_t3 = (t1 - t3) / ((float)(v1.y - v3.y));
+        slope_v3 = (v1.x - v3.x) / static_cast<float>(v1.y - v3.y);
+        slope_t3 = (t1 - t3) / static_cast<float>(v1.y - v3.y);
     }
 
     if ((v1.y - v2.y) != 0) {
-        slope_v2 = (v1.x - v2.x) / ((float)(v1.y - v2.y));
-        slope_t2 = (t1 - t2) / ((float)(v1.y - v2.y));
+        slope_v2 = (v1.x - v2.x) / static_cast<float>(v1.y - v2.y);
+        slope_t2 = (t1 - t2) / static_cast<float>(v1.y - v2.y);
         // First half of triangle
         for (int i = v1.y; i <= v2.y; ++i) {
             float di = i - v1.y;
@@ -108,7 +108,7 @@ void Window::drawTriangle(Triangle t, bool check_depth) {
                 std::swap(t_start, t_end);
             }
 
-            float tstep = 1.0f / ((float) (end - start));
+            float tstep = 1.0f / static_cast<float>(end - start);
             float t = 0.0f;
 
             // Draw line start to end
@@ -117,10 +117,10 @@ void Window::drawTriangle(Triangle t, bool check_depth) {
                 V2d t_j = t_start * (1 - t) + t_end * t;
 
                 if (t_j.w > depth_buffer[i * WIDTH + j]) {
-                    int y = (t_j.v / t_j.w) * 29.0f;
-                    int x = (t_j.u / t_j.w) * 50.0f;
+                    int y = (t_j.v / t_j.w) * static_cast<float>(tex.height - 1);
+                    int x = (t_j.u / t_j.w) * static_cast<float>(tex.width);
 
-                    setPixel(j, i, image[y * 50 + x]);
+                    setPixel(j, i, tex.image[y * tex.width + x]);
                     depth_buffer[i * WIDTH + j] = t_j.w;
                 }
 
@@ -130,8 +130,8 @@ void Window::drawTriangle(Triangle t, bool check_depth) {
     }
 
     if ((v2.y - v3.y) != 0) {
-        slope_v2 = (v2.x - v3.x) / ((float)(v2.y - v3.y));
-        slope_t2 = (t2 - t3) / ((float)(v2.y - v3.y));
+        slope_v2 = (v2.x - v3.x) / static_cast<float>(v2.y - v3.y);
+        slope_t2 = (t2 - t3) / static_cast<float>(v2.y - v3.y);
     }
     
     if (v2.y - v3.y != 0) {
@@ -150,17 +150,17 @@ void Window::drawTriangle(Triangle t, bool check_depth) {
                 std::swap(t_start, t_end);
             }
 
-            float tstep = 1.0f / ((float) (end - start));
+            float tstep = 1.0f / static_cast<float>(end - start);
             float t = 0.0f;
 
             for (int j = start; j <= end; ++j) {
                 V2d t_j = t_start * (1 - t) + t_end * t;
 
                 if (t_j.w > depth_buffer[i * WIDTH + j]) {
-                    int y = (t_j.v / t_j.w) * 29.0f;
-                    int x = (t_j.u / t_j.w) * 50.0f;
+                    int y = (t_j.v / t_j.w) * static_cast<float>(tex.height - 1);
+                    int x = (t_j.u / t_j.w) * static_cast<float>(tex.width);
 
-                    setPixel(j, i, image[y * 50 + x]);
+                    setPixel(j, i, tex.image[y * tex.width + x]);
                     depth_buffer[i * WIDTH + j] = t_j.w;
                 }
 
@@ -170,7 +170,7 @@ void Window::drawTriangle(Triangle t, bool check_depth) {
     }
 }
 
-void Window::clear(unsigned int colour) {
+void Window::clear(uint32_t colour) {
     for (int i = 0; i < HEIGHT; ++i) {
         for (int j = 0; j < WIDTH; ++j) {
             frame_buffer[i * WIDTH + j] = colour;
@@ -192,6 +192,15 @@ int Window::getHeight() {
 
 bool Window::KeyDown(int virt_key) {
     return GetKeyState(virt_key) & 0x8000;
+}
+
+void Window::drawImage(Texture t) {
+    int scale = 4;
+    for (int i = 0; i < t.height * scale; ++i) {
+        for (int j = 0; j < t.width * scale; ++j) {
+            setPixel(j, i, t.image[i / scale * t.height + j / scale]);
+        }
+    }
 }
 
 void Window::ConstructWindow(const wchar_t *title) {
@@ -220,17 +229,8 @@ void Window::ConstructWindow(const wchar_t *title) {
         NULL, NULL, instance, NULL
     );
 
-    memset(frame_buffer, 0, sizeof(unsigned int) * WIDTH * HEIGHT);
+    memset(frame_buffer, 0, sizeof(uint32_t) * WIDTH * HEIGHT);
     memset(depth_buffer, 0, sizeof(float) * WIDTH * HEIGHT);
-
-    image = new unsigned int[50 * 30];
-    memset(image, 0, sizeof(unsigned int) * 50 * 30);
-    for (int i = 0; i < 30; ++i) {
-        for (int j = 0; j < 50; ++j) {
-            if (j % 6 < 3) image[i * 50 + j] = 0x0000FF;
-            else image[i * 50 + j] = 0xFF0000;
-        }
-    }
 
     HDC dc = GetDC(wnd);
     ConstructBackBuffer(dc);

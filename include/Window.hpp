@@ -2,6 +2,7 @@
 
 #include <Windows.h>
 #include "Triangle.hpp"
+#include "Texture.hpp"
 
 #define VK_W 0x57
 #define VK_A 0x41
@@ -18,8 +19,8 @@ class Window {
         bool ProcessMessages();
 
         void update();
-        void setPixel(int x, int y, unsigned int colour);
-        void drawTriangle(Triangle t, bool check_depth = false);
+        void setPixel(int x, int y, uint32_t colour);
+        void drawTriangle(Triangle t, Texture tex, bool check_depth = false);
         void clear(unsigned int colour);
         void clear_depth_buffer();
 
@@ -27,6 +28,8 @@ class Window {
         int getHeight();
 
         bool KeyDown(int virt_key);
+
+        void drawImage(Texture t);
 
         Window(const Window&) = delete;
         Window &operator=(const Window&) = delete;
@@ -38,9 +41,8 @@ class Window {
         const int WIDTH;
         const int HEIGHT;
 
-        unsigned int *frame_buffer;
+        uint32_t *frame_buffer;
         float *depth_buffer = nullptr;
-        unsigned int *image = nullptr;
 
         HDC back_dc;
         HBITMAP back_bm;
