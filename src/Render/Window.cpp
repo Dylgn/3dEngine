@@ -59,7 +59,7 @@ float min(float a, float b) {
     else return a;
 }
 
-void Window::drawTriangle(Triangle t, Texture tex, bool check_depth) {
+void Window::drawTriangle(Triangle t, Texture &tex, bool check_depth) {
     V3d v1 = t.p[0];
     V3d v2 = t.p[1];
     V3d v3 = t.p[2];

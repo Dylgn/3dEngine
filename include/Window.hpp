@@ -20,7 +20,7 @@ class Window {
 
         void update();
         void setPixel(int x, int y, uint32_t colour);
-        void drawTriangle(Triangle t, Texture tex, bool check_depth = false);
+        void drawTriangle(Triangle t, Texture &tex, bool check_depth = false);
         void clear(unsigned int colour);
         void clear_depth_buffer();
 
