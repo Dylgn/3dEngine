@@ -2,6 +2,24 @@
 #include <cstring>
 #include "Texture.hpp"
 
+Texture::Texture() {}
+
+Texture::Texture(std::string file_name) {
+    LoadTexture(file_name);
+}
+
+Texture::Texture(Texture &t): width{t.width}, height{t.height}, image{new uint32_t[width * height]} {
+    int img_size = width * height;
+    for (int i = 0; i < img_size; ++i) {
+        image[i] = t.image[i];
+    }
+}
+
+Texture::~Texture() {
+    delete[] image;
+    image = nullptr;
+}
+
 bool Texture::LoadTexture(std::string file_name) {
     // Opens file and checks if file is opened
     FILE* f = fopen(file_name.c_str(), "rb");
