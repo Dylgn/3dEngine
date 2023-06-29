@@ -10,6 +10,7 @@ set(CMAKE_CXX_FLAGS "-DUNICODE")
 set(SOURCES
     src/main.cpp
     src/GameEngine.cpp
+    src/json.cpp
     
     src/Math/V3d.cpp
     src/Math/M4x4.cpp

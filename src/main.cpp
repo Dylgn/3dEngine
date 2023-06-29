@@ -11,12 +11,10 @@
 #include "Mesh.hpp"
 #include "Triangle.hpp"
 #include "V2d.hpp"
-
 #include "Geometry.hpp"
-
 #include "Window.hpp"
-
 #include "GameEngine.hpp"
+#include "json.hpp"
 
 class Engine3D : public olcConsoleGameEngine {
     public:
@@ -352,7 +350,11 @@ int main() {
     // if (engine.ConstructConsole(256,240,4,4)) {
     //     engine.Start();
     // } // else error check
+
+    auto settings = json::ReadJSON("../settings/settings.json");
+    float width = settings["width"].as<float>();
+    float height = settings["height"].as<float>();
     
-    BasicGameEngine engine{960, 720};
+    BasicGameEngine engine{static_cast<int>(width), static_cast<int>(height)};
     engine.Start();
 }
