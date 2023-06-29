@@ -11,5 +11,6 @@ struct Texture {
     Texture(Texture &t);
     ~Texture();
 
-    bool LoadTexture(std::string file_name); // Assumes 32-bit rgb bmp file
+    /** Load bmp texture file. Assumes it is 32-bit rgb */
+    bool LoadTexture(std::string file_name);
 };

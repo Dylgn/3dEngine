@@ -19,16 +19,26 @@ class Window {
         bool ProcessMessages();
 
         void update();
+        /** Set pixel at given coordinates to given colour in 0xRRGGBB format */
         void setPixel(int x, int y, uint32_t colour);
+        /** Draw triangle with texture */
         void drawTriangle(Triangle t, Texture &tex, bool check_depth = false);
-        void clear(unsigned int colour);
+        /** Clears screen with given colour */
+        void clear(uint32_t colour);
+        /** Clears the depth buffer */
         void clear_depth_buffer();
 
+        /** Gets width of screen */
         int getWidth();
+        /** Gets height of screen */
         int getHeight();
 
+        /** Gets if key is being held down or not.
+         * Virtual key codes can be found {@link https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes|here}
+         * @return True if held down, false otherwise
+        */
         bool KeyDown(int virt_key);
-
+        /** Draw texture to screen */
         void drawImage(Texture t);
 
         Window(const Window&) = delete;

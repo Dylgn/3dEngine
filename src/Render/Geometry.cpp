@@ -4,8 +4,7 @@
 #include "MathUtility.hpp"
 
 std::list<Triangle> Render::GetClippedTriangles(Mesh mesh, Camera &cam, float width, float height) {
-    auto triangles = GetTriangles(mesh, cam, width, height);
-    return ClipTriangles(triangles, width, height);
+    return ClipTriangles(GetTriangles(mesh, cam, width, height), width, height);
 }
 
 std::vector<Triangle> Render::GetTriangles(Mesh mesh, Camera &cam, int width, int height) {

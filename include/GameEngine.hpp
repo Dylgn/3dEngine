@@ -16,9 +16,15 @@ class GameEngine {
 
         void Start();
 
+        /** Gets if key is being held down or not.
+         * Virtual key codes can be found {@link https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes|here}
+         * @return True if held down, false otherwise
+        */
         bool KeyDown(int virt_key);
 
+        /** Starts the engine */
         virtual bool onStart() = 0;
+        /** Method which is called every frame */
         virtual bool onUpdate(float elapsed_time) = 0;
     protected:
         Camera cam;
