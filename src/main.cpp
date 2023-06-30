@@ -15,6 +15,7 @@
 #include "Window.hpp"
 #include "GameEngine.hpp"
 #include "json.hpp"
+#include "Collision.hpp"
 
 class Engine3D : public olcConsoleGameEngine {
     public:
@@ -326,20 +327,38 @@ class BasicGameEngine: public GameEngine {
     		    { 1.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f},
     		};
             meshes.push_back(mesh_cube);
+            cube = {mesh_cube, {{0,1},{0,1},{0,1}}};
+            p.box = {{-0.2f,0.2f}, {0.5f,1.5f}, {-1.2f,-0.8f}};
+            p.cam.pos = {0, 1, -1};
             return true;
         }
         bool onUpdate(float elapsed_time) override {
-            V3d forward = cam.look_dir * (8.0f * elapsed_time);
-            if (KeyDown(VK_W)) cam.pos = cam.pos + forward;
-            if (KeyDown(VK_S)) cam.pos = cam.pos - forward;
-            if (KeyDown(VK_A)) cam.yaw += 2.0f * elapsed_time;
-            if (KeyDown(VK_D)) cam.yaw -= 2.0f * elapsed_time;
-            if (KeyDown(VK_UP)) cam.pos.y += 8.0f * elapsed_time;
-            if (KeyDown(VK_DOWN)) cam.pos.y -= 8.0f * elapsed_time;
-            if (KeyDown(VK_LEFT)) cam.pos.x -= 8.0f * elapsed_time;
-            if (KeyDown(VK_RIGHT)) cam.pos.x += 8.0f * elapsed_time;
+            V3d forward = p.cam.look_dir * (8.0f * elapsed_time);
+            if (KeyDown(VK_W)) {
+                p.cam.pos = p.cam.pos + forward;
+                p.box.move(forward);
+            }
+            if (KeyDown(VK_S)) {
+                forward = V3d{0,0,0} - forward;
+                p.cam.pos = p.cam.pos + forward;
+                p.box.move(forward);
+            }
+            if (KeyDown(VK_A)) {p.cam.yaw += 2.0f * elapsed_time; }
+            if (KeyDown(VK_D)) {p.cam.yaw -= 2.0f * elapsed_time; }
+            if (KeyDown(VK_UP)) {p.cam.pos.y += 8.0f * elapsed_time; }
+            if (KeyDown(VK_DOWN)) {p.cam.pos.y -= 8.0f * elapsed_time; }
+            if (KeyDown(VK_LEFT)) {p.cam.pos.x -= 8.0f * elapsed_time; }
+            if (KeyDown(VK_RIGHT)) {p.cam.pos.x += 8.0f * elapsed_time; }
 
-            std::cout << 1 / elapsed_time << std::endl;
+            if (p.box.Colliding(cube.box)) {
+                p.cam.pos = p.cam.pos - forward;
+                p.box.move(V3d{0,0,0} - forward);
+                // do {
+                    
+                // } while (!p.box.Colliding(cube.box));
+            }
+
+            //std::cout << 1 / elapsed_time << std::endl;
             return true;
         }
 };

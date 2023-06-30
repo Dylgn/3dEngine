@@ -7,7 +7,7 @@
 
 GameEngine::GameEngine(int width, int height, float fov_deg, const wchar_t *title): 
     running{false}, window{width, height, title} {
-    cam = {
+    p.cam = {
         MathUtil::GetProjMat(fov_deg, ((float) height) / ((float) width), 0.1f, 1000.0f),
         {0,0,0},
         {0,0,0},
@@ -54,7 +54,7 @@ void GameEngine::Render() {
 
     for (Mesh &mesh : meshes) {
         // Get clipped triangles
-        std::list<Triangle> clipped = Render::GetClippedTriangles(mesh, cam, window.getWidth(), window.getHeight());
+        std::list<Triangle> clipped = Render::GetClippedTriangles(mesh, p.cam, window.getWidth(), window.getHeight());
         // Draw triangles
         for (Triangle &t : clipped) window.drawTriangle(t, temp);
     }
