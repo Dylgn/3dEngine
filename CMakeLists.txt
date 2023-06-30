@@ -17,11 +17,17 @@ set(SOURCES
     src/Math/Triangle.cpp
     src/Math/MathUtility.cpp
     src/Math/V2d.cpp
+    src/Math/Interval.cpp
 
     src/Render/Geometry.cpp
     src/Render/Mesh.cpp
     src/Render/Window.cpp
     src/Render/Texture.cpp
+
+    src/Physics/Collision.cpp
+    src/Physics/BoundingBox.cpp
+
+    src/GameObjects/Object.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
