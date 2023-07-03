@@ -245,14 +245,4 @@ namespace MathUtil {
         ret.m[3][3] = 1.0f;
         return ret;
     }
-
-    float max(float a, float b) {
-        if (a >= b) return a;
-        else return b;
-    }
-
-    float min(float a, float b) {
-        if (a >= b) return b;
-        else return a;
-    }
 }
