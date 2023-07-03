@@ -8,16 +8,16 @@ Texture::Texture(std::string file_name) {
     LoadTexture(file_name);
 }
 
-Texture::Texture(const Texture &t): width{t.width}, height{t.height}, image{new uint32_t[width * height]} {
-    int img_size = width * height;
+Texture::Texture(const Texture &t): m_width{t.m_width}, m_height{t.m_height}, m_image{new uint32_t[m_width * m_height]} {
+    int img_size = m_width * m_height;
     for (int i = 0; i < img_size; ++i) {
-        image[i] = t.image[i];
+        m_image[i] = t.m_image[i];
     }
 }
 
 Texture::~Texture() {
-    delete[] image;
-    image = nullptr;
+    delete[] m_image;
+    m_image = nullptr;
 }
 
 bool Texture::LoadTexture(std::string file_name) {
@@ -41,23 +41,23 @@ bool Texture::LoadTexture(std::string file_name) {
 
     // Get image dimensions and size
     fseek(f, 0x04, SEEK_CUR);
-    std::fread(&width, sizeof(int32_t), 1, f);
-    std::fread(&height, sizeof(int32_t), 1, f);
+    std::fread(&m_width, sizeof(int32_t), 1, f);
+    std::fread(&m_height, sizeof(int32_t), 1, f);
 
-    bool inverted = (height >= 0); // Image not stored top-down, need to flip
-    if (!inverted) height *= -1; // Change to positive height
+    bool inverted = (m_height >= 0); // Image not stored top-down, need to flip
+    if (!inverted) m_height *= -1; // Change to positive height
 
     // Read image data
     fseek(f, data_offset, SEEK_SET);
-    image = new uint32_t[width * height];
-    memset(image, 0, sizeof(uint32_t) * width * height);
-    std::fread(image, sizeof(uint32_t), width * height, f);
+    m_image = new uint32_t[m_width * m_height];
+    memset(m_image, 0, sizeof(uint32_t) * m_width * m_height);
+    std::fread(m_image, sizeof(uint32_t), m_width * m_height, f);
 
     // Flip image
     if (inverted) {
-        for (int i = 0; i < height / 2; ++i) {
-            for (int j = 0; j < width; ++j) {
-                std::swap(image[i * height + j], image[(height - 1 - i) * height + j]);
+        for (int i = 0; i < m_height / 2; ++i) {
+            for (int j = 0; j < m_width; ++j) {
+                std::swap(m_image[i * m_height + j], m_image[(m_height - 1 - i) * m_height + j]);
             }
         }
     }

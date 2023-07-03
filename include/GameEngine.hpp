@@ -6,9 +6,9 @@
 #include "Mesh.hpp"
 
 class GameEngine {
-    bool running;
-    Window window;
-    Texture temp;
+    bool m_running;
+    Window m_window;
+    Texture m_temp;
     public:
         GameEngine(int width = 640, int height = 480, float fov_deg = 90.0f, const wchar_t *title = L"");
         virtual ~GameEngine();
@@ -26,8 +26,8 @@ class GameEngine {
         /** Method which is called every frame */
         virtual bool onUpdate(const float &elapsed_time) = 0;
     protected:
-        Camera cam;
-        std::vector<Mesh> meshes;
+        Camera m_cam;
+        std::vector<Mesh> m_meshes;
     private:
         void Render();
 };

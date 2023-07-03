@@ -49,14 +49,14 @@ bool Mesh::LoadObject(std::string file_name, bool textured) {
 
                     tokens[token_count].pop_back();
 
-                    triangles.push_back(
+                    m_triangles.push_back(
                         { vertices[stoi(tokens[0]) - 1], vertices[stoi(tokens[2]) - 1], vertices[stoi(tokens[4]) - 1],
                           textures[stoi(tokens[1]) - 1], textures[stoi(tokens[3]) - 1], textures[stoi(tokens[5]) - 1] }
                     );
                 } else {
                     int f[3];
                     s >> type >> f[0] >> f[1] >> f[2];
-                    triangles.push_back({ vertices[f[0] - 1], vertices[f[1] - 1], vertices[f[2] - 1] });
+                    m_triangles.push_back({ vertices[f[0] - 1], vertices[f[1] - 1], vertices[f[2] - 1] });
                 }
                 break;
             default:

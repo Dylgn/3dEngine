@@ -3,8 +3,8 @@
 #include <string>
 
 struct Texture {
-    int32_t width = 0, height = 0;
-    uint32_t *image = nullptr;
+    int32_t m_width = 0, m_height = 0;
+    uint32_t *m_image = nullptr;
 
     Texture();
     Texture(std::string file_name);

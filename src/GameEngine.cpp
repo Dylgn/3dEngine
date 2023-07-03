@@ -6,8 +6,8 @@
 #include "Geometry.hpp"
 
 GameEngine::GameEngine(int width, int height, float fov_deg, const wchar_t *title): 
-    running{false}, window{width, height, title} {
-    cam = {
+    m_running{false}, m_window{width, height, title} {
+    m_cam = {
         MathUtil::GetProjMat(fov_deg, ((float) height) / ((float) width), 0.1f, 1000.0f),
         {0,0,0},
         {0,0,0},
@@ -18,19 +18,19 @@ GameEngine::GameEngine(int width, int height, float fov_deg, const wchar_t *titl
 GameEngine::~GameEngine() {}
 
 void GameEngine::Start() {
-    if (running) return;
-    else running = true;
+    if (m_running) return;
+    else m_running = true;
 
     onStart();
 
     auto time_prev = std::chrono::system_clock::now();
 
-    temp.LoadTexture("../resources/brick.bmp");
-    if (!temp.image) return;
+    m_temp.LoadTexture("../resources/brick.bmp");
+    if (!m_temp.m_image) return;
 
-    while (running) {
-        if (!window.ProcessMessages()) {
-            running = false;
+    while (m_running) {
+        if (!m_window.ProcessMessages()) {
+            m_running = false;
             break;
         }
         
@@ -45,19 +45,19 @@ void GameEngine::Start() {
 }
 
 bool GameEngine::KeyDown(const int &virt_key) {
-    return window.KeyDown(virt_key);
+    return m_window.KeyDown(virt_key);
 }
 
 void GameEngine::Render() {
-    window.clear(0x00000000);
-    window.clear_depth_buffer();
+    m_window.clear(0x00000000);
+    m_window.clear_depth_buffer();
 
-    for (Mesh &mesh : meshes) {
+    for (Mesh &mesh : m_meshes) {
         // Get clipped triangles
-        std::list<Triangle> clipped = Render::GetClippedTriangles(mesh, cam, window.getWidth(), window.getHeight());
+        std::list<Triangle> clipped = Render::GetClippedTriangles(mesh, m_cam, m_window.getWidth(), m_window.getHeight());
         // Draw triangles
-        for (Triangle &t : clipped) window.drawTriangle(t, temp);
+        for (Triangle &t : clipped) m_window.drawTriangle(t, m_temp);
     }
     
-    window.update();
+    m_window.update();
 }

@@ -119,10 +119,10 @@ void Window::drawTriangle(const Triangle &t, const Texture &tex, bool check_dept
                 V2d t_j = t_start * (1 - t) + t_end * t;
 
                 if (t_j.w > depth_buffer[i * WIDTH + j]) {
-                    int y = (t_j.v / t_j.w) * static_cast<float>(tex.height - 1);
-                    int x = (t_j.u / t_j.w) * static_cast<float>(tex.width);
+                    int y = (t_j.v / t_j.w) * static_cast<float>(tex.m_height - 1);
+                    int x = (t_j.u / t_j.w) * static_cast<float>(tex.m_width);
 
-                    setPixel(j, i, tex.image[y * tex.width + x]);
+                    setPixel(j, i, tex.m_image[y * tex.m_width + x]);
                     depth_buffer[i * WIDTH + j] = t_j.w;
                 }
 
@@ -159,10 +159,10 @@ void Window::drawTriangle(const Triangle &t, const Texture &tex, bool check_dept
                 V2d t_j = t_start * (1 - t) + t_end * t;
 
                 if (t_j.w > depth_buffer[i * WIDTH + j]) {
-                    int y = (t_j.v / t_j.w) * static_cast<float>(tex.height - 1);
-                    int x = (t_j.u / t_j.w) * static_cast<float>(tex.width);
+                    int y = (t_j.v / t_j.w) * static_cast<float>(tex.m_height - 1);
+                    int x = (t_j.u / t_j.w) * static_cast<float>(tex.m_width);
 
-                    setPixel(j, i, tex.image[y * tex.width + x]);
+                    setPixel(j, i, tex.m_image[y * tex.m_width + x]);
                     depth_buffer[i * WIDTH + j] = t_j.w;
                 }
 
@@ -198,9 +198,9 @@ bool Window::KeyDown(const int &virt_key) {
 
 void Window::drawImage(const Texture &t) {
     int scale = 4;
-    for (int i = 0; i < t.height * scale; ++i) {
-        for (int j = 0; j < t.width * scale; ++j) {
-            setPixel(j, i, t.image[i / scale * t.height + j / scale]);
+    for (int i = 0; i < t.m_height * scale; ++i) {
+        for (int j = 0; j < t.m_width * scale; ++j) {
+            setPixel(j, i, t.m_image[i / scale * t.m_height + j / scale]);
         }
     }
 }

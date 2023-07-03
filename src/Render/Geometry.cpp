@@ -31,7 +31,7 @@ std::vector<Triangle> Render::GetTriangles(const Mesh &mesh, Camera &cam, const 
 
     std::vector<Triangle> triangles;
     // Get triangles
-    for (Triangle t : mesh.triangles) {
+    for (Triangle t : mesh.m_triangles) {
         Triangle t_proj, t_transform, t_viewed;
 
         // Transform with world matrix
