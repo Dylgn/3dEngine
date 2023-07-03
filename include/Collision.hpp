@@ -1,7 +1,10 @@
 #pragma once
 
-#include "Interval.hpp"
+#include "Collider.hpp"
 
 namespace Collision {
-    bool Colliding(Interval a[3], Interval b[3]);
+    /** Gilbert-Johnson-Keerthi distance algorithm for determining if Colliders are colliding.
+     * @returns True if Colliders are colliding, False otherwise
+    */
+    bool GJK(const Collider *a, const Collider *b);
 }

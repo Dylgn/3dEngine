@@ -23,6 +23,10 @@ namespace MathUtil {
         };
     }
 
+    bool SameDirection(V3d a, V3d b) {
+        return a.dotProd(b) > 0.0f;
+    }
+
     V3d LineIntersectPlane(V3d plane_point, V3d &plane_norm, V3d line_start, V3d line_end, float &t) {
         plane_norm = plane_norm.normalize();
         float plane_d = -plane_norm.dotProd(plane_point);

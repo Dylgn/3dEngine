@@ -2,6 +2,10 @@
 #include "V3d.hpp"
 #include "MathUtility.hpp"
 
+const V3d V3d::unit_x{1,0,0};
+const V3d V3d::unit_y{0,1,0};
+const V3d V3d::unit_z{0,0,1};
+
 V3d V3d::operator+(V3d o) {
     return {
         this->x + o.x,
@@ -46,4 +50,12 @@ float V3d::length() {
 V3d V3d::normalize() {
     float l = length();
     return { x / l, y / l, z / l };
+}
+
+V3d V3d::opposite() {
+    return {
+        -this->x,
+        -this->y,
+        -this->z
+    };
 }

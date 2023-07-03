@@ -18,4 +18,10 @@ struct V3d {
     float length();
     
     V3d normalize();
+
+    V3d opposite();
+
+    static const V3d unit_x;
+    static const V3d unit_y;
+    static const V3d unit_z;
 };

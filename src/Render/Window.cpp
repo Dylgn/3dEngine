@@ -2,6 +2,8 @@
 
 #include "Window.hpp"
 
+const Texture Window::default_texture{"../resources/default_texture.bmp"};
+
 LRESULT CALLBACK WindowProc(HWND wnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     switch (uMsg) {
         case WM_CREATE:
@@ -59,7 +61,7 @@ float min(float a, float b) {
     else return a;
 }
 
-void Window::drawTriangle(Triangle t, Texture &tex, bool check_depth) {
+void Window::drawTriangle(Triangle t, const Texture &tex, bool check_depth) {
     V3d v1 = t.p[0];
     V3d v2 = t.p[1];
     V3d v3 = t.p[2];

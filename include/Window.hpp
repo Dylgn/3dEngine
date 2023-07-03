@@ -22,7 +22,7 @@ class Window {
         /** Set pixel at given coordinates to given colour in 0xRRGGBB format */
         void setPixel(int x, int y, uint32_t colour);
         /** Draw triangle with texture */
-        void drawTriangle(Triangle t, Texture &tex, bool check_depth = false);
+        void drawTriangle(Triangle t, const Texture &tex = default_texture, bool check_depth = false);
         /** Clears screen with given colour */
         void clear(uint32_t colour);
         /** Clears the depth buffer */
@@ -40,6 +40,8 @@ class Window {
         bool KeyDown(int virt_key);
         /** Draw texture to screen */
         void drawImage(Texture t);
+
+        static const Texture default_texture;
 
         Window(const Window&) = delete;
         Window &operator=(const Window&) = delete;

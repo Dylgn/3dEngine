@@ -12,6 +12,8 @@ namespace MathUtil {
 
     V3d CrossProd(V3d &v1, V3d &v2);
 
+    bool SameDirection(V3d a, V3d b);
+
     /** Gets the point where the given line segment intersects the given plane */
     V3d LineIntersectPlane(V3d plane_point, V3d &plane_norm, V3d line_start, V3d line_end, float &t);
 

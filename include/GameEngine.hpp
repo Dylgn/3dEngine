@@ -1,8 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "Object.hpp"
-#include "Player.hpp"
+#include "Camera.hpp"
 #include "Window.hpp"
 #include "Mesh.hpp"
 
@@ -27,8 +26,7 @@ class GameEngine {
         /** Method which is called every frame */
         virtual bool onUpdate(float elapsed_time) = 0;
     protected:
-        Player p;
-        Object cube;
+        Camera cam;
         std::vector<Mesh> meshes;
     private:
         void Render();

@@ -15,6 +15,7 @@
 #include "Window.hpp"
 #include "GameEngine.hpp"
 #include "json.hpp"
+#include "PolyCollider.hpp"
 #include "Collision.hpp"
 
 class Engine3D : public olcConsoleGameEngine {
@@ -295,12 +296,15 @@ class BasicGameEngine: public GameEngine {
         BasicGameEngine(int width = 640, int height = 480, float fov_deg = 90.0f, const wchar_t *title = L""):
             GameEngine{width, height, fov_deg, title} {}
         ~BasicGameEngine() override {}
+        Collider *cube_collider;
+        Collider *player_collider;
         
         bool onStart() override {
             // Mesh cube;
             // cube.LoadObject("../resources/brick_cube.obj");
             // meshes.push_back(cube);
             Mesh mesh_cube;
+            //mesh_cube.LoadObject("../resources/brick_cube.obj");
             mesh_cube.triangles = {
     		    // SOUTH
     		    { 0.0f, 0.0f, 0.0f, 1.0f,    0.0f, 1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 1.0f}, 
@@ -327,35 +331,36 @@ class BasicGameEngine: public GameEngine {
     		    { 1.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f},
     		};
             meshes.push_back(mesh_cube);
-            cube = {mesh_cube, {{0,1},{0,1},{0,1}}};
-            p.box = {{-0.2f,0.2f}, {0.5f,1.5f}, {-1.2f,-0.8f}};
-            p.cam.pos = {0, 1, -1};
+            cube_collider = new PolyCollider({V3d{0,0,0}, V3d{0,0,1}, V3d{1,0,1}, V3d{1,0,0}, V3d{0,1,0}, V3d{0,1,1}, V3d{1,1,1}, V3d{1,1,0}});
+            player_collider = new PolyCollider({V3d{-0.2f, 0.5f, -1.2f}, V3d{-0.2f, 0.5f, -0.8f}, V3d{0.2f, 0.5f, -0.8f}, V3d{0.2f, 0.5f, -1.2f},
+                V3d{-0.2f, 1.5f, -1.2f}, V3d{-0.2f, 1.5f, -0.8f}, V3d{0.2f, 1.5f, -0.8f}, V3d{0.2f, 1.5f, -1.2f}});
+            cam.pos = {0, 1, -1};
+
             return true;
         }
         bool onUpdate(float elapsed_time) override {
-            V3d forward = p.cam.look_dir * (8.0f * elapsed_time);
+            V3d forward = cam.look_dir * (8.0f * elapsed_time);
             if (KeyDown(VK_W)) {
-                p.cam.pos = p.cam.pos + forward;
-                p.box.move(forward);
+                cam.pos = cam.pos + forward;
+                player_collider->move(forward);
             }
             if (KeyDown(VK_S)) {
-                forward = V3d{0,0,0} - forward;
-                p.cam.pos = p.cam.pos + forward;
-                p.box.move(forward);
+                forward = forward.opposite();
+                cam.pos = cam.pos + forward;
+                player_collider->move(forward);
             }
-            if (KeyDown(VK_A)) {p.cam.yaw += 2.0f * elapsed_time; }
-            if (KeyDown(VK_D)) {p.cam.yaw -= 2.0f * elapsed_time; }
-            if (KeyDown(VK_UP)) {p.cam.pos.y += 8.0f * elapsed_time; }
-            if (KeyDown(VK_DOWN)) {p.cam.pos.y -= 8.0f * elapsed_time; }
-            if (KeyDown(VK_LEFT)) {p.cam.pos.x -= 8.0f * elapsed_time; }
-            if (KeyDown(VK_RIGHT)) {p.cam.pos.x += 8.0f * elapsed_time; }
+            if (KeyDown(VK_A)) cam.yaw += 2.0f * elapsed_time;
+            if (KeyDown(VK_D)) cam.yaw -= 2.0f * elapsed_time;
+            if (KeyDown(VK_UP)) cam.pos.y += 8.0f * elapsed_time;
+            if (KeyDown(VK_DOWN)) cam.pos.y -= 8.0f * elapsed_time;
+            if (KeyDown(VK_LEFT)) cam.pos.x -= 8.0f * elapsed_time;
+            if (KeyDown(VK_RIGHT)) cam.pos.x += 8.0f * elapsed_time;
 
-            if (p.box.Colliding(cube.box)) {
-                p.cam.pos = p.cam.pos - forward;
-                p.box.move(V3d{0,0,0} - forward);
-                // do {
-                    
-                // } while (!p.box.Colliding(cube.box));
+            if (Collision::GJK(cube_collider, player_collider)) {
+                player_collider->print();
+                cube_collider->print();
+                cam.pos = cam.pos - forward;
+                player_collider->move(forward.opposite());
             }
 
             //std::cout << 1 / elapsed_time << std::endl;
