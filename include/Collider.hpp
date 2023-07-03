@@ -8,5 +8,4 @@ struct Collider {
     virtual void move(V3d dir) = 0;
     /** Gets furthest point in given direction */
     virtual V3d FurthestPointIn(V3d dir) const = 0;
-    virtual void print() = 0;
 };

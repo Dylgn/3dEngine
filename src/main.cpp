@@ -357,8 +357,6 @@ class BasicGameEngine: public GameEngine {
             if (KeyDown(VK_RIGHT)) cam.pos.x += 8.0f * elapsed_time;
 
             if (Collision::GJK(cube_collider, player_collider)) {
-                player_collider->print();
-                cube_collider->print();
                 cam.pos = cam.pos - forward;
                 player_collider->move(forward.opposite());
             }

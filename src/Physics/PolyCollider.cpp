@@ -1,6 +1,5 @@
 #include <cfloat>
 #include "PolyCollider.hpp"
-#include <iostream>
 
 PolyCollider::PolyCollider(std::initializer_list<V3d> list) {
     for (auto v : list) {
@@ -28,11 +27,4 @@ V3d PolyCollider::FurthestPointIn(V3d dir) const {
     }
 
     return max_point;
-}
-
-void PolyCollider::print() {
-    std::cout << "COLLIDER:" << std::endl;
-    for (auto &v : m_vertices) {
-        std::cout << v.x << " " << v.y << " " << v.z << std::endl;
-    }
 }
