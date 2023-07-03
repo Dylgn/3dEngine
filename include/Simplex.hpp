@@ -13,7 +13,7 @@ class Simplex {
         Simplex &operator=(std::initializer_list<V3d> list);
         V3d &operator[](unsigned int i);
 
-        void push_front(V3d v);
+        void push_front(const V3d &v);
         unsigned int size() const;
 
         auto begin() const;

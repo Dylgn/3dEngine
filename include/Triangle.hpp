@@ -10,11 +10,11 @@ struct Triangle {
     wchar_t sym;
 	short col;
 
-    Triangle &copyPoints(Triangle o);
-    Triangle &copyTexture(Triangle o);
+    Triangle &copyPoints(const Triangle &o);
+    Triangle &copyTexture(const Triangle &o);
 
     Triangle &normalizePoints();
 
-    Triangle addPoints(V3d o);
-    Triangle multPoints(M4x4 m);
+    Triangle addPoints(const V3d &o) const;
+    Triangle multPoints(const M4x4 &m) const;
 };

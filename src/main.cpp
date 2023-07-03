@@ -338,7 +338,7 @@ class BasicGameEngine: public GameEngine {
 
             return true;
         }
-        bool onUpdate(float elapsed_time) override {
+        bool onUpdate(const float &elapsed_time) override {
             V3d forward = cam.look_dir * (8.0f * elapsed_time);
             if (KeyDown(VK_W)) {
                 cam.pos = cam.pos + forward;
@@ -361,7 +361,7 @@ class BasicGameEngine: public GameEngine {
                 player_collider->move(forward.opposite());
             }
 
-            //std::cout << 1 / elapsed_time << std::endl;
+            std::cout << 1 / elapsed_time << std::endl;
             return true;
         }
 };

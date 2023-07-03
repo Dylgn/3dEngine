@@ -3,11 +3,11 @@
 #include "Geometry.hpp"
 #include "MathUtility.hpp"
 
-std::list<Triangle> Render::GetClippedTriangles(Mesh mesh, Camera &cam, float width, float height) {
+std::list<Triangle> Render::GetClippedTriangles(const Mesh &mesh, Camera &cam, const int width, const int height) {
     return ClipTriangles(GetTriangles(mesh, cam, width, height), width, height);
 }
 
-std::vector<Triangle> Render::GetTriangles(Mesh mesh, Camera &cam, int width, int height) {
+std::vector<Triangle> Render::GetTriangles(const Mesh &mesh, Camera &cam, const int width, const int height) {
     // Rotation matrices
     M4x4 mat_rot_z, mat_rot_x;
     //theta += 1.0f * fElapsedTime;
@@ -115,9 +115,9 @@ std::vector<Triangle> Render::GetTriangles(Mesh mesh, Camera &cam, int width, in
     return triangles;
 }
 
-std::list<Triangle> Render::ClipTriangles(std::vector<Triangle> triangles, int width, int height) {
+std::list<Triangle> Render::ClipTriangles(const std::vector<Triangle> &triangles, const int width, const int height) {
     std::list<Triangle> output;
-    for (Triangle &t : triangles) {
+    for (const Triangle &t : triangles) {
         // Clip triangles against screen edges
         Triangle clipped[2];
         std::list<Triangle> t_list;

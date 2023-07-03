@@ -47,7 +47,7 @@ void Window::update() {
     BitBlt(GetDC(wnd), 0, 0, WIDTH, HEIGHT, back_dc, 0, 0, SRCCOPY);
 }
 
-void Window::setPixel(int x, int y, uint32_t colour) {
+void Window::setPixel(int x, int y, const uint32_t &colour) {
     if (x >= WIDTH || x < 0 || y >= HEIGHT || y < 0) return;
     frame_buffer[y * WIDTH + x] = colour;
 }
@@ -61,7 +61,7 @@ float min(float a, float b) {
     else return a;
 }
 
-void Window::drawTriangle(Triangle t, const Texture &tex, bool check_depth) {
+void Window::drawTriangle(const Triangle &t, const Texture &tex, bool check_depth) {
     V3d v1 = t.p[0];
     V3d v2 = t.p[1];
     V3d v3 = t.p[2];
@@ -172,7 +172,7 @@ void Window::drawTriangle(Triangle t, const Texture &tex, bool check_depth) {
     }
 }
 
-void Window::clear(uint32_t colour) {
+void Window::clear(const uint32_t &colour) {
     for (int i = 0; i < HEIGHT; ++i) {
         for (int j = 0; j < WIDTH; ++j) {
             frame_buffer[i * WIDTH + j] = colour;
@@ -192,11 +192,11 @@ int Window::getHeight() {
     return HEIGHT;
 }
 
-bool Window::KeyDown(int virt_key) {
+bool Window::KeyDown(const int &virt_key) {
     return GetKeyState(virt_key) & 0x8000;
 }
 
-void Window::drawImage(Texture t) {
+void Window::drawImage(const Texture &t) {
     int scale = 4;
     for (int i = 0; i < t.height * scale; ++i) {
         for (int j = 0; j < t.width * scale; ++j) {

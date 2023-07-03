@@ -6,20 +6,20 @@ struct V3d {
     float z = 0;
     float w = 1;
 
-    V3d operator+(V3d o);
-    V3d operator-(V3d o);
-    V3d operator*(float k);
-    V3d operator/(float k);
+    V3d operator+(const V3d &o) const;
+    V3d operator-(const V3d &o) const;
+    V3d operator*(float k) const;
+    V3d operator/(float k) const;
 
-    float dotProd(V3d o);
+    float dotProd(const V3d &o) const;
 
-    V3d crossProd(V3d o);
+    V3d crossProd(const V3d &o) const;
 
-    float length();
+    float length() const;
     
-    V3d normalize();
+    V3d normalize() const;
 
-    V3d opposite();
+    V3d opposite() const;
 
     static const V3d unit_x;
     static const V3d unit_y;

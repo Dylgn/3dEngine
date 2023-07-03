@@ -8,7 +8,7 @@ Texture::Texture(std::string file_name) {
     LoadTexture(file_name);
 }
 
-Texture::Texture(Texture &t): width{t.width}, height{t.height}, image{new uint32_t[width * height]} {
+Texture::Texture(const Texture &t): width{t.width}, height{t.height}, image{new uint32_t[width * height]} {
     int img_size = width * height;
     for (int i = 0; i < img_size; ++i) {
         image[i] = t.image[i];

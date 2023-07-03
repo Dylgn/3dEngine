@@ -44,7 +44,7 @@ void GameEngine::Start() {
     }
 }
 
-bool GameEngine::KeyDown(int virt_key) {
+bool GameEngine::KeyDown(const int &virt_key) {
     return window.KeyDown(virt_key);
 }
 

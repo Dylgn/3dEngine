@@ -20,11 +20,11 @@ class Window {
 
         void update();
         /** Set pixel at given coordinates to given colour in 0xRRGGBB format */
-        void setPixel(int x, int y, uint32_t colour);
+        void setPixel(int x, int y, const uint32_t &colour);
         /** Draw triangle with texture */
-        void drawTriangle(Triangle t, const Texture &tex = default_texture, bool check_depth = false);
+        void drawTriangle(const Triangle &t, const Texture &tex = default_texture, bool check_depth = false);
         /** Clears screen with given colour */
-        void clear(uint32_t colour);
+        void clear(const uint32_t &colour);
         /** Clears the depth buffer */
         void clear_depth_buffer();
 
@@ -37,9 +37,9 @@ class Window {
          * Virtual key codes can be found {@link https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes|here}
          * @return True if held down, false otherwise
         */
-        bool KeyDown(int virt_key);
+        bool KeyDown(const int &virt_key);
         /** Draw texture to screen */
-        void drawImage(Texture t);
+        void drawImage(const Texture &t);
 
         static const Texture default_texture;
 

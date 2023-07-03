@@ -5,7 +5,7 @@
 /** Used to test collision between objects. Assumes a convex shape.*/
 struct Collider {
     /** Move all vertices in given direction */
-    virtual void move(V3d dir) = 0;
+    virtual void move(const V3d &dir) = 0;
     /** Gets furthest point in given direction */
-    virtual V3d FurthestPointIn(V3d dir) const = 0;
+    virtual V3d FurthestPointIn(const V3d &dir) const = 0;
 };

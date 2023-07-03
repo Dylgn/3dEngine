@@ -19,12 +19,12 @@ class GameEngine {
          * Virtual key codes can be found {@link https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes|here}
          * @return True if held down, false otherwise
         */
-        bool KeyDown(int virt_key);
+        bool KeyDown(const int &virt_key);
 
         /** Starts the engine */
         virtual bool onStart() = 0;
         /** Method which is called every frame */
-        virtual bool onUpdate(float elapsed_time) = 0;
+        virtual bool onUpdate(const float &elapsed_time) = 0;
     protected:
         Camera cam;
         std::vector<Mesh> meshes;

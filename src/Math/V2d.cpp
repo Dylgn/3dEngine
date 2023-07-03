@@ -1,6 +1,6 @@
 #include "V2d.hpp"
 
-V2d V2d::operator+(V2d o) {
+V2d V2d::operator+(const V2d &o) const {
     return {
         this->u + o.u,
         this->v + o.v,
@@ -8,7 +8,7 @@ V2d V2d::operator+(V2d o) {
     };
 }
 
-V2d V2d::operator-(V2d o) {
+V2d V2d::operator-(const V2d &o) const {
     return {
         this->u - o.u,
         this->v - o.v,
@@ -16,7 +16,7 @@ V2d V2d::operator-(V2d o) {
     };
 }
 
-V2d V2d::operator*(float k) {
+V2d V2d::operator*(float k) const {
     return {
         this->u * k,
         this->v * k,
@@ -24,7 +24,7 @@ V2d V2d::operator*(float k) {
     };
 }
 
-V2d V2d::operator/(float k) {
+V2d V2d::operator/(float k) const {
     return {
         this->u / k,
         this->v / k,

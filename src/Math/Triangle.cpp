@@ -1,13 +1,13 @@
 #include "Triangle.hpp"
 
-Triangle &Triangle::copyPoints(Triangle o) {
+Triangle &Triangle::copyPoints(const Triangle &o) {
     for (int i = 0; i < 3; ++i) {
         this->p[i] = o.p[i];
     }
     return *this;
 }
 
-Triangle &Triangle::copyTexture(Triangle o) {
+Triangle &Triangle::copyTexture(const Triangle &o) {
     for (int i = 0; i < 3; ++i) {
         this->t[i] = o.t[i];
     }
@@ -21,7 +21,7 @@ Triangle &Triangle::normalizePoints() {
     return *this;
 }
 
-Triangle Triangle::addPoints(V3d v) {
+Triangle Triangle::addPoints(const V3d &v) const {
     return {
         this->p[0] + v,
         this->p[1] + v,
@@ -29,7 +29,7 @@ Triangle Triangle::addPoints(V3d v) {
     };
 }
 
-Triangle Triangle::multPoints(M4x4 m) {
+Triangle Triangle::multPoints(const M4x4 &m) const {
     return {
         m * this->p[0],
         m * this->p[1],

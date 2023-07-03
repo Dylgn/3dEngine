@@ -9,7 +9,7 @@ class PolyCollider: public Collider {
     public:
         PolyCollider(std::initializer_list<V3d> list);
         /** Move all vertices in given direction */
-        void move(V3d dir) override;
+        void move(const V3d &dir) override;
         /** Gets the furthest vertex in the given direction */
-        V3d FurthestPointIn(V3d dir) const override;
+        V3d FurthestPointIn(const V3d &dir) const override;
 };

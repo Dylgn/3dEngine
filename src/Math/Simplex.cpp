@@ -21,7 +21,7 @@ Simplex &Simplex::operator=(std::initializer_list<V3d> list) {
 
 V3d &Simplex::operator[](unsigned int i) { return m_vertices[i]; }
 
-void Simplex::push_front(V3d v) {
+void Simplex::push_front(const V3d &v) {
     m_vertices = {v, m_vertices[0], m_vertices[1], m_vertices[2]};
     m_size = std::min(m_size + 1, 4u);
 }

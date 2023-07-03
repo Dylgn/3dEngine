@@ -6,38 +6,38 @@
 
 namespace MathUtil {
     /** Multiplies 4x4 matrix by vector */
-    V3d Mat4x4VecMult(M4x4 &m, V3d &v);
+    V3d Mat4x4VecMult(const M4x4 &m, const V3d &v);
 
-    float DotProd(V3d &v1, V3d &v2);
+    float DotProd(const V3d &v1, const V3d &v2);
 
-    V3d CrossProd(V3d &v1, V3d &v2);
+    V3d CrossProd(const V3d &v1, const V3d &v2);
 
-    bool SameDirection(V3d a, V3d b);
+    bool SameDirection(const V3d &a, const V3d &b);
 
     /** Gets the point where the given line segment intersects the given plane */
-    V3d LineIntersectPlane(V3d plane_point, V3d &plane_norm, V3d line_start, V3d line_end, float &t);
+    V3d LineIntersectPlane(const V3d &plane_point, V3d &plane_norm, const V3d &line_start, const V3d &line_end, float &t);
 
     M4x4 GetIdentityMat();
 
-    M4x4 GetMatRotX(float angle);
+    M4x4 GetMatRotX(const float &angle);
 
-    M4x4 GetMatRotY(float angle);
+    M4x4 GetMatRotY(const float &angle);
 
-    M4x4 GetMatRotZ(float angle);
+    M4x4 GetMatRotZ(const float &angle);
 
-    M4x4 GetProjMat(float fov_deg, float aspect_ratio, float view_near, float view_far);
+    M4x4 GetProjMat(const float &fov_deg, const float &aspect_ratio, const float &view_near, const float &view_far);
 
-    M4x4 MatTranslate(float x, float y, float z);
+    M4x4 MatTranslate(const float &x, const float &y, const float &z);
     
-    M4x4 MatPointAt(V3d &pos, V3d &target, V3d &up);
+    M4x4 MatPointAt(const V3d &pos, const V3d &target, const V3d &up);
 
     /** Invert rotation/translation matrices */
-    M4x4 InvertRotTransMat(M4x4 &m);
+    M4x4 InvertRotTransMat(const M4x4 &m);
 
     /** Clip in_triangle against plane, output clipped triangles in out_triangle1 and out_triangle2.
      * @return Number of new triangles clipped
      */
-    int TriangleClipPlane(V3d plane_point, V3d plane_norm, Triangle &in_triangle, Triangle &out_triangle1, Triangle &out_triangle2);
+    int TriangleClipPlane(const V3d &plane_point, V3d plane_norm, Triangle &in_triangle, Triangle &out_triangle1, Triangle &out_triangle2);
 
     float max(float a, float b);
 

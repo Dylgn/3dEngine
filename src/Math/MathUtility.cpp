@@ -2,7 +2,7 @@
 #include "MathUtility.hpp"
 
 namespace MathUtil {
-    V3d Mat4x4VecMult(M4x4 &m, V3d &v) {
+    V3d Mat4x4VecMult(const M4x4 &m, const V3d &v) {
         return {
             v.x * m.m[0][0] + v.y * m.m[1][0] + v.z * m.m[2][0] + v.w * m.m[3][0],
             v.x * m.m[0][1] + v.y * m.m[1][1] + v.z * m.m[2][1] + v.w * m.m[3][1],
@@ -11,11 +11,11 @@ namespace MathUtil {
         };
     }
 
-    float DotProd(V3d &v1, V3d &v2) {
+    float DotProd(const V3d &v1, const V3d &v2) {
         return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
     }
 
-    V3d CrossProd(V3d &v1, V3d &v2) {
+    V3d CrossProd(const V3d &v1, const V3d &v2) {
         return {
             v1.y * v2.z - v1.z * v2.y,
             v1.z * v2.x - v1.x * v2.z,
@@ -23,11 +23,11 @@ namespace MathUtil {
         };
     }
 
-    bool SameDirection(V3d a, V3d b) {
+    bool SameDirection(const V3d &a, const V3d &b) {
         return a.dotProd(b) > 0.0f;
     }
 
-    V3d LineIntersectPlane(V3d plane_point, V3d &plane_norm, V3d line_start, V3d line_end, float &t) {
+    V3d LineIntersectPlane(const V3d &plane_point, V3d &plane_norm, const V3d &line_start, const V3d &line_end, float &t) {
         plane_norm = plane_norm.normalize();
         float plane_d = -plane_norm.dotProd(plane_point);
         float ad = line_start.dotProd(plane_norm);
@@ -47,7 +47,7 @@ namespace MathUtil {
         return m;
     }
 
-    M4x4 GetMatRotX(float angle) {
+    M4x4 GetMatRotX(const float &angle) {
         M4x4 m;
         m.m[0][0] = 1.0f;
         m.m[1][1] = cosf(angle);
@@ -58,7 +58,7 @@ namespace MathUtil {
         return m;
     }
 
-    M4x4 GetMatRotY(float angle) {
+    M4x4 GetMatRotY(const float &angle) {
         M4x4 m;
         m.m[0][0] = cosf(angle);
         m.m[0][2] = sinf(angle);
@@ -69,7 +69,7 @@ namespace MathUtil {
         return m;
     }
 
-    M4x4 GetMatRotZ(float angle) {
+    M4x4 GetMatRotZ(const float &angle) {
         M4x4 m;
         m.m[0][0] = cosf(angle);
         m.m[0][1] = sinf(angle);
@@ -80,7 +80,7 @@ namespace MathUtil {
         return m;
     }
 
-    M4x4 GetProjMat(float fov_deg, float aspect_ratio, float view_near, float view_far) {
+    M4x4 GetProjMat(const float &fov_deg, const float &aspect_ratio, const float &view_near, const float &view_far) {
         float fov_rad = 1.0f / tanf(fov_deg * 0.5f / 180.0f * 3.14159f);
         M4x4 m;
         m.m[0][0] = aspect_ratio * fov_rad;
@@ -92,7 +92,7 @@ namespace MathUtil {
         return m;
     }
 
-    M4x4 MatTranslate(float x, float y, float z) {
+    M4x4 MatTranslate(const float &x, const float &y, const float &z) {
         M4x4 m;
         m.m[0][0] = 1.0f;
         m.m[1][1] = 1.0f;
@@ -104,7 +104,7 @@ namespace MathUtil {
         return m;
     }
 
-    M4x4 MatPointAt(V3d &pos, V3d &target, V3d &up) {
+    M4x4 MatPointAt(const V3d &pos, const V3d &target, const V3d &up) {
         V3d new_forward = target - pos;
         new_forward.normalize();
 
@@ -134,7 +134,7 @@ namespace MathUtil {
         return m;
     }
 
-    int TriangleClipPlane(V3d plane_point, V3d plane_norm, Triangle &in_triangle, Triangle &out_triangle1, Triangle &out_triangle2) {
+    int TriangleClipPlane(const V3d &plane_point, V3d plane_norm, Triangle &in_triangle, Triangle &out_triangle1, Triangle &out_triangle2) {
         plane_norm = plane_norm.normalize();
 
         // Distance from point to plane (signed)
@@ -224,7 +224,7 @@ namespace MathUtil {
         return 0;
     }
 
-    M4x4 InvertRotTransMat(M4x4 &m) {
+    M4x4 InvertRotTransMat(const M4x4 &m) {
         // Invert rotation/translation matrices
         M4x4 ret;
         ret.m[0][0] = m.m[0][0];

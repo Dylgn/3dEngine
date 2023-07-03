@@ -8,7 +8,7 @@ struct Texture {
 
     Texture();
     Texture(std::string file_name);
-    Texture(Texture &t);
+    Texture(const Texture &t);
     ~Texture();
 
     /** Load bmp texture file. Assumes it is 32-bit rgb */

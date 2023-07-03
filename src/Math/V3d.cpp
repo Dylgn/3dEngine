@@ -6,28 +6,28 @@ const V3d V3d::unit_x{1,0,0};
 const V3d V3d::unit_y{0,1,0};
 const V3d V3d::unit_z{0,0,1};
 
-V3d V3d::operator+(V3d o) {
+V3d V3d::operator+(const V3d &o) const {
     return {
         this->x + o.x,
         this->y + o.y,
         this->z + o.z
     };
 }
-V3d V3d::operator-(V3d o) {
+V3d V3d::operator-(const V3d &o) const {
     return {
         this->x - o.x,
         this->y - o.y,
         this->z - o.z
     };
 }
-V3d V3d::operator*(float k) {
+V3d V3d::operator*(float k) const {
     return {
         this->x * k,
         this->y * k,
         this->z * k
     };
 }
-V3d V3d::operator/(float k) {
+V3d V3d::operator/(float k) const {
     return {
         this->x / k,
         this->y / k,
@@ -35,24 +35,24 @@ V3d V3d::operator/(float k) {
     };
 }
 
-float V3d::dotProd(V3d o) {
+float V3d::dotProd(const V3d &o) const {
     return MathUtil::DotProd(*this, o);
 }
 
-V3d V3d::crossProd(V3d o) {
+V3d V3d::crossProd(const V3d &o) const {
     return MathUtil::CrossProd(*this, o);
 }
 
-float V3d::length() {
+float V3d::length() const {
     return sqrtf(dotProd(*this));
 }
 
-V3d V3d::normalize() {
+V3d V3d::normalize() const {
     float l = length();
     return { x / l, y / l, z / l };
 }
 
-V3d V3d::opposite() {
+V3d V3d::opposite() const {
     return {
         -this->x,
         -this->y,
