@@ -1,5 +1,4 @@
 #include <algorithm>
-
 #include "Window.hpp"
 
 const Texture Window::default_texture{"../resources/default_texture.bmp"};
@@ -122,6 +121,9 @@ void Window::drawTriangle(const Triangle &t, const Texture &tex, bool check_dept
                     int y = (t_j.v / t_j.w) * static_cast<float>(tex.m_height - 1);
                     int x = (t_j.u / t_j.w) * static_cast<float>(tex.m_width);
 
+                    if (y - static_cast<int>(y) >= 0.5f) ++y;
+                    if (x >= tex.m_width) --x;
+
                     setPixel(j, i, tex.m_image[y * tex.m_width + x]);
                     depth_buffer[i * WIDTH + j] = t_j.w;
                 }
@@ -161,6 +163,9 @@ void Window::drawTriangle(const Triangle &t, const Texture &tex, bool check_dept
                 if (t_j.w > depth_buffer[i * WIDTH + j]) {
                     int y = (t_j.v / t_j.w) * static_cast<float>(tex.m_height - 1);
                     int x = (t_j.u / t_j.w) * static_cast<float>(tex.m_width);
+
+                    if (y - static_cast<int>(y) >= 0.5f) ++y;
+                    if (x >= tex.m_width) --x;
 
                     setPixel(j, i, tex.m_image[y * tex.m_width + x]);
                     depth_buffer[i * WIDTH + j] = t_j.w;
