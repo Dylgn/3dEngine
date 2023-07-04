@@ -57,7 +57,7 @@ bool Texture::LoadTexture(std::string file_name) {
     if (inverted) {
         for (int i = 0; i < m_height / 2; ++i) {
             for (int j = 0; j < m_width; ++j) {
-                std::swap(m_image[i * m_height + j], m_image[(m_height - 1 - i) * m_height + j]);
+                std::swap(m_image[i * m_width + j], m_image[(m_height - 1 - i) * m_width + j]);
             }
         }
     }
