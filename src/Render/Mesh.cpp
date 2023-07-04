@@ -25,7 +25,7 @@ bool Mesh::LoadObject(std::string file_name, bool textured) {
             case 'v':
                 if (line[1] == 't') { // Texture
                     V2d v;
-                    s >> type >> v.u >> v.v;
+                    s >> type >> type >> v.u >> v.v;
                     textures.push_back(v);
                 } else {
                     V3d v;
