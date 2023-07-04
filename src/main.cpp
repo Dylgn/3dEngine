@@ -17,6 +17,7 @@
 #include "json.hpp"
 #include "PolyCollider.hpp"
 #include "Collision.hpp"
+#include "Object.hpp"
 
 class Engine3D : public olcConsoleGameEngine {
     public:
@@ -296,43 +297,46 @@ class BasicGameEngine: public GameEngine {
         BasicGameEngine(int width = 640, int height = 480, float fov_deg = 90.0f, const wchar_t *title = L""):
             GameEngine{width, height, fov_deg, title} {}
         ~BasicGameEngine() override {}
+
+        Object player;
+        
         Collider *cube_collider;
-        Collider *player_collider;
+        //Collider *player_collider;
         
         bool onStart() override {
             // Mesh cube;
             // cube.LoadObject("../resources/brick_cube.obj");
             // meshes.push_back(cube);
             Mesh mesh_cube;
-            //mesh_cube.LoadObject("../resources/brick_cube.obj");
-            mesh_cube.m_triangles = {
-    		    // SOUTH
-    		    { 0.0f, 0.0f, 0.0f, 1.0f,    0.0f, 1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 1.0f}, 
-    		    { 0.0f, 0.0f, 0.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,    1.0f, 0.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f},
+            mesh_cube.LoadObject("../resources/brick_cube.obj", true);
+            // mesh_cube.m_triangles = {
+    		//     // SOUTH
+    		//     { 0.0f, 0.0f, 0.0f, 1.0f,    0.0f, 1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 1.0f}, 
+    		//     { 0.0f, 0.0f, 0.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,    1.0f, 0.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f},
 
-    		    // EAST           																			   
-    		    { 1.0f, 0.0f, 0.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,     0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 1.0f},
-    		    { 1.0f, 0.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f, 1.0f,     0.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f},
+    		//     // EAST           																			   
+    		//     { 1.0f, 0.0f, 0.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,     0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 1.0f},
+    		//     { 1.0f, 0.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f, 1.0f,     0.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f},
 
-    		    // NORTH           																			   
-    		    { 1.0f, 0.0f, 1.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f,     0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 1.0f},
-    		    { 1.0f, 0.0f, 1.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f, 1.0f,     0.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f},
+    		//     // NORTH           																			   
+    		//     { 1.0f, 0.0f, 1.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f,     0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 1.0f},
+    		//     { 1.0f, 0.0f, 1.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f, 1.0f,     0.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f},
 
-    		    // WEST            																			   
-    		    { 0.0f, 0.0f, 1.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f,    0.0f, 1.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 1.0f},
-    		    { 0.0f, 0.0f, 1.0f, 1.0f,    0.0f, 1.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f},
+    		//     // WEST            																			   
+    		//     { 0.0f, 0.0f, 1.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f,    0.0f, 1.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 1.0f},
+    		//     { 0.0f, 0.0f, 1.0f, 1.0f,    0.0f, 1.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f},
 
-    		    // TOP             																			   
-    		    { 0.0f, 1.0f, 0.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,     0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 1.0f},
-    		    { 0.0f, 1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f},
+    		//     // TOP             																			   
+    		//     { 0.0f, 1.0f, 0.0f, 1.0f,    0.0f, 1.0f, 1.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,     0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 1.0f},
+    		//     { 0.0f, 1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f},
 
-    		    // BOTTOM          																			  
-    		    { 1.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 1.0f},
-    		    { 1.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f},
-    		};
+    		//     // BOTTOM          																			  
+    		//     { 1.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 1.0f},
+    		//     { 1.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f},
+    		// };
             m_meshes.push_back(mesh_cube);
             cube_collider = new PolyCollider({V3d{0,0,0}, V3d{0,0,1}, V3d{1,0,1}, V3d{1,0,0}, V3d{0,1,0}, V3d{0,1,1}, V3d{1,1,1}, V3d{1,1,0}});
-            player_collider = new PolyCollider({V3d{-0.2f, 0.5f, -1.2f}, V3d{-0.2f, 0.5f, -0.8f}, V3d{0.2f, 0.5f, -0.8f}, V3d{0.2f, 0.5f, -1.2f},
+            player.m_collider = new PolyCollider({V3d{-0.2f, 0.5f, -1.2f}, V3d{-0.2f, 0.5f, -0.8f}, V3d{0.2f, 0.5f, -0.8f}, V3d{0.2f, 0.5f, -1.2f},
                 V3d{-0.2f, 1.5f, -1.2f}, V3d{-0.2f, 1.5f, -0.8f}, V3d{0.2f, 1.5f, -0.8f}, V3d{0.2f, 1.5f, -1.2f}});
             m_cam.pos = {0, 1, -1};
 
@@ -342,12 +346,12 @@ class BasicGameEngine: public GameEngine {
             V3d forward = m_cam.look_dir * (8.0f * elapsed_time);
             if (KeyDown(VK_W)) {
                 m_cam.pos = m_cam.pos + forward;
-                player_collider->move(forward);
+                player.m_collider->move(forward);
             }
             if (KeyDown(VK_S)) {
                 forward = forward.opposite();
                 m_cam.pos = m_cam.pos + forward;
-                player_collider->move(forward);
+                player.m_collider->move(forward);
             }
             if (KeyDown(VK_A)) m_cam.yaw += 2.0f * elapsed_time;
             if (KeyDown(VK_D)) m_cam.yaw -= 2.0f * elapsed_time;
@@ -356,9 +360,9 @@ class BasicGameEngine: public GameEngine {
             if (KeyDown(VK_LEFT)) m_cam.pos.x -= 8.0f * elapsed_time;
             if (KeyDown(VK_RIGHT)) m_cam.pos.x += 8.0f * elapsed_time;
 
-            if (Collision::GJK(cube_collider, player_collider)) {
+            if (Collision::GJK(cube_collider, player.m_collider)) {
                 m_cam.pos = m_cam.pos - forward;
-                player_collider->move(forward.opposite());
+                player.m_collider->move(forward.opposite());
             }
 
             std::cout << 1 / elapsed_time << std::endl;
