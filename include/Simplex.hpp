@@ -16,6 +16,6 @@ class Simplex {
         void push_front(const V3d &v);
         unsigned int size() const;
 
-        auto begin() const;
-        auto end() const; 
+        auto begin() const { return m_vertices.begin(); };
+        auto end() const { return m_vertices.end() - (4 - m_size); }; 
 };

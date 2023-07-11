@@ -27,6 +27,3 @@ void Simplex::push_front(const V3d &v) {
 }
 
 unsigned int Simplex::size() const { return m_size; }
-
-auto Simplex::begin() const { return m_vertices.begin(); }
-auto Simplex::end() const { return m_vertices.end() - (4 - m_size); }
