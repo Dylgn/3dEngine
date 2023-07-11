@@ -14,6 +14,9 @@ namespace MathUtil {
 
     bool SameDirection(const V3d &a, const V3d &b);
 
+    /** Creates a vector in the specified direction with the given length */
+    V3d AdjustToLength(const V3d &dir, const float &length);
+
     /** Gets the point where the given line segment intersects the given plane */
     V3d LineIntersectPlane(const V3d &plane_point, V3d &plane_norm, const V3d &line_start, const V3d &line_end, float &t);
 

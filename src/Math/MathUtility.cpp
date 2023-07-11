@@ -27,6 +27,10 @@ namespace MathUtil {
         return a.dotProd(b) > 0.0f;
     }
 
+    V3d AdjustToLength(const V3d &dir, const float &length) {
+        return dir * (length / dir.length());
+    }
+
     V3d LineIntersectPlane(const V3d &plane_point, V3d &plane_norm, const V3d &line_start, const V3d &line_end, float &t) {
         plane_norm = plane_norm.normalize();
         float plane_d = -plane_norm.dotProd(plane_point);
