@@ -166,10 +166,6 @@ bool Collision::GJK(const Collider *a, const Collider *b) {
     return ::GJK(vertices, a, b);
 }
 
-float absf(float f) {
-    return f > 0.0f ? f : -f;
-}
-
 std::pair<V3d, float> Collision::EPA(const Simplex &simplex, const Collider *a, const Collider *b) {
     std::vector<V3d> polytope(simplex.begin(), simplex.end());
     std::vector<size_t> faces = { 0, 1, 2,  0, 3, 1,  0, 2, 3,  1, 3, 2 };
@@ -186,7 +182,7 @@ std::pair<V3d, float> Collision::EPA(const Simplex &simplex, const Collider *a, 
         V3d sup = GreatestDiff(a, b, min_norm);
         float s_dist = min_norm.dotProd(sup);
 
-        if (absf(s_dist - min_dist) > 0.001f) {
+        if (std::abs(s_dist - min_dist) > 0.001f) {
             min_dist = FLT_MAX;
 
             std::vector<std::pair<size_t, size_t>> unique_edges;
