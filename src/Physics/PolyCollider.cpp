@@ -1,5 +1,6 @@
-#include <cfloat>
 #include "PolyCollider.hpp"
+
+#define FLT_MAX __FLT_MAX__
 
 PolyCollider::PolyCollider(std::initializer_list<V3d> list) {
     for (auto v : list) {
