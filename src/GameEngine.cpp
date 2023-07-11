@@ -21,7 +21,7 @@ void GameEngine::Start() {
     if (m_running) return;
     else m_running = true;
 
-    onStart();
+    if (!onStart()) return;
 
     auto time_prev = std::chrono::system_clock::now();
 
@@ -37,7 +37,7 @@ void GameEngine::Start() {
         // Calculate elapsed time since last call to onUpdate()
         auto time_now = std::chrono::system_clock::now();
         std::chrono::duration<float> elapsed_time = time_now - time_prev;
-        onUpdate(elapsed_time.count());
+        if (!onUpdate(elapsed_time.count())) return;
         time_prev = time_now;
 
         Render();
