@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <cmath>
 #include "Window.hpp"
 
 const Texture Window::default_texture{"../resources/default_texture.bmp"};
@@ -86,7 +87,7 @@ void Window::drawTriangle(const Triangle &t, const Texture &tex, bool check_dept
     float slope_v2 = 0, slope_v3 = 0;
     V2d slope_t2 = {0,0}, slope_t3 = {0,0};
 
-    if ((v1.y - v3.y) != 0 ) {
+    if ((v1.y - v3.y) != 0) {
         slope_v3 = (v1.x - v3.x) / static_cast<float>(v1.y - v3.y);
         slope_t3 = (t1 - t3) / static_cast<float>(v1.y - v3.y);
     }
@@ -115,13 +116,12 @@ void Window::drawTriangle(const Triangle &t, const Texture &tex, bool check_dept
             // Draw line start to end
             for (int j = start; j <= end; ++j) {
                 // Linear interpolation texture coordinates
-                V2d t_j = t_start * (1 - t) + t_end * t;
-
+                V2d t_j = t_start * (1.0f - t) + t_end * t;
+                
                 if (t_j.w > depth_buffer[i * WIDTH + j]) {
-                    int y = (t_j.v / t_j.w) * static_cast<float>(tex.m_height - 1);
+                    int y = std::rintf((t_j.v / t_j.w) * static_cast<float>(tex.m_height - 1));
                     int x = (t_j.u / t_j.w) * static_cast<float>(tex.m_width);
 
-                    if (y - static_cast<int>(y) >= 0.5f) ++y;
                     if (x >= tex.m_width) --x;
 
                     setPixel(j, i, tex.m_image[y * tex.m_width + x]);
@@ -138,7 +138,7 @@ void Window::drawTriangle(const Triangle &t, const Texture &tex, bool check_dept
         slope_t2 = (t2 - t3) / static_cast<float>(v2.y - v3.y);
     }
     
-    if (v2.y - v3.y != 0) {
+    if ((v2.y - v3.y) != 0) {
         // Second half of triangle
         for (int i = v2.y; i <= v3.y; ++i) {
             float di = i - v1.y;
@@ -158,13 +158,12 @@ void Window::drawTriangle(const Triangle &t, const Texture &tex, bool check_dept
             float t = 0.0f;
 
             for (int j = start; j <= end; ++j) {
-                V2d t_j = t_start * (1 - t) + t_end * t;
+                V2d t_j = t_start * (1.0f - t) + t_end * t;
 
                 if (t_j.w > depth_buffer[i * WIDTH + j]) {
-                    int y = (t_j.v / t_j.w) * static_cast<float>(tex.m_height - 1);
+                    int y = std::rintf((t_j.v / t_j.w) * static_cast<float>(tex.m_height - 1));
                     int x = (t_j.u / t_j.w) * static_cast<float>(tex.m_width);
 
-                    if (y - static_cast<int>(y) >= 0.5f) ++y;
                     if (x >= tex.m_width) --x;
 
                     setPixel(j, i, tex.m_image[y * tex.m_width + x]);
