@@ -12,6 +12,4 @@ class PolyCollider: public Collider {
         void move(const V3d &dir) override;
         /** Gets the furthest vertex in the given direction */
         V3d FurthestPointIn(const V3d &dir) const override;
-
-        void print() override;
 };
