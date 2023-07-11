@@ -52,15 +52,6 @@ void Window::setPixel(int x, int y, const uint32_t &colour) {
     frame_buffer[y * WIDTH + x] = colour;
 }
 
-float max(float a, float b) {
-    if (a > b) return a;
-    else return b;
-}
-float min(float a, float b) {
-    if (a > b) return b;
-    else return a;
-}
-
 void Window::drawTriangle(const Triangle &t, const Texture &tex, bool check_depth) {
     V3d v1 = t.p[0];
     V3d v2 = t.p[1];
@@ -99,11 +90,11 @@ void Window::drawTriangle(const Triangle &t, const Texture &tex, bool check_dept
         for (int i = v1.y; i <= v2.y; ++i) {
             float di = i - v1.y;
             // x-values of start/end of triangle at each y-value
-            int start = slope_v2 * max(di, 0) + v1.x;
-            int end = slope_v3 * max(di, 0) + v1.x;
+            int start = slope_v2 * std::max(di, 0.0f) + v1.x;
+            int end = slope_v3 * std::max(di, 0.0f) + v1.x;
 
-            V2d t_start = slope_t2 * max(di, 0) + t1;
-            V2d t_end = slope_t3 * max(di, 0) + t1;
+            V2d t_start = slope_t2 * std::max(di, 0.0f) + t1;
+            V2d t_end = slope_t3 * std::max(di, 0.0f) + t1;
 
             if (end < start) {
                 std::swap(start, end);
@@ -143,11 +134,11 @@ void Window::drawTriangle(const Triangle &t, const Texture &tex, bool check_dept
         for (int i = v2.y; i <= v3.y; ++i) {
             float di = i - v1.y;
             float di2 = i - v2.y;
-            int start = slope_v2 * max(di2, 0) + v2.x;
-            int end = slope_v3 * max(di, 0) + v1.x;
+            int start = slope_v2 * std::max(di2, 0.0f) + v2.x;
+            int end = slope_v3 * std::max(di, 0.0f) + v1.x;
 
-            V2d t_start = slope_t2 * max(di2, 0) + t2;
-            V2d t_end = slope_t3 * max(di, 0) + t1;
+            V2d t_start = slope_t2 * std::max(di2, 0.0f) + t2;
+            V2d t_end = slope_t3 * std::max(di, 0.0f) + t1;
 
             if (end < start) {
                 std::swap(start, end);
