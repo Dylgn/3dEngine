@@ -20,7 +20,7 @@ V3d PolyCollider::FurthestPointIn(const V3d &dir) const {
 
     // Loops through all vertices and gets furthest in 'dir' direction
     for (V3d v : m_vertices) {
-        float dist = v.dotProd(dir);
+        float dist = v.dot(dir);
         if (dist > max_dist) {
             max_dist = dist;
             max_point = v;

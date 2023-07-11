@@ -35,16 +35,16 @@ V3d V3d::operator/(float k) const {
     };
 }
 
-float V3d::dotProd(const V3d &o) const {
+float V3d::dot(const V3d &o) const {
     return MathUtil::DotProd(*this, o);
 }
 
-V3d V3d::crossProd(const V3d &o) const {
+V3d V3d::cross(const V3d &o) const {
     return MathUtil::CrossProd(*this, o);
 }
 
 float V3d::length() const {
-    return sqrtf(dotProd(*this));
+    return sqrtf(dot(*this));
 }
 
 V3d V3d::normalize() const {

@@ -18,7 +18,7 @@ namespace {
         V3d ab = b - a;
         V3d ao = a.opposite();
 
-        if (MathUtil::SameDirection(ab, ao)) dir = ab.crossProd(ao).crossProd(ab);
+        if (MathUtil::SameDirection(ab, ao)) dir = ab.cross(ao).cross(ab);
         else {
             simplex = {a};
             dir = ao;
@@ -35,14 +35,14 @@ namespace {
         V3d ac = c - a;
         V3d ao = a.opposite();
 
-        V3d abc = ab.crossProd(ac);
+        V3d abc = ab.cross(ac);
 
-        if (MathUtil::SameDirection(abc.crossProd(ac), ao)) {
+        if (MathUtil::SameDirection(abc.cross(ac), ao)) {
             if (MathUtil::SameDirection(ac, ao)) {
                 simplex = {a, c};
-                dir = ac.crossProd(ao).crossProd(ac);
+                dir = ac.cross(ao).cross(ac);
             } else return NSLine(simplex = {a, b}, dir);
-        } else if (MathUtil::SameDirection(ab.crossProd(abc), ao)) {
+        } else if (MathUtil::SameDirection(ab.cross(abc), ao)) {
             return NSLine(simplex = {a, b}, dir);
         } else if (MathUtil::SameDirection(abc, ao)) {
             dir = abc;
@@ -65,9 +65,9 @@ namespace {
         V3d ad = d - a;
         V3d ao = a.opposite();
 
-        V3d abc = ab.crossProd(ac);
-        V3d acd = ac.crossProd(ad);
-        V3d adb = ad.crossProd(ab);
+        V3d abc = ab.cross(ac);
+        V3d acd = ac.cross(ad);
+        V3d adb = ad.cross(ab);
 
         if (MathUtil::SameDirection(abc, ao)) {
             return NSTriangle(simplex = {a, b, c}, dir);
@@ -106,7 +106,7 @@ namespace {
             sup = GreatestDiff(a, b, to_origin);
 
             // Current closest vertex is closest possible, no collision
-            if (sup.dotProd(to_origin) <= 0) return false;
+            if (sup.dot(to_origin) <= 0) return false;
 
             vertices.push_front(sup);
 
@@ -130,8 +130,8 @@ namespace {
             V3d b = polytope[faces[i + 1]];
             V3d c = polytope[faces[i + 2]];
 
-            V3d norm = (b - a).crossProd(c - a).normalize();
-            float dist = norm.dotProd(a);
+            V3d norm = (b - a).cross(c - a).normalize();
+            float dist = norm.dot(a);
 
             if (dist < 0) {
                 norm = norm * -1;
@@ -180,7 +180,7 @@ std::pair<V3d, float> Collision::EPA(const Simplex &simplex, const Collider *a, 
         min_dist = norms[min_face].w;
 
         V3d sup = GreatestDiff(a, b, min_norm);
-        float s_dist = min_norm.dotProd(sup);
+        float s_dist = min_norm.dot(sup);
 
         if (std::abs(s_dist - min_dist) > 0.001f) {
             min_dist = FLT_MAX;

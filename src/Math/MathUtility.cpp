@@ -24,7 +24,7 @@ namespace MathUtil {
     }
 
     bool SameDirection(const V3d &a, const V3d &b) {
-        return a.dotProd(b) > 0.0f;
+        return a.dot(b) > 0.0f;
     }
 
     V3d AdjustToLength(const V3d &dir, const float &length) {
@@ -33,9 +33,9 @@ namespace MathUtil {
 
     V3d LineIntersectPlane(const V3d &plane_point, V3d &plane_norm, const V3d &line_start, const V3d &line_end, float &t) {
         plane_norm = plane_norm.normalize();
-        float plane_d = -plane_norm.dotProd(plane_point);
-        float ad = line_start.dotProd(plane_norm);
-        float bd = line_end.dotProd(plane_norm);
+        float plane_d = -plane_norm.dot(plane_point);
+        float ad = line_start.dot(plane_norm);
+        float bd = line_end.dot(plane_norm);
         t = (-plane_d - ad) / (bd - ad);
         V3d line_slope = line_end - line_start;
         V3d line_to_intersect = line_slope * t;
@@ -112,10 +112,10 @@ namespace MathUtil {
         V3d new_forward = target - pos;
         new_forward.normalize();
 
-        V3d new_up = up - (new_forward * up.dotProd(new_forward));
+        V3d new_up = up - (new_forward * up.dot(new_forward));
         new_up.normalize();
 
-        V3d new_right = new_up.crossProd(new_forward);
+        V3d new_right = new_up.cross(new_forward);
 
         // Dimensioning/translation matrix
         M4x4 m;
@@ -144,7 +144,7 @@ namespace MathUtil {
         // Distance from point to plane (signed)
         auto dist = [&](V3d &p) {
             V3d n = p.normalize();
-            return (plane_norm.x * p.x + plane_norm.y * p.y + plane_norm.z * p.z - plane_norm.dotProd(plane_point));
+            return (plane_norm.x * p.x + plane_norm.y * p.y + plane_norm.z * p.z - plane_norm.dot(plane_point));
         };
 
         // Points inside/outside of plane

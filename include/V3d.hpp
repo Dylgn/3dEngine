@@ -11,9 +11,9 @@ struct V3d {
     V3d operator*(float k) const;
     V3d operator/(float k) const;
 
-    float dotProd(const V3d &o) const;
+    float dot(const V3d &o) const;
 
-    V3d crossProd(const V3d &o) const;
+    V3d cross(const V3d &o) const;
 
     float length() const;
     

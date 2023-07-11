@@ -44,19 +44,19 @@ std::vector<Triangle> Render::GetTriangles(const Mesh &mesh, Camera &cam, const 
         line1 = t_transform.p[1] - t_transform.p[0];
         line2 = t_transform.p[2] - t_transform.p[0];
         // Get normal from cross product
-        norm = line1.crossProd(line2);
+        norm = line1.cross(line2);
         norm = norm.normalize();
 
         // Ray from triangle to camera
         V3d cam_ray = t_transform.p[0] - cam.pos;
         // t visible if ray aligned with normal
-        if (norm.dotProd(cam_ray) < 0.0f) {
+        if (norm.dot(cam_ray) < 0.0f) {
             /*
             // Illumination
             V3d light_dir = { 0.0f, 1.0f, -1.0f };
             light_dir = light_dir.normalize();
             // Alignment of light direction & normal
-            float dp = MathUtil::max(0.1f, light_dir.dotProd(norm));
+            float dp = MathUtil::max(0.1f, light_dir.dot(norm));
 
 			CHAR_INFO c = GetColour(dp);
 			t_transform.col = c.Attributes;
