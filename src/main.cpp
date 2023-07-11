@@ -308,7 +308,7 @@ class BasicGameEngine: public GameEngine {
             // cube.LoadObject("../resources/brick_cube.obj");
             // meshes.push_back(cube);
             Mesh mesh_cube;
-            mesh_cube.LoadObject("../resources/brick_cube.obj", true);
+            mesh_cube.LoadObject("../resources/untitled.obj", true);
             // mesh_cube.m_triangles = {
     		//     // SOUTH
     		//     { 0.0f, 0.0f, 0.0f, 1.0f,    0.0f, 1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 1.0f}, 
@@ -360,12 +360,19 @@ class BasicGameEngine: public GameEngine {
             if (KeyDown(VK_LEFT)) m_cam.pos.x -= 8.0f * elapsed_time;
             if (KeyDown(VK_RIGHT)) m_cam.pos.x += 8.0f * elapsed_time;
 
-            if (Collision::GJK(cube_collider, player.m_collider)) {
-                m_cam.pos = m_cam.pos - forward;
-                player.m_collider->move(forward.opposite());
+            // if (Collision::GJK(cube_collider, player.m_collider)) {
+            //     m_cam.pos = m_cam.pos - forward;
+            //     player.m_collider->move(forward.opposite());
+            // }
+
+            if (Collision::GJK(player.m_collider, cube_collider)) {
+                auto res = Collision::EPA(cube_collider, player.m_collider);
+                auto dir = MathUtil::AdjustToLength(res.first, res.second);
+                m_cam.pos = m_cam.pos + dir;
+                player.m_collider->move(dir);
             }
 
-            std::cout << 1 / elapsed_time << std::endl;
+            //std::cout << 1 / elapsed_time << std::endl;
             return true;
         }
 };
