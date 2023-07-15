@@ -134,7 +134,7 @@ namespace {
             float dist = norm.dot(a);
 
             if (dist < 0) {
-                norm = norm * -1;
+                norm *= -1;
                 dist *= -1;
             }
 

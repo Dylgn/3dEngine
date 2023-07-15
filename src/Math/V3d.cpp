@@ -20,19 +20,40 @@ V3d V3d::operator-(const V3d &o) const {
         this->z - o.z
     };
 }
-V3d V3d::operator*(float k) const {
+V3d V3d::operator*(const float &k) const {
     return {
         this->x * k,
         this->y * k,
         this->z * k
     };
 }
-V3d V3d::operator/(float k) const {
+V3d V3d::operator/(const float &k) const {
     return {
         this->x / k,
         this->y / k,
         this->z / k
     };
+}
+
+V3d &V3d::operator+=(const V3d &o) {
+    this->x += o.x;
+    this->y += o.y;
+    this->z += o.z;
+    return *this;
+}
+
+V3d &V3d::operator+=(const float &k) {
+    this->x += k;
+    this->y += k;
+    this->z += k;
+    return *this;
+}
+
+V3d &V3d::operator*=(const float &k) {
+    this->x *= k;
+    this->y *= k;
+    this->z *= k;
+    return *this;
 }
 
 float V3d::dot(const V3d &o) const {

@@ -8,8 +8,12 @@ struct V3d {
 
     V3d operator+(const V3d &o) const;
     V3d operator-(const V3d &o) const;
-    V3d operator*(float k) const;
-    V3d operator/(float k) const;
+    V3d operator*(const float &k) const;
+    V3d operator/(const float &k) const;
+
+    V3d &operator+=(const V3d &o);
+    V3d &operator+=(const float &k);
+    V3d &operator*=(const float &k);
 
     float dot(const V3d &o) const;
 
