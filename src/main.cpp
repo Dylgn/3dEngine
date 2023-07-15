@@ -308,7 +308,7 @@ class BasicGameEngine: public GameEngine {
             // cube.LoadObject("../resources/brick_cube.obj");
             // meshes.push_back(cube);
             Mesh mesh_cube;
-            mesh_cube.LoadObject("../resources/untitled.obj", true);
+            mesh_cube.LoadObject("../resources/ramp.obj", true);
             // mesh_cube.m_triangles = {
     		//     // SOUTH
     		//     { 0.0f, 0.0f, 0.0f, 1.0f,    0.0f, 1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 1.0f}, 
@@ -372,7 +372,7 @@ class BasicGameEngine: public GameEngine {
                 player.m_collider->move(dir);
             }
 
-            //std::cout << 1 / elapsed_time << std::endl;
+            std::cout << 1 / elapsed_time << std::endl;
             return true;
         }
 };

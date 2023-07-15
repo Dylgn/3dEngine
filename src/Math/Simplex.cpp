@@ -7,14 +7,6 @@ Simplex &Simplex::operator=(std::initializer_list<V3d> list) {
         m_vertices[std::distance(list.begin(), v)] = *v;
     }
     m_size = list.size();
-    // const std::size_t size = list.size();
-    // std::size_t i = 0;
-
-    // for (auto v : list) {
-    //     m_vertices[i] = v;
-    // }
-
-    // m_size = list.size();
 
     return *this;
 }
