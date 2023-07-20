@@ -15,6 +15,10 @@ struct V3d {
     V3d &operator+=(const float &k);
     V3d &operator*=(const float &k);
 
+    V3d operator-() const;
+
+    operator bool() const;
+
     float dot(const V3d &o) const;
 
     V3d cross(const V3d &o) const;
@@ -23,9 +27,8 @@ struct V3d {
     
     V3d normalize() const;
 
-    V3d opposite() const;
-
     static const V3d unit_x;
     static const V3d unit_y;
     static const V3d unit_z;
+    static const V3d origin;
 };

@@ -5,6 +5,7 @@
 const V3d V3d::unit_x{1,0,0};
 const V3d V3d::unit_y{0,1,0};
 const V3d V3d::unit_z{0,0,1};
+const V3d V3d::origin{0,0,0};
 
 V3d V3d::operator+(const V3d &o) const {
     return {
@@ -56,6 +57,18 @@ V3d &V3d::operator*=(const float &k) {
     return *this;
 }
 
+V3d V3d::operator-() const {
+    return {
+        -this->x,
+        -this->y,
+        -this->z
+    };
+}
+
+V3d::operator bool() const {
+    return !(this->x == 0 && this->y == 0 && this->z == 0); 
+}
+
 float V3d::dot(const V3d &o) const {
     return MathUtil::DotProd(*this, o);
 }
@@ -71,12 +84,4 @@ float V3d::length() const {
 V3d V3d::normalize() const {
     float l = length();
     return { x / l, y / l, z / l };
-}
-
-V3d V3d::opposite() const {
-    return {
-        -this->x,
-        -this->y,
-        -this->z
-    };
 }

@@ -10,9 +10,9 @@ std::list<Triangle> Render::GetClippedTriangles(const Mesh &mesh, Camera &cam, c
 std::vector<Triangle> Render::GetTriangles(const Mesh &mesh, Camera &cam, const int width, const int height) {
     // Rotation matrices
     M4x4 mat_rot_z, mat_rot_x;
-    //theta += 1.0f * fElapsedTime;
-    mat_rot_z = MathUtil::GetMatRotZ(cam.theta * 0.5f);
-    mat_rot_x = MathUtil::GetMatRotX(cam.theta);
+    //cam.theta += 1.0f * 0.5f;
+    mat_rot_z = MathUtil::GetMatRotZ(cam.roll);
+    mat_rot_x = MathUtil::GetMatRotX(cam.pitch);
 
     // Translate matrix
     M4x4 mat_translate = MathUtil::MatTranslate(0.0f, 0.0f, 0.0f);

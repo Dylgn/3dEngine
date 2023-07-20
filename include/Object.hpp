@@ -1,12 +1,22 @@
 #pragma once
 
-#include "Collider.hpp"
+#include "Body.hpp"
 #include "Mesh.hpp"
+#include "Texture.hpp"
+#include "Transform.hpp"
 
 struct Object {
-    Collider *m_collider;
-    Mesh m_mesh;
-    V3d m_force;
-    V3d m_velocity;
-    float m_mass;
+    Body *body;
+    Mesh *mesh;
+    Texture *texture;
+    Transform *transform;
+
+    Object();
+    Object(std::string mesh_file_path, std::string texture_file_path);
+    Object(Transform *transform, std::string mesh_file_path, std::string texture_file_path);
+    virtual ~Object();
+
+    virtual V3d GetCollisionNormal(const Object &other);
+    virtual void Move(const V3d &dir);
+    virtual void SetPos(const V3d &dir);
 };

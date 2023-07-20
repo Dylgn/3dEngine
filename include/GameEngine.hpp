@@ -4,11 +4,15 @@
 #include "Camera.hpp"
 #include "Window.hpp"
 #include "Mesh.hpp"
+#include "V3d.hpp"
+#include "Object.hpp"
+#include "Player.hpp"
 
 class GameEngine {
     bool m_running;
     Window m_window;
     Texture m_temp;
+    V3d m_gravity{0.0f, -9.81f, 0.0f};
     public:
         GameEngine(int width = 640, int height = 480, float fov_deg = 90.0f, const wchar_t *title = L"");
         virtual ~GameEngine();
@@ -25,9 +29,12 @@ class GameEngine {
         virtual bool onStart() = 0;
         /** Method which is called every frame */
         virtual bool onUpdate(const float &elapsed_time) = 0;
+
+        virtual bool PhysicsStep(const float &elapsed_time);
     protected:
-        Camera m_cam;
-        std::vector<Mesh> m_meshes;
+        Player player;
+        std::vector<Object> m_objects;
+        //Object cube;
     private:
         void Render();
 };

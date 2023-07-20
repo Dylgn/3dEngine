@@ -4,14 +4,15 @@
 #include "MathUtility.hpp"
 #include "Triangle.hpp"
 #include "Geometry.hpp"
+#include "Rigidbody.hpp"
 
 GameEngine::GameEngine(int width, int height, float fov_deg, const wchar_t *title): 
     m_running{false}, m_window{width, height, title} {
-    m_cam = {
+    player = {
         MathUtil::GetProjMat(fov_deg, ((float) height) / ((float) width), 0.1f, 1000.0f),
         {0,0,0},
         {0,0,0},
-        0, 0
+        0, 0, 0
     };
 }
 
@@ -48,16 +49,24 @@ bool GameEngine::KeyDown(const int &virt_key) {
     return m_window.KeyDown(virt_key);
 }
 
-void GameEngine::Render() {
+bool GameEngine::PhysicsStep(const float &elapsed_time) {
+    // for (auto &o : m_objects) {
+    //     Rigidbody *body;
+    //     if (body = dynamic_cast<Rigidbody*>(o.body)) {
+    //         body->ApplyForce(m_gravity * body->mass);
+    //         body->Move(elapsed_time);
+    //     }
+    // }
+    return false;
+}
+
+void GameEngine::Render()
+{
     m_window.clear(0x00000000);
     m_window.clear_depth_buffer();
 
-    for (Mesh &mesh : m_meshes) {
-        // Get clipped triangles
-        std::list<Triangle> clipped = Render::GetClippedTriangles(mesh, m_cam, m_window.getWidth(), m_window.getHeight());
-        // Draw triangles
-        for (Triangle &t : clipped) m_window.drawTriangle(t, m_temp);
-    }
+    std::list<Triangle> clipped = Render::GetClippedTriangles(*m_objects[0].mesh, *player.GetCamera(), m_window.getWidth(), m_window.getHeight());
+    for (Triangle &t : clipped) m_window.drawTriangle(t, m_temp);
     
     m_window.update();
 }

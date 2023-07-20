@@ -4,12 +4,18 @@
 #include "V3d.hpp"
 #include "Mesh.hpp"
 
-bool Mesh::LoadObject(std::string file_name, bool textured) {
-    std::ifstream f(file_name);
-    if (!f.is_open()) return false;
+Mesh::Mesh() {}
 
-     // Temp storage of vertices
-     std::vector<V3d> vertices;
+Mesh::Mesh(std::string file_name, bool textured) {
+    LoadObject(file_name, textured);
+}
+
+std::vector<V3d> Mesh::LoadObject(std::string file_name, bool textured) {
+    std::vector<V3d> vertices;
+    std::ifstream f(file_name);
+    if (!f.is_open()) return vertices;
+
+     // Temp storage of texture coords
      std::vector<V2d> textures;
 
      while (!f.eof()) {
@@ -63,5 +69,24 @@ bool Mesh::LoadObject(std::string file_name, bool textured) {
                 break;
          }
      }
-     return true;
+     return vertices;
+}
+
+void Mesh::Move(const V3d &dir) {
+    for (auto &t : m_triangles) {
+        t.p[0] += dir;
+        t.p[1] += dir;
+        t.p[2] += dir;
+    }
+}
+
+V3d Mesh::GetCenter() const {
+    V3d avg;
+    for (auto &t : m_triangles) {
+        avg += t.p[0];
+        avg += t.p[1];
+        avg += t.p[2];
+    }
+    float count = 3 * m_triangles.size();
+    return avg / count;
 }

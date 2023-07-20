@@ -16,7 +16,7 @@ namespace {
         V3d b = simplex[1];
 
         V3d ab = b - a;
-        V3d ao = a.opposite();
+        V3d ao = -a;
 
         if (MathUtil::SameDirection(ab, ao)) dir = ab.cross(ao).cross(ab);
         else {
@@ -33,7 +33,7 @@ namespace {
 
         V3d ab = b - a;
         V3d ac = c - a;
-        V3d ao = a.opposite();
+        V3d ao = -a;
 
         V3d abc = ab.cross(ac);
 
@@ -48,7 +48,7 @@ namespace {
             dir = abc;
         } else {
             simplex = {a, c, b};
-            dir = abc.opposite();
+            dir = -abc;
         }
 
         return false;
@@ -63,7 +63,7 @@ namespace {
         V3d ab = b - a;
         V3d ac = c - a;
         V3d ad = d - a;
-        V3d ao = a.opposite();
+        V3d ao = -a;
 
         V3d abc = ab.cross(ac);
         V3d acd = ac.cross(ad);
@@ -89,29 +89,7 @@ namespace {
 
     /** Gets diff of furthest points in opposite directions to get a vertex on hull of A - B*/
     V3d GreatestDiff(const Collider *a, const Collider *b, V3d dir) {
-        return a->FurthestPointIn(dir) - b->FurthestPointIn(dir.opposite());
-    }
-
-    bool GJK(Simplex &vertices, const Collider *a, const Collider *b) {
-        // Initial support point (first direction is arbitrary)
-        V3d sup = GreatestDiff(a, b, V3d::unit_x);
-
-        // Create simplex to try and cover origin
-        vertices.push_front(sup);
-
-        // Dir towards origin
-        V3d to_origin = sup.opposite();
-
-        while (true) {
-            sup = GreatestDiff(a, b, to_origin);
-
-            // Current closest vertex is closest possible, no collision
-            if (sup.dot(to_origin) <= 0) return false;
-
-            vertices.push_front(sup);
-
-            if (NextSimplex(vertices, to_origin)) return true;
-        }
+        return a->FurthestPointIn(dir) - b->FurthestPointIn(-dir);
     }
 
     //
@@ -161,12 +139,34 @@ namespace {
     }
 }
 
-bool Collision::GJK(const Collider *a, const Collider *b) {
-    Simplex vertices;
-    return ::GJK(vertices, a, b);
+bool Collision::GJK(Simplex &vertices, const Collider *a, const Collider *b) {
+    // Initial support point (first direction is arbitrary)
+    V3d sup = GreatestDiff(a, b, V3d::unit_x);
+
+    // Create simplex to try and cover origin
+    vertices.push_front(sup);
+
+    // Dir towards origin
+    V3d to_origin = -sup;
+
+    while (true) {
+        sup = GreatestDiff(a, b, to_origin);
+
+        // Current closest vertex is closest possible, no collision
+        if (sup.dot(to_origin) <= 0) return false;
+
+        vertices.push_front(sup);
+
+        if (NextSimplex(vertices, to_origin)) return true;
+    }
 }
 
-std::pair<V3d, float> Collision::EPA(const Simplex &simplex, const Collider *a, const Collider *b) {
+bool Collision::GJK(const Collider *a, const Collider *b) {
+    Simplex vertices;
+    return GJK(vertices, a, b);
+}
+
+V3d Collision::EPA(const Simplex &simplex, const Collider *a, const Collider *b) {
     std::vector<V3d> polytope(simplex.begin(), simplex.end());
     std::vector<size_t> faces = { 0, 1, 2,  0, 3, 1,  0, 2, 3,  1, 3, 2 };
 
@@ -235,11 +235,11 @@ std::pair<V3d, float> Collision::EPA(const Simplex &simplex, const Collider *a, 
         }
     }
 
-    return { min_norm, min_dist + 0.001f };
+    return MathUtil::AdjustToLength(min_norm, min_dist + 0.001f);
 }
 
-std::pair<V3d, float> Collision::EPA(const Collider *a, const Collider *b) {
+V3d Collision::EPA(const Collider *a, const Collider *b) {
     Simplex simplex;
-    ::GJK(simplex, a, b);
+    GJK(simplex, a, b);
     return EPA(simplex, a, b);
 }

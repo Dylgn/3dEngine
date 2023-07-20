@@ -18,6 +18,8 @@
 #include "PolyCollider.hpp"
 #include "Collision.hpp"
 #include "Object.hpp"
+#include "Rigidbody.hpp"
+#include "Player.hpp"
 
 class Engine3D : public olcConsoleGameEngine {
     public:
@@ -297,18 +299,13 @@ class BasicGameEngine: public GameEngine {
         BasicGameEngine(int width = 640, int height = 480, float fov_deg = 90.0f, const wchar_t *title = L""):
             GameEngine{width, height, fov_deg, title} {}
         ~BasicGameEngine() override {}
-
-        Object player;
-        
-        Collider *cube_collider;
-        //Collider *player_collider;
         
         bool onStart() override {
             // Mesh cube;
             // cube.LoadObject("../resources/brick_cube.obj");
             // meshes.push_back(cube);
-            Mesh mesh_cube;
-            mesh_cube.LoadObject("../resources/ramp.obj", true);
+            // Mesh mesh_cube;
+            // mesh_cube.LoadObject("../resources/untitled.obj", true);
             // mesh_cube.m_triangles = {
     		//     // SOUTH
     		//     { 0.0f, 0.0f, 0.0f, 1.0f,    0.0f, 1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 1.0f}, 
@@ -334,45 +331,46 @@ class BasicGameEngine: public GameEngine {
     		//     { 1.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 1.0f},
     		//     { 1.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f},
     		// };
-            m_meshes.push_back(mesh_cube);
-            cube_collider = new PolyCollider({V3d{0,0,0}, V3d{0,0,1}, V3d{1,0,1}, V3d{1,0,0}, V3d{0,1,0}, V3d{0,1,1}, V3d{1,1,1}, V3d{1,1,0}});
-            player.m_collider = new PolyCollider({V3d{-0.2f, 0.5f, -1.2f}, V3d{-0.2f, 0.5f, -0.8f}, V3d{0.2f, 0.5f, -0.8f}, V3d{0.2f, 0.5f, -1.2f},
+            // m_meshes.push_back(mesh_cube);
+            // cube_collider = new PolyCollider({V3d{0,0,0}, V3d{0,0,1}, V3d{1,0,1}, V3d{1,0,0}, V3d{0,1,0}, V3d{0,1,1}, V3d{1,1,1}, V3d{1,1,0}});
+            Collider *collider = new PolyCollider({V3d{-0.2f, 0.5f, -1.2f}, V3d{-0.2f, 0.5f, -0.8f}, V3d{0.2f, 0.5f, -0.8f}, V3d{0.2f, 0.5f, -1.2f},
                 V3d{-0.2f, 1.5f, -1.2f}, V3d{-0.2f, 1.5f, -0.8f}, V3d{0.2f, 1.5f, -0.8f}, V3d{0.2f, 1.5f, -1.2f}});
-            m_cam.pos = {0, 1, -1};
+            player.body = new Body(collider);
+            player.SetCameraPos({0, 1, -1});
+
+            m_objects.emplace_back("../resources/untitled.obj", "../resources/brick.bmp");
 
             return true;
         }
         bool onUpdate(const float &elapsed_time) override {
-            V3d forward = m_cam.look_dir * (8.0f * elapsed_time);
+            Camera *cam = player.GetCamera();
+            V3d forward = cam->look_dir * (8.0f * elapsed_time);
             if (KeyDown(VK_W)) {
-                m_cam.pos = m_cam.pos + forward;
-                player.m_collider->move(forward);
+                player.Move(forward);
             }
             if (KeyDown(VK_S)) {
-                forward = forward.opposite();
-                m_cam.pos = m_cam.pos + forward;
-                player.m_collider->move(forward);
+                forward = -forward;
+                player.Move(forward);
             }
-            if (KeyDown(VK_A)) m_cam.yaw += 2.0f * elapsed_time;
-            if (KeyDown(VK_D)) m_cam.yaw -= 2.0f * elapsed_time;
-            if (KeyDown(VK_UP)) m_cam.pos.y += 8.0f * elapsed_time;
-            if (KeyDown(VK_DOWN)) m_cam.pos.y -= 8.0f * elapsed_time;
-            if (KeyDown(VK_LEFT)) m_cam.pos.x -= 8.0f * elapsed_time;
-            if (KeyDown(VK_RIGHT)) m_cam.pos.x += 8.0f * elapsed_time;
+            if (KeyDown(VK_A)) cam->yaw += 2.0f * elapsed_time;
+            if (KeyDown(VK_D)) cam->yaw -= 2.0f * elapsed_time;
+            if (KeyDown(VK_UP)) cam->pos.y += 8.0f * elapsed_time;
+            if (KeyDown(VK_DOWN)) cam->pos.y -= 8.0f * elapsed_time;
+            if (KeyDown(VK_LEFT)) cam->pos.x -= 8.0f * elapsed_time;
+            if (KeyDown(VK_RIGHT)) cam->pos.x += 8.0f * elapsed_time;
 
-            // if (Collision::GJK(cube_collider, player.m_collider)) {
-            //     m_cam.pos = m_cam.pos - forward;
-            //     player.m_collider->move(forward.opposite());
+            V3d norm = player.GetCollisionNormal(m_objects[0]);
+            if (norm) player.Move(norm);
+
+            // if (Collision::GJK(player.body->getCollider(), m_objects[0].body->getCollider())) {
+            //     auto res = Collision::EPA(m_objects[0].body->getCollider(), player.body->getCollider());
+            //     auto dir = MathUtil::AdjustToLength(res.first, res.second);
+
+            //     m_cam.pos += dir;
+            //     player.body->getCollider()->Move(dir);
             // }
 
-            if (Collision::GJK(player.m_collider, cube_collider)) {
-                auto res = Collision::EPA(cube_collider, player.m_collider);
-                auto dir = MathUtil::AdjustToLength(res.first, res.second);
-                m_cam.pos = m_cam.pos + dir;
-                player.m_collider->move(dir);
-            }
-
-            std::cout << 1 / elapsed_time << std::endl;
+            //std::cout << 1 / elapsed_time << std::endl;
             return true;
         }
 };

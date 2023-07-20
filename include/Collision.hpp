@@ -9,10 +9,18 @@ namespace Collision {
     */
     bool GJK(const Collider *a, const Collider *b);
 
-    /** Expanding Polytope Algorithm for determining the normal and depth of a collision
-     * @returns Normal of collision (V3d) and depth of the collision (float)
+    /** Gilbert-Johnson-Keerthi distance algorithm for determining if Colliders are colliding.
+     * @returns True if Colliders are colliding, False otherwise
     */
-    std::pair<V3d, float> EPA(const Simplex &simplex, const Collider *a, const Collider *b);
+    bool GJK(Simplex &vertices, const Collider *a, const Collider *b);
 
-    std::pair<V3d, float> EPA(const Collider *a, const Collider *b);
+    /** Expanding Polytope Algorithm for determining the normal and depth of a collision
+     * @returns Normal of collision with length equal to depth of collision
+    */
+    V3d EPA(const Simplex &simplex, const Collider *a, const Collider *b);
+
+    /** Expanding Polytope Algorithm for determining the normal and depth of a collision
+     * @returns Normal of collision with length equal to depth of collision
+    */
+    V3d EPA(const Collider *a, const Collider *b);
 }

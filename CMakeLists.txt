@@ -26,6 +26,10 @@ set(SOURCES
 
     src/Physics/PolyCollider.cpp
     src/Physics/Collision.cpp
+    src/Physics/Rigidbody.cpp
+
+    src/GameObjects/Object.cpp
+    src/GameObjects/Player.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
