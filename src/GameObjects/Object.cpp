@@ -16,6 +16,19 @@ Object::Object(Transform *transform, std::string mesh_file_path, std::string tex
 
 Object::~Object() {}
 
+void Object::SetBody(Body *body) {
+    if (this->body) delete this->body;
+    this->body = body;
+}
+
+Body *Object::GetBody() const {
+    return body;
+}
+
+Mesh *Object::GetMesh() const {
+    return mesh;
+}
+
 V3d Object::GetCollisionNormal(const Object &other) {
     if (!body || !other.body) return V3d::origin;
 
@@ -41,4 +54,8 @@ void Object::SetPos(const V3d &dir) {
         body->Move(dir - center);
     }
     transform->pos = dir;
+}
+
+V3d Object::GetPos() const {
+    return transform->pos;
 }
