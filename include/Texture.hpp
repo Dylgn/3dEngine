@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <cstdint>
 
 struct Texture {
     int32_t m_width = 0, m_height = 0;
