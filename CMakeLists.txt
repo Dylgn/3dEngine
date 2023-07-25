@@ -30,6 +30,7 @@ set(SOURCES
 
     src/GameObjects/Object.cpp
     src/GameObjects/Player.cpp
+    src/GameObjects/ObjectUtility.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
