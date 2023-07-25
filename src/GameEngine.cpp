@@ -22,7 +22,7 @@ void GameEngine::Start() {
     if (m_running) return;
     else m_running = true;
 
-    if (!onStart()) return;
+    if (!OnStart()) return;
 
     auto time_prev = std::chrono::system_clock::now();
 
@@ -38,7 +38,8 @@ void GameEngine::Start() {
         // Calculate elapsed time since last call to onUpdate()
         auto time_now = std::chrono::system_clock::now();
         std::chrono::duration<float> elapsed_time = time_now - time_prev;
-        if (!onUpdate(elapsed_time.count())) return;
+        if (!OnUpdate(elapsed_time.count())) return;
+        PhysicsStep(elapsed_time.count());
         time_prev = time_now;
 
         Render();
@@ -57,6 +58,14 @@ bool GameEngine::PhysicsStep(const float &elapsed_time) {
     //         body->Move(elapsed_time);
     //     }
     // }
+
+    for (auto &o : m_objects) {
+        Rigidbody *body;
+        if (body = dynamic_cast<Rigidbody*>(o.GetBody())) {
+            body->Accelerate(m_gravity);
+            o.Move(body->CalculateVelocity(elapsed_time) * elapsed_time);
+        }
+    }
     return false;
 }
 
@@ -65,7 +74,7 @@ void GameEngine::Render()
     m_window.clear(0x00000000);
     m_window.clear_depth_buffer();
 
-    std::list<Triangle> clipped = Render::GetClippedTriangles(*m_objects[0].mesh, *player.GetCamera(), m_window.getWidth(), m_window.getHeight());
+    std::list<Triangle> clipped = Render::GetClippedTriangles(*m_objects[0].GetMesh(), *player.GetCamera(), m_window.getWidth(), m_window.getHeight());
     for (Triangle &t : clipped) m_window.drawTriangle(t, m_temp);
     
     m_window.update();

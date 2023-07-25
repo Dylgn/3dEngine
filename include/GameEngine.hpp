@@ -26,9 +26,9 @@ class GameEngine {
         bool KeyDown(const int &virt_key);
 
         /** Starts the engine */
-        virtual bool onStart() = 0;
+        virtual bool OnStart() = 0;
         /** Method which is called every frame */
-        virtual bool onUpdate(const float &elapsed_time) = 0;
+        virtual bool OnUpdate(const float &elapsed_time) = 0;
 
         virtual bool PhysicsStep(const float &elapsed_time);
     protected:

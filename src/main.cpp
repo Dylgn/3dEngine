@@ -20,6 +20,7 @@
 #include "Object.hpp"
 #include "Rigidbody.hpp"
 #include "Player.hpp"
+#include "ObjectUtility.hpp"
 
 class Engine3D : public olcConsoleGameEngine {
     public:
@@ -300,7 +301,7 @@ class BasicGameEngine: public GameEngine {
             GameEngine{width, height, fov_deg, title} {}
         ~BasicGameEngine() override {}
         
-        bool onStart() override {
+        bool OnStart() override {
             // Mesh cube;
             // cube.LoadObject("../resources/brick_cube.obj");
             // meshes.push_back(cube);
@@ -333,16 +334,20 @@ class BasicGameEngine: public GameEngine {
     		// };
             // m_meshes.push_back(mesh_cube);
             // cube_collider = new PolyCollider({V3d{0,0,0}, V3d{0,0,1}, V3d{1,0,1}, V3d{1,0,0}, V3d{0,1,0}, V3d{0,1,1}, V3d{1,1,1}, V3d{1,1,0}});
-            Collider *collider = new PolyCollider({V3d{-0.2f, 0.5f, -1.2f}, V3d{-0.2f, 0.5f, -0.8f}, V3d{0.2f, 0.5f, -0.8f}, V3d{0.2f, 0.5f, -1.2f},
-                V3d{-0.2f, 1.5f, -1.2f}, V3d{-0.2f, 1.5f, -0.8f}, V3d{0.2f, 1.5f, -0.8f}, V3d{0.2f, 1.5f, -1.2f}});
-            player.body = new Body(collider);
-            player.SetCameraPos({0, 1, -1});
+            // Collider *collider = new PolyCollider({V3d{-0.2f, 0.5f, -1.2f}, V3d{-0.2f, 0.5f, -0.8f}, V3d{0.2f, 0.5f, -0.8f}, V3d{0.2f, 0.5f, -1.2f},
+            //     V3d{-0.2f, 1.5f, -1.2f}, V3d{-0.2f, 1.5f, -0.8f}, V3d{0.2f, 1.5f, -0.8f}, V3d{0.2f, 1.5f, -1.2f}});
+            // player.SetBody(new Body(collider));
+
+            player.SetBody(ObjectUtil::GetRigidBox(0.4f, 1.0f, 0.4f));
+            player.SetPos({0.0f, 1.0f, -1.0f});
+            //player.SetCameraPos({0, 1, -1});
 
             m_objects.emplace_back("../resources/untitled.obj", "../resources/brick.bmp");
+            m_objects.push_back(player);
 
             return true;
         }
-        bool onUpdate(const float &elapsed_time) override {
+        bool OnUpdate(const float &elapsed_time) override {
             Camera *cam = player.GetCamera();
             V3d forward = cam->look_dir * (8.0f * elapsed_time);
             if (KeyDown(VK_W)) {
@@ -358,17 +363,13 @@ class BasicGameEngine: public GameEngine {
             if (KeyDown(VK_DOWN)) cam->pos.y -= 8.0f * elapsed_time;
             if (KeyDown(VK_LEFT)) cam->pos.x -= 8.0f * elapsed_time;
             if (KeyDown(VK_RIGHT)) cam->pos.x += 8.0f * elapsed_time;
+            if (KeyDown(0x51)) {
+                auto ret = player.GetPos();
+                std::cout << ret.x << " " << ret.y << " " << ret.z << std::endl;
+            }
 
             V3d norm = player.GetCollisionNormal(m_objects[0]);
             if (norm) player.Move(norm);
-
-            // if (Collision::GJK(player.body->getCollider(), m_objects[0].body->getCollider())) {
-            //     auto res = Collision::EPA(m_objects[0].body->getCollider(), player.body->getCollider());
-            //     auto dir = MathUtil::AdjustToLength(res.first, res.second);
-
-            //     m_cam.pos += dir;
-            //     player.body->getCollider()->Move(dir);
-            // }
 
             //std::cout << 1 / elapsed_time << std::endl;
             return true;
