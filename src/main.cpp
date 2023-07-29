@@ -339,10 +339,10 @@ class BasicGameEngine: public GameEngine {
             // player.SetBody(new Body(collider));
 
             player.SetBody(ObjectUtil::GetRigidBox(0.4f, 1.0f, 0.4f));
-            player.SetPos({0.0f, 1.0f, -1.0f});
+            player.SetPos({0.5f, 3.0f, 0.5f});
             //player.SetCameraPos({0, 1, -1});
 
-            m_objects.emplace_back("../resources/untitled.obj", "../resources/brick.bmp");
+            m_objects.emplace_back("../resources/ramp2.obj", "../resources/brick.bmp");
             m_objects.push_back(player);
 
             return true;
@@ -364,9 +364,11 @@ class BasicGameEngine: public GameEngine {
             if (KeyDown(VK_LEFT)) cam->pos.x -= 8.0f * elapsed_time;
             if (KeyDown(VK_RIGHT)) cam->pos.x += 8.0f * elapsed_time;
             if (KeyDown(0x51)) {
-                auto ret = player.GetPos();
-                std::cout << ret.x << " " << ret.y << " " << ret.z << std::endl;
+                player.SetPos(V3d{player.GetPos().x, 10.0f, player.GetPos().z});
             }
+
+            // auto ret = player.GetPos();
+            // std::cout << ret.x << " " << ret.y << " " << ret.z << std::endl;
 
             V3d norm = player.GetCollisionNormal(m_objects[0]);
             if (norm) player.Move(norm);

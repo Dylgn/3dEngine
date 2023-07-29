@@ -21,8 +21,8 @@ std::vector<Triangle> Render::GetTriangles(const Mesh &mesh, Camera &cam, const 
     M4x4 mat_world = (mat_rot_z * mat_rot_x) * mat_translate;
 
     // View matrix
-    V3d up = { 0,1,0 };
-    V3d target = { 0,0,1 };
+    V3d up = V3d{0, 1, 0};
+    V3d target = V3d{0, 0, 1};
     M4x4 mat_cam_rot = MathUtil::GetMatRotY(cam.yaw);
     cam.look_dir = mat_cam_rot * target;
     target = cam.pos + cam.look_dir;

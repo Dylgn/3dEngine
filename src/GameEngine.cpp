@@ -38,8 +38,8 @@ void GameEngine::Start() {
         // Calculate elapsed time since last call to onUpdate()
         auto time_now = std::chrono::system_clock::now();
         std::chrono::duration<float> elapsed_time = time_now - time_prev;
+        if (!PhysicsStep(elapsed_time.count())) return;
         if (!OnUpdate(elapsed_time.count())) return;
-        PhysicsStep(elapsed_time.count());
         time_prev = time_now;
 
         Render();
@@ -51,22 +51,22 @@ bool GameEngine::KeyDown(const int &virt_key) {
 }
 
 bool GameEngine::PhysicsStep(const float &elapsed_time) {
-    // for (auto &o : m_objects) {
-    //     Rigidbody *body;
-    //     if (body = dynamic_cast<Rigidbody*>(o.body)) {
-    //         body->ApplyForce(m_gravity * body->mass);
-    //         body->Move(elapsed_time);
-    //     }
-    // }
-
     for (auto &o : m_objects) {
         Rigidbody *body;
         if (body = dynamic_cast<Rigidbody*>(o.GetBody())) {
             body->Accelerate(m_gravity);
             o.Move(body->CalculateVelocity(elapsed_time) * elapsed_time);
+            body->SetForce(V3d::origin);
+
+            float min_height = 1.0f;
+
+            if (o.GetPos().y < min_height) {
+                body->SetVelocity(V3d::origin);
+                o.Move({0.0f, min_height - o.GetPos().y, 0.0f});
+            }
         }
     }
-    return false;
+    return true;
 }
 
 void GameEngine::Render()
