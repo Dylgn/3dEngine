@@ -40,6 +40,7 @@ void GameEngine::Start() {
         std::chrono::duration<float> elapsed_time = time_now - time_prev;
         if (!PhysicsStep(elapsed_time.count())) return;
         if (!OnUpdate(elapsed_time.count())) return;
+        if (!ResolveCollisions(elapsed_time.count())) return;
         time_prev = time_now;
 
         Render();
@@ -69,8 +70,37 @@ bool GameEngine::PhysicsStep(const float &elapsed_time) {
     return true;
 }
 
-void GameEngine::Render()
-{
+bool GameEngine::ResolveCollisions(const float &elapsed_time) {
+    for (Object &a : m_objects) {
+        for (Object &b : m_objects) {
+            if (a == b) break;
+            else if (!a.GetBody() || !b.GetBody()) continue;
+
+            V3d norm = a.GetCollisionNormal(b);
+            if (norm) {
+                Rigidbody *a_body = dynamic_cast<Rigidbody*>(a.GetBody());
+                Rigidbody *b_body = dynamic_cast<Rigidbody*>(b.GetBody());
+
+                if (a_body && b_body) {
+                    norm = norm / 2.0f;
+                    a.Move(norm);
+                    b.Move(-norm);
+                    a_body->SetVelocity(V3d::origin);
+                    b_body->SetVelocity(V3d::origin);
+                } else if (a_body) {
+                    a.Move(norm);
+                    a_body->SetVelocity(V3d::origin);
+                } else if (b_body) {
+                    b.Move(-norm);
+                    b_body->SetVelocity(V3d::origin);
+                }
+            }
+        }
+    }
+    return true;
+}
+
+void GameEngine::Render() {
     m_window.clear(0x00000000);
     m_window.clear_depth_buffer();
 

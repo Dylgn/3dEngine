@@ -25,4 +25,6 @@ class Object {
         virtual void Move(const V3d &dir);
         virtual void SetPos(const V3d &dir);
         virtual V3d GetPos() const;
+
+        virtual bool operator==(const Object &o);
 };

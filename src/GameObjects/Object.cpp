@@ -59,3 +59,7 @@ void Object::SetPos(const V3d &dir) {
 V3d Object::GetPos() const {
     return transform->pos;
 }
+
+bool Object::operator==(const Object &o) {
+    return body == o.body && mesh == o.mesh && texture == o.texture && transform == o.transform;
+}

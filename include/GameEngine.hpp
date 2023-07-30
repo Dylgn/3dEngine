@@ -31,6 +31,8 @@ class GameEngine {
         virtual bool OnUpdate(const float &elapsed_time) = 0;
 
         virtual bool PhysicsStep(const float &elapsed_time);
+
+        virtual bool ResolveCollisions(const float &elapsed_time);
     protected:
         Player player;
         std::vector<Object> m_objects;

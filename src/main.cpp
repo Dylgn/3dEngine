@@ -370,8 +370,8 @@ class BasicGameEngine: public GameEngine {
             // auto ret = player.GetPos();
             // std::cout << ret.x << " " << ret.y << " " << ret.z << std::endl;
 
-            V3d norm = player.GetCollisionNormal(m_objects[0]);
-            if (norm) player.Move(norm);
+            // V3d norm = player.GetCollisionNormal(m_objects[0]);
+            // if (norm) player.Move(norm);
 
             //std::cout << 1 / elapsed_time << std::endl;
             return true;

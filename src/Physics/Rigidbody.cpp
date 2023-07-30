@@ -1,5 +1,4 @@
 #include "Rigidbody.hpp"
-#include <iostream>
 
 Rigidbody::Rigidbody(Collider *collider): Body{collider} {}
 
