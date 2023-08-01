@@ -332,16 +332,9 @@ class BasicGameEngine: public GameEngine {
     		//     { 1.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 1.0f},
     		//     { 1.0f, 0.0f, 1.0f, 1.0f,    0.0f, 0.0f, 0.0f, 1.0f,    1.0f, 0.0f, 0.0f, 1.0f,     0.0f, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f,    1.0f, 1.0f, 1.0f},
     		// };
-            // m_meshes.push_back(mesh_cube);
-            // cube_collider = new PolyCollider({V3d{0,0,0}, V3d{0,0,1}, V3d{1,0,1}, V3d{1,0,0}, V3d{0,1,0}, V3d{0,1,1}, V3d{1,1,1}, V3d{1,1,0}});
-            // Collider *collider = new PolyCollider({V3d{-0.2f, 0.5f, -1.2f}, V3d{-0.2f, 0.5f, -0.8f}, V3d{0.2f, 0.5f, -0.8f}, V3d{0.2f, 0.5f, -1.2f},
-            //     V3d{-0.2f, 1.5f, -1.2f}, V3d{-0.2f, 1.5f, -0.8f}, V3d{0.2f, 1.5f, -0.8f}, V3d{0.2f, 1.5f, -1.2f}});
-            // player.SetBody(new Body(collider));
 
             player.SetBody(ObjectUtil::GetRigidBox(0.4f, 1.0f, 0.4f));
             player.SetPos({0.5f, 3.0f, 0.5f});
-            //player.SetCameraPos({0, 1, -1});
-            player.OnCollision = [](const Object &other){ std::cout << "COLLISION" << std::endl; };
 
             m_objects.emplace_back("../resources/ramp2.obj", "../resources/brick.bmp");
             m_objects.push_back(player);
@@ -367,12 +360,6 @@ class BasicGameEngine: public GameEngine {
             if (KeyDown(0x51)) {
                 player.SetPos(V3d{player.GetPos().x, 10.0f, player.GetPos().z});
             }
-
-            // auto ret = player.GetPos();
-            // std::cout << ret.x << " " << ret.y << " " << ret.z << std::endl;
-
-            // V3d norm = player.GetCollisionNormal(m_objects[0]);
-            // if (norm) player.Move(norm);
 
             //std::cout << 1 / elapsed_time << std::endl;
             return true;
