@@ -61,11 +61,11 @@ bool GameEngine::PhysicsStep(const float &elapsed_time) {
             body->SetForce(V3d::origin);
 
             // Dont let objects fall below a certain height
-            float min_height = 1.0f;
-
-            if (o.GetPos().y < min_height) {
+            float min_height = 0.0f;
+            float cur_height = o.GetBody()->FurthestPointIn(-V3d::unit_y).y;
+            if (cur_height < min_height) {
                 body->SetVelocity(V3d::origin);
-                o.Move({0.0f, min_height - o.GetPos().y, 0.0f});
+                o.Move({0.0f, min_height - cur_height, 0.0f});
             }
         }
     }
@@ -83,7 +83,7 @@ bool GameEngine::ResolveCollisions(const float &elapsed_time) {
                 // Call OnCollision
                 if (a.OnCollision) a.OnCollision(b);
                 if (b.OnCollision) b.OnCollision(a);
-                
+
                 // Move bodies if they're rigid
                 Rigidbody *a_body = dynamic_cast<Rigidbody*>(a.GetBody());
                 Rigidbody *b_body = dynamic_cast<Rigidbody*>(b.GetBody());
