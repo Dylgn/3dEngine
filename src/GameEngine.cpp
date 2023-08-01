@@ -55,10 +55,12 @@ bool GameEngine::PhysicsStep(const float &elapsed_time) {
     for (auto &o : m_objects) {
         Rigidbody *body;
         if (body = dynamic_cast<Rigidbody*>(o.GetBody())) {
+            // Apply gravity and move body
             body->Accelerate(m_gravity);
             o.Move(body->CalculateVelocity(elapsed_time) * elapsed_time);
             body->SetForce(V3d::origin);
 
+            // Dont let objects fall below a certain height
             float min_height = 1.0f;
 
             if (o.GetPos().y < min_height) {
@@ -78,9 +80,13 @@ bool GameEngine::ResolveCollisions(const float &elapsed_time) {
 
             V3d norm = a.GetCollisionNormal(b);
             if (norm) {
+                // Call OnCollision
+                if (a.OnCollision) a.OnCollision(b);
+                if (b.OnCollision) b.OnCollision(a);
+                
+                // Move bodies if they're rigid
                 Rigidbody *a_body = dynamic_cast<Rigidbody*>(a.GetBody());
                 Rigidbody *b_body = dynamic_cast<Rigidbody*>(b.GetBody());
-
                 if (a_body && b_body) {
                     norm = norm / 2.0f;
                     a.Move(norm);

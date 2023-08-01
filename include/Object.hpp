@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include "Body.hpp"
 #include "Mesh.hpp"
 #include "Texture.hpp"
@@ -17,14 +18,25 @@ class Object {
         Object(Transform *transform, std::string mesh_file_path, std::string texture_file_path);
         virtual ~Object();
 
+        /** Set body of object */
         void SetBody(Body *body);
+        /** Get body of object */
         Body *GetBody() const;
+        /** Get mesh of object */
         Mesh *GetMesh() const;
-        
-        virtual V3d GetCollisionNormal(const Object &other);
-        virtual void Move(const V3d &dir);
+        /** Set position of object */
         virtual void SetPos(const V3d &dir);
+        /** Get position of object*/
         virtual V3d GetPos() const;
+        /** Get collision normal with other
+         * @return Collision normal. If there is no collision, return V3d::origin
+        */
+        virtual V3d GetCollisionNormal(const Object &other);
+        /** Move object in given direction */
+        virtual void Move(const V3d &dir);
 
         virtual bool operator==(const Object &o);
+
+        /** Method that is called on collision */
+        std::function<void(const Object&)> OnCollision = [](const Object &other){};
 };
