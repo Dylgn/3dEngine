@@ -8,8 +8,8 @@
 
 namespace Obj {
     enum Property {
-        gravity = 0,
-        walks = 1
+        gravity = 0, // takes gravity
+        walks = 1 // is walking (to step up stairs)
     };
 }
 
