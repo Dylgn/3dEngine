@@ -8,6 +8,8 @@
 
 class Object {
     protected:
+        std::function<void(Object &, Object &)> collision_function = [](Object&,Object&){};
+        
         Body *body; // Physics Bounding Body
         Mesh *mesh; // Graphic Mesh w/ Texture Coordinates
         Texture *texture; // Texture used by Mesh
@@ -38,5 +40,8 @@ class Object {
         virtual bool operator==(const Object &o);
 
         /** Method that is called on collision */
-        std::function<void(const Object&)> OnCollision = [](const Object &other){};
+        virtual void OnCollision(Object &other);
+
+        /** Set function that is called by default OnCollision method */
+        void SetOnCollision(const std::function<void(Object &, Object &)> &func);
 };

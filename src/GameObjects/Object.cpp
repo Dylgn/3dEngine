@@ -63,3 +63,11 @@ void Object::Move(const V3d &dir) {
 bool Object::operator==(const Object &o) {
     return body == o.body && mesh == o.mesh && texture == o.texture && transform == o.transform;
 }
+
+void Object::OnCollision(Object &other) {
+    collision_function(*this, other);
+}
+
+void Object::SetOnCollision(const std::function<void(Object &, Object &)> &func) {
+    collision_function = func;
+}

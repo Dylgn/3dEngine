@@ -81,8 +81,8 @@ bool GameEngine::ResolveCollisions(const float &elapsed_time) {
             V3d norm = a.GetCollisionNormal(b);
             if (norm) {
                 // Call OnCollision
-                if (a.OnCollision) a.OnCollision(b);
-                if (b.OnCollision) b.OnCollision(a);
+                a.OnCollision(b);
+                b.OnCollision(a);
 
                 // Move bodies if they're rigid
                 Rigidbody *a_body = dynamic_cast<Rigidbody*>(a.GetBody());
