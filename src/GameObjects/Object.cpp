@@ -1,8 +1,9 @@
+#include <iterator>
 #include "Object.hpp"
 #include "PolyCollider.hpp"
 #include "Collision.hpp"
 
-Object::Object(): body{nullptr}, mesh{nullptr}, texture{nullptr}, transform{} {}
+Object::Object() : body{nullptr}, mesh{nullptr}, texture{nullptr}, transform{} {}
 
 Object::Object(std::string mesh_file_path, std::string texture_file_path):
     mesh{new Mesh()}, texture{new Texture{texture_file_path}}, transform{new Transform{}} {
@@ -70,4 +71,47 @@ void Object::OnCollision(Object &other) {
 
 void Object::SetOnCollision(const std::function<void(Object &, Object &)> &func) {
     collision_function = func;
+}
+
+std::pair<bool, int> Object::GetIndexOf(int property) {
+    int min = 0;
+    int max = properties.size();
+    while (true) {
+        // Index in middle of [min,max] interval
+        int i = (max - min) / 2 + min;
+        // Only 1 element left in interval
+        if (min >= max) return {property == properties[i], i};
+        // Check if element is equal
+        else if (property == properties[i]) return {true, i};
+        // Element is greater than target, target must be in lower half of remaining interval
+        else if (property < properties[i]) max = i;
+        // Element is less than target, target must be in upper half of remaining interavl
+        else min = i + 1;
+    }
+}
+
+bool Object::AddProperty(int property) {
+    auto ret = GetIndexOf(property);
+    if (ret.first) return false;
+    else {
+        auto it = properties.begin();
+        std::advance(it, ret.second);
+        properties.insert(it, property);
+        return true;
+    }
+}
+
+bool Object::RemoveProperty(int property) {
+    auto ret = GetIndexOf(property);
+    if (ret.first) return false;
+    else {
+        auto it = properties.begin();
+        std::advance(it, ret.second);
+        properties.erase(it);
+        return true;
+    }
+}
+
+bool Object::ContainsProperty(int property) {
+    return GetIndexOf(property).first;
 }

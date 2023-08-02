@@ -6,7 +6,15 @@
 #include "Texture.hpp"
 #include "Transform.hpp"
 
+enum ObjProperty {
+    gravity = 0,
+    walks = 1,
+};
+
 class Object {
+    std::vector<int> properties;
+
+    std::pair<bool, int> GetIndexOf(int property);
     protected:
         std::function<void(Object &, Object &)> collision_function = [](Object&,Object&){};
         
@@ -44,4 +52,17 @@ class Object {
 
         /** Set function that is called by default OnCollision method */
         void SetOnCollision(const std::function<void(Object &, Object &)> &func);
+
+        /** Adds property to list of properties
+         * @return True if property isn't already in list, false otherwise
+        */
+        bool AddProperty(int property);
+        /** Remove property from list of properties
+         * @return True if property is removevd, false if property is not in list
+        */
+        bool RemoveProperty(int property);
+        /** Checks if property is contained in list of properties
+         * @return True if property is removed, false if property is not in list
+        */
+        bool ContainsProperty(int property);
 };
