@@ -87,19 +87,16 @@ bool GameEngine::ResolveCollisions(const float &elapsed_time) {
                 // Move bodies if they're rigid
                 Rigidbody *a_body = dynamic_cast<Rigidbody*>(a.GetBody());
                 Rigidbody *b_body = dynamic_cast<Rigidbody*>(b.GetBody());
-                if (a_body && b_body) {
-                    norm = norm / 2.0f;
-                    a.Move(norm);
-                    b.Move(-norm);
-                    a_body->SetVelocity(V3d::origin);
-                    b_body->SetVelocity(V3d::origin);
-                } else if (a_body) {
-                    a.Move(norm);
-                    a_body->SetVelocity(V3d::origin);
-                } else if (b_body) {
-                    b.Move(-norm);
-                    b_body->SetVelocity(V3d::origin);
-                }
+
+                if (a_body && b_body) norm = norm / 2.0f;
+
+                auto move = [](Object &o, Rigidbody *body, const V3d &norm) {
+                    o.Move(norm);
+                    body->SetVelocity(V3d::origin);
+                };
+
+                if (a_body) move(a, a_body, norm);
+                if (b_body) move(b, b_body, -norm);
             }
         }
     }
