@@ -6,10 +6,12 @@
 #include "Texture.hpp"
 #include "Transform.hpp"
 
-enum ObjProperty {
-    gravity = 0,
-    walks = 1,
-};
+namespace Obj {
+    enum Property {
+        gravity = 0,
+        walks = 1
+    };
+}
 
 class Object {
     std::vector<int> properties;

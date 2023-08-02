@@ -74,6 +74,7 @@ void Object::SetOnCollision(const std::function<void(Object &, Object &)> &func)
 }
 
 std::pair<bool, int> Object::GetIndexOf(int property) {
+    if (properties.size() == 0) return {false, 0};
     int min = 0;
     int max = properties.size();
     while (true) {

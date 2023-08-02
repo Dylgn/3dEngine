@@ -56,9 +56,11 @@ bool GameEngine::PhysicsStep(const float &elapsed_time) {
         Rigidbody *body;
         if (body = dynamic_cast<Rigidbody*>(o.GetBody())) {
             // Apply gravity and move body
-            body->Accelerate(m_gravity);
-            o.Move(body->CalculateVelocity(elapsed_time) * elapsed_time);
-            body->SetForce(V3d::origin);
+            if (o.ContainsProperty(Obj::Property::gravity)) {
+                body->Accelerate(m_gravity);
+                o.Move(body->CalculateVelocity(elapsed_time) * elapsed_time);
+                body->SetForce(V3d::origin);
+            }
 
             // Dont let objects fall below a certain height
             float min_height = 0.0f;

@@ -304,6 +304,7 @@ class BasicGameEngine: public GameEngine {
         bool OnStart() override {
             player.SetBody(ObjectUtil::GetRigidBox(0.4f, 1.0f, 0.4f));
             player.SetPos({0.5f, 3.0f, 0.5f});
+            player.AddProperty(Obj::Property::gravity);
 
             m_objects.emplace_back("../resources/ramp2.obj", "../resources/brick.bmp");
             m_objects.push_back(player);
