@@ -92,13 +92,21 @@ bool GameEngine::ResolveCollisions(const float &elapsed_time) {
 
                 if (a_body && b_body) norm = norm / 2.0f;
 
-                auto move = [](Object &o, Rigidbody *body, const V3d &norm) {
+                auto move = [](Object &o, Rigidbody *body, Body *other_body, const V3d &norm) {
+
+                    if (o.ContainsProperty(Obj::Property::walks)) {
+                        V3d diff = body->FurthestPointIn(-V3d::unit_y) - other_body->FurthestPointIn(V3d::unit_y);
+                        if (diff.y < 0 && diff.y > -0.2f) {
+                            o.Move(V3d{0.0f, -diff.y + 0.001f, 0.0f});
+                            return;
+                        }
+                    }
                     o.Move(norm);
                     body->SetVelocity(V3d::origin);
                 };
 
-                if (a_body) move(a, a_body, norm);
-                if (b_body) move(b, b_body, -norm);
+                if (a_body) move(a, a_body, b.GetBody(), norm);
+                if (b_body) move(b, b_body, a.GetBody(), -norm);
             }
         }
     }
