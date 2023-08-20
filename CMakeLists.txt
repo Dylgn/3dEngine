@@ -27,6 +27,14 @@ set(SOURCES
     src/Physics/PolyCollider.cpp
     src/Physics/Collision.cpp
     src/Physics/Rigidbody.cpp
+    
+    src/Physics/Particle.cpp
+    src/Physics/ForceGenerator.cpp
+    src/Physics/GravityGenerator.cpp
+    src/Physics/DragGenerator.cpp
+    src/Physics/SpringGenerator.cpp
+    src/Physics/AnchorSpringGenerator.cpp
+    src/Physics/BungeeGenerator.cpp
 
     src/GameObjects/Object.cpp
     src/GameObjects/Player.cpp

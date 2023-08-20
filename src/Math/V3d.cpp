@@ -83,5 +83,6 @@ float V3d::length() const {
 
 V3d V3d::normalize() const {
     float l = length();
-    return { x / l, y / l, z / l };
+    if (l == 0) return V3d::origin;
+    else return { x / l, y / l, z / l };
 }

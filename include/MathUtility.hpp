@@ -14,8 +14,21 @@ namespace MathUtil {
 
     bool SameDirection(const V3d &a, const V3d &b);
 
+    /** Removes a given direction from the given vector
+     * @param vec The vector you want the direction removed from
+     * @param dir The direction you want removed
+    */
+    V3d RemoveDirectionFrom(const V3d &vec, const V3d &dir);
+
     /** Creates a vector in the specified direction with the given length */
     V3d AdjustToLength(const V3d &dir, const float &length);
+
+    /** Gets orthonormal basis
+     * @param a First mutually orthogonal vector. Direction will not change but will be normalized.
+     * @param b Second mutually orthogonal vector. Direction may change if not orthogonal to first.
+     * @return Third mutually orthogonal vector. Returns V3d::origin if a and b are parallel.
+    */
+    V3d OrthonormalBasis(V3d &a, V3d &b);
 
     /** Gets the point where the given line segment intersects the given plane */
     V3d LineIntersectPlane(const V3d &plane_point, V3d &plane_norm, const V3d &line_start, const V3d &line_end, float &t);

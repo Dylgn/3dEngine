@@ -11,6 +11,10 @@ void Rigidbody::SetVelocity(const V3d &dir) {
     velocity = dir;
 }
 
+V3d Rigidbody::GetVelocity() {
+    return velocity;
+}
+
 void Rigidbody::Accelerate(const V3d &dir) {
     force += dir * mass;
 }
@@ -21,4 +25,12 @@ void Rigidbody::ApplyForce(const V3d &dir) {
 
 void Rigidbody::SetForce(const V3d &dir) {
     force = dir;
+}
+
+V3d Rigidbody::GetForce() {
+    return force;
+}
+
+float Rigidbody::GetMass() {
+    return mass;
 }

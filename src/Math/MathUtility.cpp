@@ -27,11 +27,27 @@ namespace MathUtil {
         return a.dot(b) > 0.0f;
     }
 
+    V3d RemoveDirectionFrom(const V3d &vec, const V3d &dir) {
+        return vec - (dir * vec.dot(dir));
+    }
+
     V3d AdjustToLength(const V3d &dir, const float &length) {
         return dir * (length / dir.length());
     }
 
-    V3d LineIntersectPlane(const V3d &plane_point, V3d &plane_norm, const V3d &line_start, const V3d &line_end, float &t) {
+    V3d OrthonormalBasis(V3d &a, V3d &b) {
+        // Get new b and c vectors
+        V3d c = a.cross(b);
+        if (c.length() == 0) return V3d::origin;
+        else b = c.cross(a);
+        // Normalize vectors
+        a = a.normalize();
+        b = b.normalize();
+        return c.normalize();
+    }
+
+    V3d LineIntersectPlane(const V3d &plane_point, V3d &plane_norm, const V3d &line_start, const V3d &line_end, float &t)
+    {
         plane_norm = plane_norm.normalize();
         float plane_d = -plane_norm.dot(plane_point);
         float ad = line_start.dot(plane_norm);
