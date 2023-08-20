@@ -317,11 +317,13 @@ class BasicGameEngine: public GameEngine {
             Camera *cam = player.GetCamera();
             V3d forward = cam->look_dir * (8.0f * elapsed_time);
             if (KeyDown(VK_W)) {
-                player.Move(forward);
+                static_cast<Rigidbody*>(player.GetBody())->Accelerate(forward);
+                //player.Move(forward);
             }
             if (KeyDown(VK_S)) {
                 forward = -forward;
-                player.Move(forward);
+                static_cast<Rigidbody*>(player.GetBody())->Accelerate(forward);
+                //player.Move(forward);
             }
             if (KeyDown(VK_A)) cam->yaw += 2.0f * elapsed_time;
             if (KeyDown(VK_D)) cam->yaw -= 2.0f * elapsed_time;
@@ -332,6 +334,9 @@ class BasicGameEngine: public GameEngine {
             if (KeyDown(0x51)) {
                 player.SetPos(V3d{player.GetPos().x, 10.0f, player.GetPos().z});
             }
+
+            //auto pos = player.GetPos();
+            //std::cout << pos.x << " " << pos.y << " " << pos.z << std::endl;
 
             //std::cout << 1 / elapsed_time << std::endl;
             return true;
