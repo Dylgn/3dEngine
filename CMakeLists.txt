@@ -35,6 +35,9 @@ set(SOURCES
     src/Physics/SpringGenerator.cpp
     src/Physics/AnchorSpringGenerator.cpp
     src/Physics/BungeeGenerator.cpp
+    src/Physics/BuoyancyGenerator.cpp
+    src/Physics/Contact.cpp
+    src/Physics/ContactResolver.cpp
 
     src/GameObjects/Object.cpp
     src/GameObjects/Player.cpp
