@@ -37,6 +37,7 @@ set(SOURCES
     src/Physics/BungeeGenerator.cpp
     src/Physics/BuoyancyGenerator.cpp
     src/Physics/Contact.cpp
+    src/Physics/ParticleLink.cpp
 
     src/GameObjects/Object.cpp
     src/GameObjects/Player.cpp

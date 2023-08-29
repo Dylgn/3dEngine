@@ -32,3 +32,8 @@ class ParticleContactResolver {
         /** Resolves penetration and velocity for particle contacts */
         void ResolveContacts(ParticleContact *contacts, unsigned count, float elapsed_time);
 };
+
+struct ParticleContactGenerator {
+    // Fills given contact structure with the generated contact
+    virtual unsigned AddContact(ParticleContact *contact, unsigned limit) const = 0;
+};
