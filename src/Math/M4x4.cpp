@@ -1,5 +1,6 @@
 #include "V3d.hpp"
 #include "MathUtility.hpp"
+#include "M4x4.hpp"
 
 M4x4 M4x4::operator*(const M4x4 &o) const {
     M4x4 ret;
@@ -18,4 +19,3 @@ M4x4 M4x4::operator*(const M4x4 &o) const {
 V3d M4x4::operator*(const V3d &v) const {
     return MathUtil::Mat4x4VecMult(*this, v);
 }
-

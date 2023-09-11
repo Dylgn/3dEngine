@@ -18,6 +18,9 @@ set(SOURCES
     src/Math/MathUtility.cpp
     src/Math/V2d.cpp
     src/Math/Simplex.cpp
+    src/Math/M3x4.cpp
+    src/Math/M3x3.cpp
+    src/Math/Quaternion.cpp
 
     src/Render/Geometry.cpp
     src/Render/Mesh.cpp
