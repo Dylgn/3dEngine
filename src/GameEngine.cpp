@@ -5,7 +5,6 @@
 #include "MathUtility.hpp"
 #include "Triangle.hpp"
 #include "Geometry.hpp"
-#include "Rigidbody.hpp"
 
 GameEngine::GameEngine(int width, int height, float fov_deg, const wchar_t *title): 
     m_running{false}, m_window{width, height, title} {
@@ -39,9 +38,7 @@ void GameEngine::Start() {
         // Calculate elapsed time since last call to onUpdate()
         auto time_now = std::chrono::system_clock::now();
         std::chrono::duration<float> elapsed_time = time_now - time_prev;
-        if (!PhysicsStep(elapsed_time.count())) return;
         if (!OnUpdate(elapsed_time.count())) return;
-        if (!ResolveCollisions(elapsed_time.count())) return;
         time_prev = time_now;
 
         Render();
@@ -52,6 +49,7 @@ bool GameEngine::KeyDown(const int &virt_key) {
     return m_window.KeyDown(virt_key);
 }
 
+/*
 bool GameEngine::PhysicsStep(const float &elapsed_time) {
     for (Object &o : m_objects) {
         Rigidbody *body;
@@ -127,7 +125,7 @@ bool GameEngine::ResolveCollisions(const float &elapsed_time) {
                 if (spd >= 0) continue;
 
                 // restitution
-                float e = 1.0f; /* (a_body ? a_body->GetRestitution() : 1.0f) * ( b_body ? b_body->GetRestitution() : 1.0f )*/
+                float e = 1.0f; (a_body ? a_body->GetRestitution() : 1.0f) * ( b_body ? b_body->GetRestitution() : 1.0f );
                 
                 float j = -(1.0f + e) * spd / (a_mass + b_mass);
 
@@ -190,6 +188,7 @@ bool GameEngine::ResolveCollisions(const float &elapsed_time) {
     }
     return true;
 }
+*/
 
 void GameEngine::Render() {
     m_window.clear(0x00000000);

@@ -18,7 +18,6 @@
 #include "PolyCollider.hpp"
 #include "Collision.hpp"
 #include "Object.hpp"
-#include "Rigidbody.hpp"
 #include "Player.hpp"
 #include "ObjectUtility.hpp"
 
@@ -317,13 +316,13 @@ class BasicGameEngine: public GameEngine {
             Camera *cam = player.GetCamera();
             V3d forward = cam->look_dir * (8.0f * elapsed_time);
             if (KeyDown(VK_W)) {
-                static_cast<Rigidbody*>(player.GetBody())->Accelerate(forward);
-                //player.Move(forward);
+                //static_cast<Rigidbody*>(player.GetBody())->Accelerate(forward);
+                player.Move(forward);
             }
             if (KeyDown(VK_S)) {
                 forward = -forward;
-                static_cast<Rigidbody*>(player.GetBody())->Accelerate(forward);
-                //player.Move(forward);
+                //static_cast<Rigidbody*>(player.GetBody())->Accelerate(forward);
+                player.Move(forward);
             }
             if (KeyDown(VK_A)) cam->yaw += 2.0f * elapsed_time;
             if (KeyDown(VK_D)) cam->yaw -= 2.0f * elapsed_time;
