@@ -18,6 +18,9 @@ struct M3x4 {
     /** Sets matrix to be rotation matrix corresponding to the given quaternion. */
     void SetAsOrientationPosOf(const Quaternion &q, const V3d &pos);
 
+    /** Transforms given vector by this matrix */
+    V3d Transform(const V3d &v) const;
+    
     /** Transform given vector by transformational inverse of this matrix */
     V3d TransformInverse(const V3d &v) const;
 

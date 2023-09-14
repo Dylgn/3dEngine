@@ -8,6 +8,14 @@ void M3x3::Set(int x, int y, float value) {
     data[3 * y + x] = value;
 }
 
+V3d M3x3::operator*(const V3d &v) const {
+    return V3d{
+        v.x * data[0] + v.y * data[1] + v.z * data[2],
+        v.x * data[3] + v.y * data[4] + v.z * data[5],
+        v.x * data[6] + v.y * data[7] + v.z * data[8]
+    };
+}
+
 M3x3 M3x3::GetTranspose() const {
     M3x3 ret;
     ret.SetAsTransposeOf(*this);

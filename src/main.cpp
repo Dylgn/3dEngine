@@ -301,7 +301,7 @@ class BasicGameEngine: public GameEngine {
         ~BasicGameEngine() override {}
         
         bool OnStart() override {
-            player.SetBody(ObjectUtil::GetRigidBox(0.4f, 1.0f, 0.4f));
+            //player.SetBody(ObjectUtil::GetRigidBox(0.4f, 1.0f, 0.4f));
             player.SetPos({0.5f, 3.0f, 0.5f});
             player.AddProperty(Obj::Property::gravity);
             player.AddProperty(Obj::Property::walks);

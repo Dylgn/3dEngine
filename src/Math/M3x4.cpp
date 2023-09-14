@@ -53,6 +53,10 @@ void M3x4::SetAsOrientationPosOf(const Quaternion &q, const V3d &pos) {
     data[11] = pos.z;
 }
 
+V3d M3x4::Transform(const V3d &v) const {
+    return (*this) * v;
+}
+
 V3d M3x4::TransformInverse(const V3d &v) const {
     V3d tmp = v;
     tmp.x -= data[3];
