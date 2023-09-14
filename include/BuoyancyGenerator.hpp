@@ -1,8 +1,8 @@
 #pragma once
 
-#include "ForceGenerator.hpp"
+#include "ParticleForceGenerator.hpp"
 
-class BuoyancyGenerator: public ForceGenerator {
+class BuoyancyGenerator: public ParticleForceGenerator {
     float max_depth; // Max submersion depth before it reaches max buoyance force
     float volume;
     float liquid_height; // Y-value of liquid (assumes parallel to XZ-plane

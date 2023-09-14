@@ -1,10 +1,10 @@
-#include "ForceGenerator.hpp"
+#include "ParticleForceGenerator.hpp"
 
-void ForceRegistry::Add(Particle *p, ForceGenerator *pfg) {
+void ParticleForceRegistry::Add(Particle *p, ParticleForceGenerator *pfg) {
     registrations.push_back({p, pfg});
 }
 
-void ForceRegistry::Remove(Particle *p, ForceGenerator *pfg) {
+void ParticleForceRegistry::Remove(Particle *p, ParticleForceGenerator *pfg) {
     for (Registry::iterator it = registrations.begin(); it != registrations.end(); ++it) {
         if (it->p == p && it->pfg == pfg) {
             registrations.erase(it);
@@ -13,11 +13,11 @@ void ForceRegistry::Remove(Particle *p, ForceGenerator *pfg) {
     }
 }
 
-void ForceRegistry::Clear() {
+void ParticleForceRegistry::Clear() {
     registrations.clear();
 }
 
-void ForceRegistry::Update(float elapsed_time) {
+void ParticleForceRegistry::Update(float elapsed_time) {
     for (ForceRegistration pfr : registrations) {
         pfr.pfg->UpdateForce(pfr.p, elapsed_time);
     }

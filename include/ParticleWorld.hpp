@@ -3,7 +3,7 @@
 #include <vector>
 #include "Particle.hpp"
 #include "Contact.hpp"
-#include "ForceGenerator.hpp"
+#include "ParticleForceGenerator.hpp"
 
 class ParticleWorld {
     public:
@@ -14,7 +14,7 @@ class ParticleWorld {
 
         bool calculate_iterations; // If world should calculate number of iterations to give contact resolver at each frame
 
-        ForceRegistry registry; // Force registers for particles in world
+        ParticleForceRegistry registry; // Force registers for particles in world
 
         ParticleContactResolver resolver; // Resolver for contacts in world
 

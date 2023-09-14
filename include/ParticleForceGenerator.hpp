@@ -1,27 +1,27 @@
 #pragma once
 
 #include <vector>
-#include "Rigidbody.hpp"
+#include "Particle.hpp"
 
-struct ForceGenerator {
-    virtual void UpdateForce(Rigidbody *b, float elapsed_time) = 0;
+struct ParticleForceGenerator {
+    virtual void UpdateForce(Particle *p, float elapsed_time) = 0;
 };
 
-class ForceRegistry {
+class ParticleForceRegistry {
     protected:
         struct ForceRegistration {
-            Rigidbody *b;
-            ForceGenerator *fg;
+            Particle *p;
+            ParticleForceGenerator *pfg;
         };
 
         typedef std::vector<ForceRegistration> Registry;
         Registry registrations;
     public:
         /** Registers given particle and force generator pair. */
-        void Add(Rigidbody *b, ForceGenerator *fg);
+        void Add(Particle *p, ParticleForceGenerator *pfg);
 
         /** Removes given particle and force generator pair. No effect if pair is not registered */
-        void Remove(Rigidbody *b, ForceGenerator *fg);
+        void Remove(Particle *p, ParticleForceGenerator *pfg);
 
         /** Clears all registrations from registry. */
         void Clear();

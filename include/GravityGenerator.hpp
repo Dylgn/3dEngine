@@ -1,8 +1,8 @@
 #pragma once
 
-#include "ForceGenerator.hpp"
+#include "ParticleForceGenerator.hpp"
 
-class GravityGenerator: public ForceGenerator {
+class GravityGenerator: public ParticleForceGenerator {
     V3d gravity;
 
     public:

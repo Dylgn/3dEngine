@@ -1,9 +1,9 @@
 #pragma once
 
-#include "ForceGenerator.hpp"
+#include "ParticleForceGenerator.hpp"
 
 // Spring that links two objects
-class SpringGenerator: public ForceGenerator {
+class SpringGenerator: public ParticleForceGenerator {
     Particle *other; // Particle at other end of spring
     float spring_const; // Spring constant
     float rest_length; // Rest length of spring

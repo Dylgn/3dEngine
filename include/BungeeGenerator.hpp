@@ -1,8 +1,8 @@
 #pragma once
 
-#include "ForceGenerator.hpp"
+#include "ParticleForceGenerator.hpp"
 
-class BungeeGenerator: public ForceGenerator {
+class BungeeGenerator: public ParticleForceGenerator {
     Particle *other;
     float spring_const;
     float rest_length;

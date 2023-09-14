@@ -1,8 +1,8 @@
 #pragma once
 
-#include "ForceGenerator.hpp"
+#include "ParticleForceGenerator.hpp"
 
-class DragGenerator: public ForceGenerator {
+class DragGenerator: public ParticleForceGenerator {
     // Coefficients for simplified model of drag
     float k1; // drag coefficient
     float k2; // squared drag coefficient

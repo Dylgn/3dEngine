@@ -1,9 +1,9 @@
 #pragma once
 
-#include "ForceGenerator.hpp"
+#include "ParticleForceGenerator.hpp"
 
 // Links one end of spring with fixed point
-class AnchorSpringGenerator: public ForceGenerator {
+class AnchorSpringGenerator: public ParticleForceGenerator {
     protected:
         V3d *anchor; // Location of other end of spring
         float spring_const;

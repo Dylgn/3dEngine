@@ -29,10 +29,9 @@ set(SOURCES
 
     src/Physics/PolyCollider.cpp
     src/Physics/Collision.cpp
-    src/Physics/Rigidbody.cpp
     
     src/Physics/Particle.cpp
-    src/Physics/ForceGenerator.cpp
+    src/Physics/ParticleForceGenerator.cpp
     src/Physics/GravityGenerator.cpp
     src/Physics/DragGenerator.cpp
     src/Physics/SpringGenerator.cpp
@@ -42,6 +41,8 @@ set(SOURCES
     src/Physics/Contact.cpp
     src/Physics/ParticleLink.cpp
     src/Physics/ParticleWorld.cpp
+    src/Physics/Rigidbody.cpp
+    src/Physics/World.cpp
 
     src/GameObjects/Object.cpp
     src/GameObjects/Player.cpp
