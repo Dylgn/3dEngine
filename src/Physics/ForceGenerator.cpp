@@ -28,6 +28,10 @@ void ForceRegistry::Update(float elapsed_time) {
 
 Aerodynamics::Aerodynamics(const M3x3 &tensor, const V3d &pos, const V3d *wind_speed): tensor{tensor}, pos{pos}, wind_speed{wind_speed} {}
 
+void Aerodynamics::UpdateForce(Rigidbody *b, float elapsed_time) {
+    UpdateForceFromTensor(b, elapsed_time, tensor);
+}
+
 void Aerodynamics::UpdateForceFromTensor(Rigidbody *b, float elapsed_time, const M3x3 &tensor) {
     // Calculate total velocity
     V3d velo = b->GetVelocity();
@@ -52,6 +56,7 @@ M3x3 AeroControl::GetTensor() {
     } else if (control > 0) {
         M3x3::Lerp(tensor, max_tensor, control);
     } else return tensor;
+    return tensor;
 }
 
 AeroControl::AeroControl(const M3x3 &base, const M3x3 &min, const M3x3 &max, const V3d &pos, const V3d *wind_speed):
