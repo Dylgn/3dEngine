@@ -69,7 +69,24 @@ V3d M3x4::TransformInverse(const V3d &v) const {
     };
 }
 
-void M3x4::SetAsInverseOf(const M3x4 &m) {
+V3d M3x4::TrasnformInverseDirection(const V3d &v) const {
+    return V3d{
+        v.x * data[0] + v.y * data[4] +v.z * data[8],
+        v.x * data[1] + v.y * data[5] +v.z * data[9],
+        v.x * data[2] + v.y * data[6] +v.z * data[10]
+    };
+}
+
+V3d M3x4::TransformDirection(const V3d &v) const {
+    return V3d{
+        v.x * data[0] + v.y * data[1] + v.z * data[2],
+        v.x * data[4] + v.y * data[5] + v.z * data[6],
+        v.x * data[8] + v.y * data[9] + v.z * data[10]
+    };
+}
+
+void M3x4::SetAsInverseOf(const M3x4 &m)
+{
     float inv_det = GetDeterminant();
     if (inv_det == 0) return;
     else inv_det = 1.0f / inv_det;

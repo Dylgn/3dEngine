@@ -24,6 +24,12 @@ struct M3x4 {
     /** Transform given vector by transformational inverse of this matrix */
     V3d TransformInverse(const V3d &v) const;
 
+    /** Transform given direction vector by transformational inverse of this matrix. */
+    V3d TrasnformInverseDirection(const V3d &v) const;
+
+    /** Transform given directioon vector by matrix. */
+    V3d TransformDirection(const V3d &v) const;
+    
     private:
         void SetAsInverseOf(const M3x4 &m);
 };

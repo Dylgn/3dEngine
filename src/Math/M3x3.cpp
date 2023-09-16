@@ -80,3 +80,11 @@ void M3x3::SetAsTransposeOf(const M3x3 &m) {
     data[7] = m.data[5];
     data[8] = m.data[8];
 }
+
+M3x3 M3x3::Lerp(const M3x3 &a, const M3x3 &b, float prop) {
+    M3x3 ret;
+    for (unsigned i = 0; i < 9; ++i) {
+        ret.data[i] = a.data[i] * (1 - prop) + b.data[i] * prop;
+    }
+    return ret;
+}

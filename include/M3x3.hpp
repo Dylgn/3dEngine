@@ -22,4 +22,7 @@ struct M3x3 {
 
     /** Sets matrix to be transpose of given matrix. */
     void SetAsTransposeOf(const M3x3 &m);
+
+    /** Interpolates a couple of matrices */
+    static M3x3 Lerp(const M3x3 &a, const M3x3 &b, float prop);
 };

@@ -47,4 +47,8 @@ class Rigidbody {
         V3d GetPointInWorldSpace(const V3d &v) const;
 
         void Integrate(float elapsed_time);
+
+        V3d GetVelocity() const;
+
+        M3x4 GetTransform() const;
 };

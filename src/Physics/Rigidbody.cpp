@@ -106,3 +106,11 @@ void Rigidbody::Integrate(float elapsed_time) {
     CalculateDerivedData();
     ClearAccumulators();
 }
+
+V3d Rigidbody::GetVelocity() const {
+    return velocity;
+}
+
+M3x4 Rigidbody::GetTransform() const {
+    return trnasform_matrix;
+}

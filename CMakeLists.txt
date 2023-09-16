@@ -43,6 +43,7 @@ set(SOURCES
     src/Physics/ParticleWorld.cpp
     src/Physics/Rigidbody.cpp
     src/Physics/World.cpp
+    src/Physics/ForceGenerator.cpp
 
     src/GameObjects/Object.cpp
     src/GameObjects/Player.cpp
