@@ -32,7 +32,6 @@ class BasicGameEngine: public GameEngine {
             player.AddProperty(Obj::Property::walks);
             player.AddProperty(Obj::Property::no_render);
 
-            // m_objects.emplace_back("../resources/ramp2.obj", "../resources/brick.bmp");
             m_objects.emplace_back("../resources/scene01.obj", "../resources/grass.bmp");
             m_objects.emplace_back("../resources/scene02.obj", "../resources/box.bmp");
             m_objects.emplace_back("../resources/scene03.obj", "../resources/redbrick.bmp");
