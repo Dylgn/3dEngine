@@ -1,9 +1,10 @@
 # Overview
 This is a 3d game engine that I started working on, starting May 2023. It uses no external libraries. It has the following features:
 - Software renderer
+- Physics engine (in development)
+- JSON Parser
 - Importing .bmp image textures
 - Importing .obj game objects
-- Physics engine (in development)
 
 # Demo
 A demo video can be found [here.](https://youtu.be/sMuDvSHr05I)\
