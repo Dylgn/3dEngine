@@ -12,3 +12,11 @@ PolyCollider *ObjectUtil::GetBoxCollider(const float &width, const float &height
         {width,height,depth}
     };
 }
+
+Body *ObjectUtil::GetBox(const float &width, const float &height, const float &depth) {
+    return new Body{GetBoxCollider(width, height, depth)};
+}
+
+Rbody *ObjectUtil::GetRigidBox(const float &width, const float &height, const float &depth) {
+    return new Rbody{GetBoxCollider(width, height, depth)};
+}
