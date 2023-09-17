@@ -29,6 +29,7 @@ set(SOURCES
 
     src/Physics/PolyCollider.cpp
     src/Physics/Collision.cpp
+    src/Physics/Body.cpp
     
     src/Physics/Particle.cpp
     src/Physics/ParticleForceGenerator.cpp
