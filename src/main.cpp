@@ -26,12 +26,21 @@ class BasicGameEngine: public GameEngine {
         ~BasicGameEngine() override {}
         
         bool OnStart() override {
-            //player.SetBody(ObjectUtil::GetRigidBox(0.4f, 1.0f, 0.4f));
+            player.SetBody(ObjectUtil::GetRigidBox(0.4f, 2.0f, 0.4f));
             player.SetPos({0.5f, 3.0f, 0.5f});
             player.AddProperty(Obj::Property::gravity);
             player.AddProperty(Obj::Property::walks);
+            player.AddProperty(Obj::Property::no_render);
 
-            m_objects.emplace_back("../resources/ramp2.obj", "../resources/brick.bmp");
+            // m_objects.emplace_back("../resources/ramp2.obj", "../resources/brick.bmp");
+            m_objects.emplace_back("../resources/scene01.obj", "../resources/grass.bmp");
+            m_objects.emplace_back("../resources/scene02.obj", "../resources/box.bmp");
+            m_objects.emplace_back("../resources/scene03.obj", "../resources/redbrick.bmp");
+            m_objects.emplace_back("../resources/scene04.obj", "../resources/stone.bmp");
+            m_objects.emplace_back("../resources/scene05.obj", "../resources/stone.bmp");
+            m_objects.emplace_back("../resources/scene06.obj", "../resources/stone.bmp");
+            m_objects.emplace_back("../resources/scene07.obj", "../resources/stone.bmp");
+            m_objects.emplace_back("../resources/scene08.obj", "../resources/stone.bmp");
             m_objects.push_back(player);
 
             return true;
@@ -41,20 +50,14 @@ class BasicGameEngine: public GameEngine {
             Camera *cam = player.GetCamera();
             V3d forward = cam->look_dir * (8.0f * elapsed_time);
             if (KeyDown(VK_W)) {
-                //static_cast<Rigidbody*>(player.GetBody())->Accelerate(forward);
                 player.Move(forward);
             }
             if (KeyDown(VK_S)) {
                 forward = -forward;
-                //static_cast<Rigidbody*>(player.GetBody())->Accelerate(forward);
                 player.Move(forward);
             }
             if (KeyDown(VK_A)) cam->yaw += 2.0f * elapsed_time;
             if (KeyDown(VK_D)) cam->yaw -= 2.0f * elapsed_time;
-            if (KeyDown(VK_UP)) cam->pos.y += 8.0f * elapsed_time;
-            if (KeyDown(VK_DOWN)) cam->pos.y -= 8.0f * elapsed_time;
-            if (KeyDown(VK_LEFT)) cam->pos.x -= 8.0f * elapsed_time;
-            if (KeyDown(VK_RIGHT)) cam->pos.x += 8.0f * elapsed_time;
             if (KeyDown(0x51)) {
                 player.SetPos(V3d{player.GetPos().x, 10.0f, player.GetPos().z});
             }
