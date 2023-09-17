@@ -12,6 +12,7 @@ class GameEngine {
     bool m_running;
     Window m_window;
     Texture m_temp;
+    Texture *m_default;
     V3d m_gravity{0.0f, -9.81f, 0.0f};
     public:
         GameEngine(int width = 640, int height = 480, float fov_deg = 90.0f, const wchar_t *title = L"");
@@ -24,6 +25,10 @@ class GameEngine {
          * @return True if held down, false otherwise
         */
         bool KeyDown(const int &virt_key);
+
+        bool PhysicsStep(const float &elapsed_time);
+
+        bool ResolveCollisions(const float &elapsed_time);
 
         /** Starts the engine */
         virtual bool OnStart() = 0;
