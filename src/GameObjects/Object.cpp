@@ -3,7 +3,12 @@
 #include "PolyCollider.hpp"
 #include "Collision.hpp"
 
-Object::Object() : body{nullptr}, mesh{nullptr}, texture{nullptr}, transform{} {}
+Object::Object() : body{nullptr}, mesh{nullptr}, texture{nullptr}, transform{nullptr} {}
+
+Object::Object(std::string mesh_file_path):
+    mesh{new Mesh()}, texture{nullptr}, transform{new Transform()} {
+    body = new Body{new PolyCollider(mesh->LoadObject(mesh_file_path, false))};
+}
 
 Object::Object(std::string mesh_file_path, std::string texture_file_path):
     mesh{new Mesh()}, texture{new Texture{texture_file_path}}, transform{new Transform{}} {
@@ -28,6 +33,10 @@ Body *Object::GetBody() const {
 
 Mesh *Object::GetMesh() const {
     return mesh;
+}
+
+Texture *Object::GetTexture() const {
+    return texture;
 }
 
 void Object::SetPos(const V3d &dir) {

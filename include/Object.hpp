@@ -9,7 +9,8 @@
 namespace Obj {
     enum Property {
         gravity = 0, // takes gravity
-        walks = 1 // is walking (to step up stairs)
+        walks = 1, // is walking (to step up stairs)
+        no_render = 2 // don't attempt to render object
     };
 }
 
@@ -26,6 +27,7 @@ class Object {
         Transform *transform; // Transform (location & rotation)
     public:
         Object();
+        Object(std::string mesh_file_path);
         Object(std::string mesh_file_path, std::string texture_file_path);
         Object(Transform *transform, std::string mesh_file_path, std::string texture_file_path);
         virtual ~Object();
@@ -36,6 +38,8 @@ class Object {
         Body *GetBody() const;
         /** Get mesh of object */
         Mesh *GetMesh() const;
+        /** Get texture of object */
+        Texture *GetTexture() const;
         /** Set position of object */
         virtual void SetPos(const V3d &dir);
         /** Get position of object*/
