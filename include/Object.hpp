@@ -19,7 +19,7 @@ class Object {
 
     std::pair<bool, int> GetIndexOf(int property);
     protected:
-        std::function<void(Object &, Object &)> collision_function = [](Object&,Object&){};
+        std::function<void(Object *, Object *)> collision_function = [](Object*,Object*){};
         
         Body *body; // Physics Bounding Body
         Mesh *mesh; // Graphic Mesh w/ Texture Coordinates
@@ -30,7 +30,10 @@ class Object {
         Object(std::string mesh_file_path);
         Object(std::string mesh_file_path, std::string texture_file_path);
         Object(Transform *transform, std::string mesh_file_path, std::string texture_file_path);
+        Object(Object &&other);
         virtual ~Object();
+
+        virtual Object &operator=(Object &&o);
 
         /** Set body of object */
         void SetBody(Body *body);
@@ -47,17 +50,17 @@ class Object {
         /** Get collision normal with other
          * @return Collision normal. If there is no collision, return V3d::origin
         */
-        virtual V3d GetCollisionNormal(const Object &other);
+        virtual V3d GetCollisionNormal(Object *other);
         /** Move object in given direction */
         virtual void Move(const V3d &dir);
 
         virtual bool operator==(const Object &o);
 
         /** Method that is called on collision */
-        virtual void OnCollision(Object &other);
+        virtual void OnCollision(Object *other);
 
         /** Set function that is called by default OnCollision method */
-        void SetOnCollision(const std::function<void(Object &, Object &)> &func);
+        void SetOnCollision(const std::function<void(Object *, Object *)> &func);
 
         /** Adds property to list of properties
          * @return True if property isn't already in list, false otherwise

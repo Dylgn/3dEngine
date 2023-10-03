@@ -20,7 +20,32 @@ Object::Object(Transform *transform, std::string mesh_file_path, std::string tex
     body = new Body{new PolyCollider{mesh->LoadObject(mesh_file_path, true)}};
 }
 
-Object::~Object() {}
+Object::Object(Object &&other): body{nullptr}, mesh{nullptr}, texture{nullptr}, transform{nullptr} {
+    std::swap(body, other.body);
+    std::swap(mesh, other.mesh);
+    std::swap(texture, other.texture);
+    std::swap(transform, other.transform);
+}
+
+Object::~Object() {
+    delete body;
+    delete mesh;
+    delete texture;
+    delete transform;
+    body = nullptr;
+    mesh = nullptr;
+    texture = nullptr;
+    transform = nullptr;
+}
+
+Object &Object::operator=(Object &&o) {
+    std::swap(body, o.body);
+    std::swap(mesh, o.mesh);
+    std::swap(texture, o.texture);
+    std::swap(transform, o.transform);
+
+    return *this;
+}
 
 void Object::SetBody(Body *body) {
     if (this->body) delete this->body;
@@ -55,12 +80,12 @@ V3d Object::GetPos() const {
     return transform->pos;
 }
 
-V3d Object::GetCollisionNormal(const Object &other) {
-    if (!body || !other.body) return V3d::origin;
+V3d Object::GetCollisionNormal(Object *other) {
+    if (!body || !other->body) return V3d::origin;
 
     Simplex simplex;
-    return Collision::GJK(simplex, other.body->collider, body->collider) ?
-        Collision::EPA(simplex, other.body->collider, body->collider) :
+    return Collision::GJK(simplex, other->body->collider, body->collider) ?
+        Collision::EPA(simplex, other->body->collider, body->collider) :
         V3d::origin;
 }
 
@@ -74,11 +99,11 @@ bool Object::operator==(const Object &o) {
     return body == o.body && mesh == o.mesh && texture == o.texture && transform == o.transform;
 }
 
-void Object::OnCollision(Object &other) {
-    collision_function(*this, other);
+void Object::OnCollision(Object *other) {
+    collision_function(this, other);
 }
 
-void Object::SetOnCollision(const std::function<void(Object &, Object &)> &func) {
+void Object::SetOnCollision(const std::function<void(Object *, Object *)> &func) {
     collision_function = func;
 }
 

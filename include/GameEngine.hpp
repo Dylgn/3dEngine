@@ -35,8 +35,8 @@ class GameEngine {
         /** Method which is called every frame */
         virtual bool OnUpdate(const float &elapsed_time) = 0;
     protected:
-        Player player;
-        std::vector<Object> m_objects;
+        Player *player;
+        std::vector<Object *> m_objects;
         //Object cube;
     private:
         void Render();
