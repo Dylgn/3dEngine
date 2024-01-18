@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.26)
 
 project (3dengine)
 
-find_package(OpenGL REQUIRED)
-
 set(CMAKE_CXX_FLAGS "-DUNICODE")
 
 # CPP Files
