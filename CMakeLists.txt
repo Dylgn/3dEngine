@@ -43,6 +43,8 @@ set(SOURCES
     src/Physics/Rigidbody.cpp
     src/Physics/World.cpp
     src/Physics/ForceGenerator.cpp
+    src/Physics/CollideBroad.cpp
+    src/Physics/BoundingVolumes.cpp
 
     src/GameObjects/Object.cpp
     src/GameObjects/Player.cpp

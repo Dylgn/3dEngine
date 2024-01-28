@@ -81,6 +81,11 @@ float V3d::length() const {
     return sqrtf(dot(*this));
 }
 
+float V3d::squareLength() const
+{
+    return dot(*this);
+}
+
 V3d V3d::normalize() const {
     float l = length();
     if (l == 0) return V3d::origin;

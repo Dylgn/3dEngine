@@ -24,6 +24,8 @@ struct V3d {
     V3d cross(const V3d &o) const;
 
     float length() const;
+
+    float squareLength() const;
     
     V3d normalize() const;
 
