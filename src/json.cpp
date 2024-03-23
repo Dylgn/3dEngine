@@ -145,6 +145,26 @@ namespace {
             }
         }
     }
+
+    template<typename T> T asNum(void *p) {
+        return static_cast<T>(json::as<float>(p));
+    }
+}
+
+template<> int json::as(void *p) {
+    return asNum<int>(p);
+}
+
+template<> short json::as(void *p) {
+    return asNum<short>(p);
+}
+
+template<> long json::as(void *p) {
+    return asNum<long>(p);
+}
+
+template<> double json::as(void *p) {
+    return asNum<double>(p);
 }
 
 json::Node::Node(Value *v): v{v} {}

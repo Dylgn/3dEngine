@@ -11,6 +11,14 @@ namespace json {
         virtual ~Value() {};
     };
 
+    template<typename T> T as(void *p) {
+        return *static_cast<T*>(p);
+    }
+    template<> int as(void *p);
+    template<> short as(void *p);
+    template<> long as(void *p);
+    template<> double as(void *p);
+
     /** Contains a (possibly nested) json value */
     class Node {
         Value *v;
@@ -29,11 +37,7 @@ namespace json {
              * @throws May throw an error if cast to the wrong type
             */
             template<typename T> T as() {
-                return *static_cast<T*>(v->get());
-            }
-            /** Cast value stored in node to a given number type */
-            template<typename T> T asNum() {
-                return static_cast<T>(as<float>());
+                return json::as<T>(v->get());
             }
     };
 
