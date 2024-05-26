@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Contact.hpp"
+#include "ParticleContact.hpp"
 
 struct ParticleLink: public ParticleContactGenerator {
     Particle *particles[2]; // Pair of particles connected by link

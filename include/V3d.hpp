@@ -17,6 +17,9 @@ struct V3d {
 
     V3d operator-() const;
 
+    float operator[](unsigned i) const;
+    float &operator[](unsigned i);
+
     operator bool() const;
 
     float dot(const V3d &o) const;

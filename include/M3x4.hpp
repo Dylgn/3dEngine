@@ -29,6 +29,9 @@ struct M3x4 {
 
     /** Transform given directioon vector by matrix. */
     V3d TransformDirection(const V3d &v) const;
+
+    /** Gets a vector representing one column in the matrix */
+    V3d GetColumnVector(int i) const;
     
     private:
         void SetAsInverseOf(const M3x4 &m);

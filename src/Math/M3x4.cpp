@@ -85,6 +85,11 @@ V3d M3x4::TransformDirection(const V3d &v) const {
     };
 }
 
+V3d M3x4::GetColumnVector(int i) const
+{
+    return V3d{data[i], data[i + 4], data[i + 8]};
+}
+
 void M3x4::SetAsInverseOf(const M3x4 &m)
 {
     float inv_det = GetDeterminant();

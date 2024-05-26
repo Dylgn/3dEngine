@@ -1,4 +1,5 @@
 #include <cmath>
+#include <stdexcept>
 #include "V3d.hpp"
 #include "MathUtility.hpp"
 
@@ -63,6 +64,36 @@ V3d V3d::operator-() const {
         -this->y,
         -this->z
     };
+}
+
+float V3d::operator[](unsigned i) const {
+    switch (i) {
+        case 0:
+            return x;
+        case 1:
+            return y;
+        case 2:
+            return z;
+        case 3:
+            return w;
+        default:
+            throw std::out_of_range("Tried accessing out of range element for V3d");
+    }
+}
+
+float &V3d::operator[](unsigned i) {
+    switch (i) {
+        case 0:
+            return x;
+        case 1:
+            return y;
+        case 2:
+            return z;
+        case 3:
+            return w;
+        default:
+            throw std::out_of_range("Tried accessing out of range element for V3d");
+    }
 }
 
 V3d::operator bool() const {

@@ -14,6 +14,9 @@ struct BoundingSphere {
     /** Checks if overlaping with given BoundingSphere */
     bool overlaps(BoundingSphere *other);
 
+    /** Gets growth required to incorporate given bounding sphere */
+    float getGrowth(const BoundingSphere &other) const;
+
     /** Gets the volume of the sphere */
     float getVolume() const;
 };

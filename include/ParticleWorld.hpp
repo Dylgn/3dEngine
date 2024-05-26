@@ -2,7 +2,7 @@
 
 #include <vector>
 #include "Particle.hpp"
-#include "Contact.hpp"
+#include "ParticleContact.hpp"
 #include "ParticleForceGenerator.hpp"
 
 class ParticleWorld {
