@@ -5,20 +5,13 @@
 struct Quaternion {
     union {
         struct {
-            float r; // real
-            float i; // complex
-            float j;
-            float k;
+            float x, y, z, w;
         };
         float data[4];
     };
 
-    void operator*=(const Quaternion &q);
+    Quaternion(float x, float y, float z, float w);
+    Quaternion(V3d axis, float angle);
 
-    /** Normalizes the quaternion. */
-    void Normalize();
-
-    void RotateBy(const V3d &v);
-
-    void AddScaledVector(const V3d &v, float scale);
+    Quaternion operator-() const;
 };

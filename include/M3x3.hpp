@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Quaternion.hpp"
+#include "V3d.hpp"
 
 struct M3x3 {
     float data[9];
@@ -13,9 +13,6 @@ struct M3x3 {
     M3x3 GetTranspose() const;
     M3x3 GetInverse() const;
     void Invert();
-
-    /** Sets matrix to be rotation matrix corresponding to the given quaternion. */
-    void SetAsOrientationOf(const Quaternion &q);
 
     /** Sets matrix to be inverse of given matrix. */
     void SetAsInverseOf(const M3x3 &m);

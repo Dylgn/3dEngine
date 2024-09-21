@@ -32,18 +32,6 @@ void M3x3::Invert() {
     SetAsInverseOf(*this);
 }
 
-void M3x3::SetAsOrientationOf(const Quaternion &q) {
-    data[0] = 1 - (2 * q.j * q.j + 2 * q.k * q.k);
-    data[1] = 2 * q.i * q.j + 2 * q.k * q.r;
-    data[2] = 2 * q.i * q.k - 2 * q.j * q.r;
-    data[3] = 2 * q.i * q.j - 2 * q.k * q.r;
-    data[4] = 1 - (2 * q.i * q.i + 2 * q.k * q.k);
-    data[5] = 2 * q.j * q.k + 2 * q.i * q.r;
-    data[6] = 2 * q.i * q.k + 2 * q.j * q.r;
-    data[7] = 2 * q.j * q.k - 2 * q.i * q.r;
-    data[8] = 1 - (2 * q.i * q.i + 2 * q.j * q.j);
-}
-
 void M3x3::SetAsInverseOf(const M3x3 &m) {
     float p1 = m.data[0] * m.data[4];
     float p2 = m.data[0] * m.data[5];
