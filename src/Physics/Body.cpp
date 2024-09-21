@@ -1,6 +1,6 @@
 #include "Body.hpp"
 
-Rbody::Rbody(Collider *collider): Body{collider} {}
+Rbody::Rbody(PolyCollider *collider): Body{collider} {}
 
 V3d Rbody::CalculateVelocity(const float &elapsed_time) {
     velocity += (force / mass) * elapsed_time;

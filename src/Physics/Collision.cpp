@@ -88,7 +88,7 @@ namespace {
     }
 
     /** Gets diff of furthest points in opposite directions to get a vertex on hull of A - B*/
-    V3d GreatestDiff(const Collider *a, const Collider *b, V3d dir) {
+    V3d GreatestDiff(const PolyCollider *a, const PolyCollider *b, V3d dir) {
         return a->FurthestPointIn(dir) - b->FurthestPointIn(-dir);
     }
 
@@ -139,7 +139,7 @@ namespace {
     }
 }
 
-bool Collision::GJK(Simplex &vertices, const Collider *a, const Collider *b) {
+bool Collision::GJK(Simplex &vertices, const PolyCollider *a, const PolyCollider *b) {
     // Initial support point (first direction is arbitrary)
     V3d sup = GreatestDiff(a, b, V3d::unit_x);
 
@@ -161,12 +161,12 @@ bool Collision::GJK(Simplex &vertices, const Collider *a, const Collider *b) {
     }
 }
 
-bool Collision::GJK(const Collider *a, const Collider *b) {
+bool Collision::GJK(const PolyCollider *a, const PolyCollider *b) {
     Simplex vertices;
     return GJK(vertices, a, b);
 }
 
-V3d Collision::EPA(const Simplex &simplex, const Collider *a, const Collider *b) {
+V3d Collision::EPA(const Simplex &simplex, const PolyCollider *a, const PolyCollider *b) {
     std::vector<V3d> polytope(simplex.begin(), simplex.end());
     std::vector<size_t> faces = { 0, 1, 2,  0, 3, 1,  0, 2, 3,  1, 3, 2 };
 
@@ -238,7 +238,7 @@ V3d Collision::EPA(const Simplex &simplex, const Collider *a, const Collider *b)
     return MathUtil::AdjustToLength(min_norm, min_dist + 0.001f);
 }
 
-V3d Collision::EPA(const Collider *a, const Collider *b) {
+V3d Collision::EPA(const PolyCollider *a, const PolyCollider *b) {
     Simplex simplex;
     GJK(simplex, a, b);
     return EPA(simplex, a, b);

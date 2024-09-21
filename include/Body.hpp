@@ -1,13 +1,13 @@
 #pragma once
 
 #include "Transform.hpp"
-#include "Collider.hpp"
+#include "PolyCollider.hpp"
 
 class Body {
     protected:
-        Collider *collider;
+        PolyCollider *collider;
     public:
-        Body(Collider *collider): collider{collider} {}
+        Body(PolyCollider *collider): collider{collider} {}
         virtual ~Body() { delete collider; }
         
         virtual void Move(const V3d &dir) { collider->Move(dir); }
@@ -22,7 +22,7 @@ class Rbody: public Body {
     V3d velocity;
     float mass = 1.0f;
     public:
-        Rbody(Collider *collider);
+        Rbody(PolyCollider *collider);
         /** Calculates velocity direction */
         V3d CalculateVelocity(const float &elapsed_time);
         /** Set velocity */
