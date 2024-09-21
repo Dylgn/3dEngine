@@ -28,25 +28,6 @@ set(SOURCES
     src/Physics/PolyCollider.cpp
     src/Physics/Collision.cpp
     src/Physics/Body.cpp
-    
-    src/Physics/Particle.cpp
-    src/Physics/ParticleForceGenerator.cpp
-    src/Physics/GravityGenerator.cpp
-    src/Physics/DragGenerator.cpp
-    src/Physics/SpringGenerator.cpp
-    src/Physics/AnchorSpringGenerator.cpp
-    src/Physics/BungeeGenerator.cpp
-    src/Physics/BuoyancyGenerator.cpp
-    src/Physics/Contact.cpp
-    src/Physics/ParticleContact.cpp
-    src/Physics/ParticleLink.cpp
-    src/Physics/ParticleWorld.cpp
-    src/Physics/Rigidbody.cpp
-    src/Physics/World.cpp
-    src/Physics/ForceGenerator.cpp
-    src/Physics/CollideBroad.cpp
-    src/Physics/CollideNarrow.cpp
-    src/Physics/BoundingVolumes.cpp
 
     src/GameObjects/Object.cpp
     src/GameObjects/Player.cpp
