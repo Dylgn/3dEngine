@@ -29,6 +29,9 @@ set(SOURCES
     src/Physics/Collision.cpp
     src/Physics/Body.cpp
 
+    src/Physics/Dynamics.cpp
+    src/Physics/Constraints.cpp
+
     src/GameObjects/Object.cpp
     src/GameObjects/Player.cpp
     src/GameObjects/ObjectUtility.cpp
