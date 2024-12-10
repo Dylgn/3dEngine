@@ -37,12 +37,12 @@ struct Angular : public Constraint {
     float compliance; // Stiffness of the constraint
     float lambda_pos; // TODO add desc : multiplier
 
+protected:
     void apply(float h, const V3d &delta_q, float &lambda);
 };
 
 // Mutual Orientation
 struct Mutual : public Angular {
-private:
     void solve(float h) override;
 };
 
@@ -66,7 +66,7 @@ struct Hinge : public Angular {
 
     float lower_limit;
     float upper_limit;
-private:
+
     void solve(float h) override;
 };
 
@@ -94,8 +94,7 @@ struct Spherical : public Angular {
     }; // Local swing axis
     float *lambda_twist;
     Limits twist_limits;
-
-private:
+    
     void solve(float h) override;
 };
 
