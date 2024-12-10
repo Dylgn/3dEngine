@@ -3,6 +3,9 @@
 #include "M4x4.hpp"
 #include "V3d.hpp"
 #include "Triangle.hpp"
+#include <cmath>
+
+#define PI 3.14159
 
 namespace MathUtil {
     /** Multiplies 4x4 matrix by vector */
@@ -54,4 +57,6 @@ namespace MathUtil {
      * @return Number of new triangles clipped
      */
     int TriangleClipPlane(const V3d &plane_point, V3d plane_norm, Triangle &in_triangle, Triangle &out_triangle1, Triangle &out_triangle2);
+
+    float clamp(float num, float min, float max);
 }

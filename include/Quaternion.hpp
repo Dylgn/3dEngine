@@ -19,6 +19,7 @@ struct Quaternion {
     Quaternion operator-() const;
 
     Quaternion operator*(const Quaternion &q) const;
+    // Warning: not to be confused with Quaternion::rotate()!
     Quaternion operator*(const V3d &v) const;
     Quaternion operator*(float k) const;
 

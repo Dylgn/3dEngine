@@ -1,4 +1,3 @@
-#include <cmath>
 #include "MathUtility.hpp"
 
 namespace MathUtil {
@@ -242,6 +241,11 @@ namespace MathUtil {
         }
 
         return 0;
+    }
+
+    float clamp(float num, float min, float max)
+    {
+        return std::min(std::max(num, min), max);
     }
 
     M4x4 InvertRotTransMat(const M4x4 &m) {
