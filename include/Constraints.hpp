@@ -22,15 +22,30 @@ struct Constraint {
 
 namespace Constraints {
 
-struct Distance : public Constraint {
+struct Position : public Constraint {
+protected:
+    void apply(const V3d &normal, float magnitude, float delta_lambda);
+
+    float getGeneralizedInverseMass(unsigned i, const V3d &r, const V3d &n, float c) const;
+
+    float getDeltaLambda(float h, const V3d &normal, float magnitude, float compliance, float lambda) const;
+};
+
+struct Distance : public Position {
     float distance; // Constraint distance
     float compliance; // Inverse of stiffness, value of 0 is infinitely stiff
     float *lambda; // TODO add desc : multiplier
 
     void solve(float h) override;
+};
 
-private:
-    float getGeneralizedInverseMass(unsigned i, const V3d &r, const V3d &n, float c) const;
+struct Collision : public Position {
+    V3d normal;
+    float *lambda_t = 0; // Lagrange Multiplier for tangential force
+    float *lambda_n = 0; // Lagrange Multiplier for normal force
+
+    void solve(float h) override;
+    void velocitySolve(float h);
 };
 
 struct Angular : public Constraint {
@@ -94,7 +109,7 @@ struct Spherical : public Angular {
     }; // Local swing axis
     float *lambda_twist;
     Limits twist_limits;
-    
+
     void solve(float h) override;
 };
 

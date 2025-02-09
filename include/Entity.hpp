@@ -14,9 +14,17 @@ struct Entity {
     V3d angular_velocity;
     M3x3 inertia_tensor;
 
+    float static_friction; // static friction coefficient
+    float dynamic_friction; // dynamic friction coefficient
+
+    float restitution; // restitution coefficient
+
     struct {
         V3d pos;
         Quaternion rot;
+
+        V3d velocity;
+        V3d angular_velocity;
     } prev;
 
     struct {

@@ -48,5 +48,11 @@ void SimulatePhysics(float dt, std::vector<Entity*> &entities, std::vector<Const
             e->angular_velocity = V3d{d_rot.x, d_rot.y, d_rot.z} * 2 / h;
             if (d_rot.w < 0) e->angular_velocity = -e->angular_velocity;
         }
+
+        // (3.6) SolveVelocities()
+        for (int j = 0; j < constraints.size(); ++j) {
+            Constraints::Collision *c = dynamic_cast<Constraints::Collision*>(constraints[j]);
+            if (c) c->velocitySolve(h);
+        }
     }
 }
